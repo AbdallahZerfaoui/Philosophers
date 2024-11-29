@@ -1,10 +1,12 @@
 EXE = philo
 
-CC = cc -g
+CC = cc -g -pthread
 RM = rm -f
 CFLAGS = -Wall -Wextra -Werror
 
-SRC = main.c init.c philosopher.c utils.c simulation.c errors.c memory_management.c
+SRC = main.c init.c philosopher.c \
+	utils.c simulation.c errors.c \
+	memory_management.c basic.c
 OBJ = $(SRC:.c=.o)
 
 all: $(EXE)

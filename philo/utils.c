@@ -5,60 +5,43 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/28 15:53:20 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/11/28 16:18:02 by azerfaou         ###   ########.fr       */
+/*   Created: 2024/11/29 11:39:33 by azerfaou          #+#    #+#             */
+/*   Updated: 2024/11/29 18:27:18 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-// The calloc() function allocates memory for an array of nmemb elements of
-// size bytes each and returns a pointer to the allocated memory.
-// The memory is set to zero. If nmemb or size is 0, then calloc() returns
-// either NULL, or a unique pointer value that can later be successfully
-// passed to free().
-
-// A less known difference is that in operating systems with optimistic memory
-// allocation, like Linux, the pointer returned by malloc isn't backed by real
-// memory until the program actually touches it.
-
-// calloc does indeed touch the memory (it writes zeroes on it) and thus you'll
-// be sure the OS is backing the allocation with actual RAM (or swap).
-// This is also why it is slower than malloc (not only does it have to zero it,
-// the OS must also find a suitable memory area by possibly swapping out other
-// processes)
-
-void	*ft_calloc(size_t nitems, size_t size)
+long long	current_time(void)
 {
-	void	*ptr;
-	size_t	total_size;
+	struct timeval	tv;
 
-	total_size = nitems * size;
-	ptr = malloc(total_size);
-	if (ptr == NULL)
-		return (NULL);
-	memset(ptr, 0, total_size);
-	return (ptr);
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000LL + tv.tv_usec / 1000LL);
 }
 
-int	ft_atoi(const char *str)
+void	sleep_ms(int ms)
 {
-	int	res;
-	int	sign;
-	int	i;
+	long long	start;
 
-	res = 0;
-	sign = 1;
-	i = 0;
-	while (str[i] == ' ' || str[i] == '\t'
-		|| str[i] == '\n' || str[i] == '\v'
-		|| str[i] == '\f' || str[i] == '\r')
-		i++;
-	while (str[i] == '0')
-		i++;
-	if (str[i] == '-' || str[i] == '+')
-		sign = 1 - 2 * (str[i++] == '-');
-	while (str[i] >= '0' && str[i] <= '9')
-		res = res * 10 + (str[i++] - '0');
-	return (sign * res);
+	start = current_time();
+	if (current_time() - start < ms)
+		usleep(ms - (current_time() - start));
+}
+
+void	print_action(t_table *table, int philo_id, const char *action)
+{
+	printf("%lld %d %s\n",
+		current_time() - table->start_time, philo_id, action);
+}
+
+/***
+ * @brief Get the forks ids for the philosopher with its given id
+ * @note We count in the time sense, so the left fork is the philosopher id
+ */
+void	get_forks_ids(int philo_id, int *left_fork,
+	int *right_fork, int num_philosophers)
+{
+	*left_fork = philo_id;
+	*right_fork = (philo_id + 1) % num_philosophers;
 }

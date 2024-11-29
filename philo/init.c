@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 15:45:59 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/11/28 16:16:19 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/11/29 18:30:13 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,27 @@ static void	init_philosophers(t_simulation *simulation, int mini_nbr_meals)
 	}
 }
 
+static void	init_forks(t_simulation *simulation)
+{
+	int	i;
+
+	i = 0;
+	while (i < simulation->table->num_philosophers)
+	{
+		simulation->table->forks[i].id = i;
+		pthread_mutex_init(&simulation->table->forks[i].mutex, NULL);
+		i++;
+	}
+}
+
+/***
+ * @brief Parse the inputs and initialize the simulation structure
+ * 1. We allocate memory for the simulation structure and the table structure.
+ * 2. We fill the table struct
+ * 3. We check if the number of meals is provided, if not, we set it to INT_MAX
+ * 4. We allocate memory for the forks and the philosophers
+ * @return t_simulation*
+ */
 t_simulation	*parse_inputs(char **argv)
 {
 	t_simulation	*simulation;
@@ -43,10 +64,12 @@ t_simulation	*parse_inputs(char **argv)
 		mini_nbr_meals = ft_atoi(argv[5]);
 	else
 		mini_nbr_meals = INT_MAX;
+	simulation->table->forks = \
+		ft_calloc(simulation->table->num_philosophers, sizeof(t_fork));
+	init_forks(simulation);
 	simulation->philosophers = \
 		ft_calloc(simulation->table->num_philosophers, sizeof(t_philosopher));
 	init_philosophers(simulation, mini_nbr_meals);
+	simulation->table->start_time = current_time();
 	return (simulation);
 }
-
-
