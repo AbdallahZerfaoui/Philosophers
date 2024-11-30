@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 15:45:59 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/11/29 18:30:13 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/11/30 19:41:50 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	init_philosophers(t_simulation *simulation, int mini_nbr_meals)
 		simulation->philosophers[i].times_eaten = 0;
 		simulation->philosophers[i].mini_nbr_meals = mini_nbr_meals;
 		simulation->philosophers[i].last_meal_time = 0;
-		simulation->philosophers[i].table = simulation->table;
+		simulation->philosophers[i].simulation = simulation;
 		i++;
 	}
 }
@@ -41,6 +41,19 @@ static void	init_forks(t_simulation *simulation)
 	}
 }
 
+void	destroy_mutexes(t_simulation *simulation)
+{
+	int	i;
+
+	i = 0;
+	while (i < simulation->table->num_philosophers)
+	{
+		pthread_mutex_destroy(&simulation->table->forks[i].mutex);
+		i++;
+	}
+	pthread_mutex_destroy(&simulation->log_mutex);
+}
+
 /***
  * @brief Parse the inputs and initialize the simulation structure
  * 1. We allocate memory for the simulation structure and the table structure.
@@ -55,6 +68,7 @@ t_simulation	*parse_inputs(char **argv)
 	int				mini_nbr_meals;
 
 	simulation = ft_calloc(1, sizeof(t_simulation));
+	simulation->log_lst = NULL;
 	simulation->table = ft_calloc(1, sizeof(t_table));
 	simulation->table->num_philosophers = ft_atoi(argv[1]);
 	simulation->table->time_to_die = ft_atoi(argv[2]);
@@ -64,11 +78,13 @@ t_simulation	*parse_inputs(char **argv)
 		mini_nbr_meals = ft_atoi(argv[5]);
 	else
 		mini_nbr_meals = INT_MAX;
-	simulation->table->forks = \
+	simulation->table->forks = (t_fork *) \
 		ft_calloc(simulation->table->num_philosophers, sizeof(t_fork));
 	init_forks(simulation);
-	simulation->philosophers = \
+	pthread_mutex_init(&simulation->log_mutex, NULL);
+	simulation->philosophers = (t_philosopher *) \
 		ft_calloc(simulation->table->num_philosophers, sizeof(t_philosopher));
+	simulation->table->philosophers = simulation->philosophers;
 	init_philosophers(simulation, mini_nbr_meals);
 	simulation->table->start_time = current_time();
 	return (simulation);

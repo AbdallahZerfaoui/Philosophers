@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 11:39:26 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/11/29 11:39:27 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/11/30 15:51:17 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ void	*ft_calloc(size_t nitems, size_t size)
 	void	*ptr;
 	size_t	total_size;
 
+	if (nitems != 0 && size > SIZE_MAX / nitems)
+		return (NULL);
 	total_size = nitems * size;
 	ptr = malloc(total_size);
 	if (ptr == NULL)
@@ -61,4 +63,23 @@ int	ft_atoi(const char *str)
 	while (str[i] >= '0' && str[i] <= '9')
 		res = res * 10 + (str[i++] - '0');
 	return (sign * res);
+}
+
+char	*ft_strdup(const char *s)
+{
+	char	*ptr;
+	size_t	size;
+
+	size = 0;
+	while (s[size])
+		size++;
+	ptr = (char *)ft_calloc(size + 1, sizeof(char));
+	if (!ptr)
+		return (NULL);
+	while (size > 0)
+	{
+		ptr[size - 1] = s[size - 1];
+		size--;
+	}
+	return (ptr);
 }

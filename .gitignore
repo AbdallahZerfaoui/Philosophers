@@ -1,4 +1,7 @@
 // Basic
+.DS_Store
+.vscode
+*.dSYM
 *.md
 test*
 
