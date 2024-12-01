@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 17:56:50 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/11/30 20:50:45 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:54:43 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,12 +102,12 @@ void	*philosopher_routine(t_philosopher *philosopher)
 	table = philosopher->simulation->table;
 	get_forks_ids(philosopher->id, &left_fork, &right_fork,
 		table->num_philosophers);
-	while (1)
+	while (!is_simulation_over(philosopher->simulation))
 	{
 		take_forks(philosopher, philosopher->id % 2);
 		eat(philosopher);
 		get_a_nap(philosopher);
-		think(philosopher, time_to_think);       
+		think(philosopher, time_to_think);
 	}
 	return (NULL);
 }

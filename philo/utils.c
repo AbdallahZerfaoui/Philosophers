@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 11:39:33 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/11/30 21:08:57 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:56:04 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,9 @@ int	alles_gut(t_simulation *simulation)
 		if (time > simulation->table->time_to_die)
 		{
 			// time = current_time() - simulation->table->philosophers[i].last_meal_time;
-			printf("%lld - philo : %d - died - time to die :\n", time, i);
- 			print_action(simulation->table, i, "died");
+			// printf("%lld - philo : %d - died - time to die :\n", time, i);
+ 			// print_action(simulation->table, i, "died");
+			log_action(simulation, i, "died");
 			return (0);
 		}
 		i++;
@@ -105,4 +106,11 @@ int	dinner_is_over(t_simulation *simulation)
 		i++;
 	}
 	return (1);
+}
+
+int is_simulation_over(t_simulation *simulation)
+{
+	if (!alles_gut(simulation) || dinner_is_over(simulation))
+		return (1);
+	return (0);
 }

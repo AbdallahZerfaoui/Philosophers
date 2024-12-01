@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 14:58:47 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/11/30 21:14:16 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/01 13:24:54 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ long long				current_time(void);
 // Utils - Simulation
 int						alles_gut(t_simulation *simulation);
 int						dinner_is_over(t_simulation *simulation);
+int						is_simulation_over(t_simulation *simulation);
 
 // Initialization
 t_simulation			*parse_inputs(char **argv);
