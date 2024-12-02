@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 15:18:01 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/11/30 20:45:05 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/01 13:44:17 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,18 +92,18 @@ int	log_size(t_log *lst)
 	return (len);
 }
 
-void	print_logs(t_log *log_lst)
-{
-	t_log	*current;
+// void	print_logs(t_log *log_lst)
+// {
+// 	t_log	*current;
 
-	if (log_lst == NULL)
-		return ;
-	current = log_lst;
-	printf("Size of the log: %d\n", log_size(log_lst));
-	while (current != NULL)
-	{
-		printf("%lld - philo : %d - %s\n",
-			current->timestamp, current->philo_id, current->action);
-		current = current->next;
-	}
-}
+// 	if (log_lst == NULL)
+// 		return ;
+// 	current = log_lst;
+// 	printf("Size of the log: %d\n", log_size(log_lst));
+// 	while (current != NULL)
+// 	{
+// 		printf("%lld - philo : %d - %s\n",
+// 			current->timestamp, current->philo_id, current->action);
+// 		current = current->next;
+// 	}
+// }

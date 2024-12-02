@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 15:17:03 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/11/30 21:57:47 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/02 11:26:04 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,25 @@ static void	run_simulation(t_simulation *simulation)
 	i = 0;
 	while (i < simulation->table->num_philosophers)
 	{
+		simulation->philosophers[i].last_meal_time = current_time();
 		pthread_create(&simulation->philosophers[i].thread, NULL,
 			(void *)philosopher_routine, &simulation->philosophers[i]);
 		printf("philo %d has started\n", i);
+		// sleep_ms(100 * i + 100);
 		i++;
 	}
 	duration = 0;
+	// printf("mini meals : %d\n", simulation->philosophers[0].mini_nbr_meals);
 	while (!is_simulation_over(simulation) && duration < SIMU_DURATION)
 	{
 		duration = current_time() - simulation->table->start_time;
+		// printf("alles gut : %d\n", simulation->someone_died);
 	}
 	i = 0;
 	while (i < simulation->table->num_philosophers)
 	{
 		pthread_join(simulation->philosophers[i].thread, NULL);
-		printf("philo %d has finished\n", i);
+		// printf("philo abdallah %d has finished\n", i);
 		i++;
 	}
 }
@@ -60,10 +64,10 @@ int	main(int argc, char **argv)
 		run_simulation(simulation);
 	}
 	destroy_mutexes(simulation);
-	if (simulation->log_lst != NULL)
-	{
-		print_logs(simulation->log_lst);
-	}
+	// if (simulation->log_lst != NULL)
+	// {
+	// 	print_logs(simulation->log_lst);
+	// }
 	free_simulation(simulation);
 	return (0);
 }

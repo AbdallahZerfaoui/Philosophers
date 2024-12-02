@@ -6,11 +6,36 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 17:56:50 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/11/30 21:54:43 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/01 20:14:57 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	report_death(t_philosopher *philosopher)
+{
+	t_simulation	*simulation;
+
+	simulation = philosopher->simulation;
+	pthread_mutex_lock(&simulation->death_mutex);
+	simulation->someone_died = 1;
+	print_action(simulation, philosopher->id, "died");
+	pthread_mutex_unlock(&simulation->death_mutex);
+}
+
+int	is_alive(t_philosopher *philosopher)
+{
+	long long	time;
+
+	time = current_time() - philosopher->last_meal_time;
+	if (time > philosopher->simulation->table->time_to_die)
+	{
+		// printf("last meal : %lld, he died at : %lld\n",
+		// 	philosopher->last_meal_time, time);
+		return (0);
+	}
+	return (1);
+}
 
 /***
  * @brief The philosopher takes the forks
@@ -18,37 +43,57 @@
  */
 static void	take_forks(t_philosopher *philosopher, int side)
 {
-	t_table	*table;
-	int		left_fork;
-	int		right_fork;
+	t_simulation	*simulation;
+	t_table			*table;
+	int				left_fork;
+	int				right_fork;
 
-	table = philosopher->simulation->table;
+	simulation = philosopher->simulation;
+	table = simulation->table;
 	get_forks_ids(philosopher->id, &left_fork, &right_fork,
-		table->num_philosophers);
-	if (side == 0)
+		simulation->table->num_philosophers);
+	if (is_alive(philosopher))
 	{
-		pthread_mutex_lock(&table->forks[left_fork].mutex);
-		// print_action(table, philosopher->id, "has taken the left fork");
-		log_action(philosopher->simulation, philosopher->id,
-			"has taken the left fork");
-		pthread_mutex_lock(&table->forks[right_fork].mutex);
-		// print_action(table, philosopher->id, "has taken the right fork");
-		log_action(philosopher->simulation, philosopher->id,
-			"has taken the right fork");
+		if (side == 0)
+		{
+			pthread_mutex_lock(&table->forks[left_fork].fork_mutex);
+			pthread_mutex_lock(&table->nbr_forks_mutex);
+			table->nbr_forks--;
+			pthread_mutex_unlock(&table->nbr_forks_mutex);
+			print_action(simulation, philosopher->id,
+				"has taken the left fork");
+			pthread_mutex_lock(&table->forks[right_fork].fork_mutex);
+			pthread_mutex_lock(&table->nbr_forks_mutex);
+			table->nbr_forks--;
+			pthread_mutex_unlock(&table->nbr_forks_mutex);
+			print_action(simulation, philosopher->id,
+				"has taken the right fork");
+		}
+		else
+		{
+			pthread_mutex_lock(&table->forks[right_fork].fork_mutex);
+			pthread_mutex_lock(&table->nbr_forks_mutex);
+			table->nbr_forks--;
+			pthread_mutex_unlock(&table->nbr_forks_mutex);
+			print_action(simulation, philosopher->id,
+				"has taken the right fork");
+			pthread_mutex_lock(&table->forks[left_fork].fork_mutex);
+			pthread_mutex_lock(&table->nbr_forks_mutex);
+			table->nbr_forks--;
+			pthread_mutex_unlock(&table->nbr_forks_mutex);
+			print_action(simulation, philosopher->id,
+				"has taken the left fork");
+		}
 	}
 	else
 	{
-		pthread_mutex_lock(&table->forks[right_fork].mutex);
-		// print_action(table, philosopher->id, "has taken the right fork");
-		log_action(philosopher->simulation, philosopher->id,
-			"has taken the right fork");
-		pthread_mutex_lock(&table->forks[left_fork].mutex);
-		// print_action(table, philosopher->id, "has taken the left fork");
-		log_action(philosopher->simulation, philosopher->id,
-			"has taken the left fork");
+		report_death(philosopher);
 	}
 }
-
+/**
+ * @note last meal time is the moment when the philosopher started eating
+ * and not when he finished eating
+ */
 static void	eat(t_philosopher *philosopher)
 {
 	t_table	*table;
@@ -58,17 +103,34 @@ static void	eat(t_philosopher *philosopher)
 	table = philosopher->simulation->table;
 	get_forks_ids(philosopher->id, &left_fork, &right_fork,
 		table->num_philosophers);
-	// print_action(table, philosopher->id, "is eating");
-	log_action(philosopher->simulation, philosopher->id, "is eating");
-	sleep_ms(table->time_to_eat);
-	philosopher->last_meal_time = current_time();
-	pthread_mutex_unlock(&table->forks[left_fork].mutex);
-	log_action(philosopher->simulation, philosopher->id,
-		"has released the left fork");
-	pthread_mutex_unlock(&table->forks[right_fork].mutex);
-	log_action(philosopher->simulation, philosopher->id,
-		"has released the right fork");
-	philosopher->times_eaten++;
+	if (is_alive(philosopher))
+	{
+		print_action(philosopher->simulation, philosopher->id, "is eating");
+		philosopher->last_meal_time = current_time();
+		sleep_ms(table->time_to_eat);
+		pthread_mutex_unlock(&table->forks[left_fork].fork_mutex);
+		pthread_mutex_lock(&table->nbr_forks_mutex);
+		table->nbr_forks++;
+		pthread_mutex_unlock(&table->nbr_forks_mutex);
+		print_action(philosopher->simulation, philosopher->id,
+			"has released the left fork");
+		pthread_mutex_unlock(&table->forks[right_fork].fork_mutex);
+		pthread_mutex_lock(&table->nbr_forks_mutex);
+		table->nbr_forks++;
+		pthread_mutex_unlock(&table->nbr_forks_mutex);
+		print_action(philosopher->simulation, philosopher->id,
+			"has released the right fork");
+		philosopher->times_eaten++;
+	}
+	else
+	{
+		report_death(philosopher);
+		pthread_mutex_unlock(&table->forks[left_fork].fork_mutex);
+		pthread_mutex_unlock(&table->forks[right_fork].fork_mutex);
+		pthread_mutex_lock(&table->nbr_forks_mutex);
+		table->nbr_forks += 2;
+		pthread_mutex_unlock(&table->nbr_forks_mutex);
+	}
 }
 
 static void	get_a_nap(t_philosopher *philosopher)
@@ -76,19 +138,36 @@ static void	get_a_nap(t_philosopher *philosopher)
 	t_table	*table;
 
 	table = philosopher->simulation->table;
-	// print_action(table, philosopher->id, "is sleeping");
-	log_action(philosopher->simulation, philosopher->id, "is sleeping");
-	sleep_ms(table->time_to_sleep);
+	if (is_alive(philosopher))
+	{
+		print_action(philosopher->simulation, philosopher->id, "is sleeping");
+		sleep_ms(table->time_to_sleep);
+	}
+	else
+	{
+		report_death(philosopher);
+	}
 }
 
 static void	think(t_philosopher *philosopher, int time_to_think)
 {
-	t_table	*table;
+	t_table		*table;
+	long long	start;
 
 	table = philosopher->simulation->table;
-	// print_action(table, philosopher->id, "is thinking");
-	log_action(philosopher->simulation, philosopher->id, "is thinking");
-	sleep_ms(time_to_think);
+	start = current_time();
+	if (is_alive(philosopher))
+	{
+		print_action(philosopher->simulation, philosopher->id, "is thinking");
+		while (is_alive(philosopher) && current_time() - start < time_to_think)
+		{
+			sleep_ms(MINI_TIME);
+		}
+		if (!is_alive(philosopher))
+		{
+			report_death(philosopher);
+		}
+	}
 }
 
 void	*philosopher_routine(t_philosopher *philosopher)
@@ -104,10 +183,30 @@ void	*philosopher_routine(t_philosopher *philosopher)
 		table->num_philosophers);
 	while (!is_simulation_over(philosopher->simulation))
 	{
-		take_forks(philosopher, philosopher->id % 2);
-		eat(philosopher);
-		get_a_nap(philosopher);
-		think(philosopher, time_to_think);
+		if (table->num_philosophers > 1)
+		{
+			if (is_simulation_over(philosopher->simulation))
+				break ;
+			take_forks(philosopher, philosopher->id % 2);
+			if (is_simulation_over(philosopher->simulation))
+				break ;
+			eat(philosopher);
+			if (is_simulation_over(philosopher->simulation))
+				break ;
+			get_a_nap(philosopher);
+			if (is_simulation_over(philosopher->simulation))
+				break ;
+			think(philosopher, time_to_think);
+		}
+		else
+		{
+			if (is_simulation_over(philosopher->simulation))
+				break ;
+			get_a_nap(philosopher);
+			if (is_simulation_over(philosopher->simulation))
+				break ;
+			think(philosopher, time_to_think);
+		}
 	}
 	return (NULL);
 }

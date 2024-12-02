@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra -Werror
 
 SRC = main.c init.c philosopher.c \
 	utils.c simulation.c errors.c \
-	memory_management.c basic.c logs.c
+	memory_management.c basic.c
 OBJ = $(SRC:.c=.o)
 
 all: $(EXE)

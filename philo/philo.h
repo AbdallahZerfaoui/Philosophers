@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 14:58:47 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/01 13:24:54 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/01 20:01:47 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,10 @@
 
 # define MINIMUM_INPUTS 5
 # define ALL_INPUTS 6
-# define TIME_TO_THINK 250
-# define SIMU_DURATION 2000
+# define TIME_TO_THINK 100
+# define SIMU_DURATION 5000
 # define ACTION_STR_LEN 50
+# define MINI_TIME 10
 
 // Action description (e.g., "is eating")
 typedef struct s_log
@@ -39,7 +40,7 @@ typedef struct s_log
 typedef struct s_fork
 {
 	int					id;
-	pthread_mutex_t		mutex;
+	pthread_mutex_t		fork_mutex;
 }						t_fork;
 
 typedef struct s_philosopher
@@ -59,6 +60,8 @@ typedef struct s_table
 	long long			time_to_eat;
 	long long			time_to_sleep;
 	t_fork				*forks;
+	int					nbr_forks;
+	pthread_mutex_t		nbr_forks_mutex;
 	t_philosopher		*philosophers;
 	long long			start_time;
 }						t_table;
@@ -67,8 +70,9 @@ typedef struct s_simulation
 {
 	t_table				*table;
 	t_philosopher		*philosophers;
-	t_log				*log_lst;
-	pthread_mutex_t		log_mutex;
+	int					someone_died;
+	pthread_mutex_t		print_mutex;
+	pthread_mutex_t		death_mutex;
 }						t_simulation;
 
 // Errors
@@ -78,7 +82,7 @@ void					handle_missing_values(void);
 void					free_simulation(t_simulation *simulation);
 
 // Utils
-void					print_action(t_table *table, int id,
+void					print_action(t_simulation *simulation, int id,
 							const char *action);
 void					log_action(t_simulation *simulation, int philo_id,
 							const char *action);

@@ -4,5 +4,7 @@
 *.dSYM
 *.md
 test*
+*.txt
+./*.txt
 
 // Specific for the project
