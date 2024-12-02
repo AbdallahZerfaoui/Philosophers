@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 15:45:59 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/01 20:13:52 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/02 20:49:23 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ t_simulation	*parse_inputs(char **argv)
 
 	simulation = ft_calloc(1, sizeof(t_simulation));
 	simulation->someone_died = 0;
+	simulation->someone_starved = 0;
 	simulation->table = ft_calloc(1, sizeof(t_table));
 	simulation->table->num_philosophers = ft_atoi(argv[1]);
 	simulation->table->nbr_forks = ft_atoi(argv[1]);
@@ -84,6 +85,7 @@ t_simulation	*parse_inputs(char **argv)
 	init_forks(simulation);
 	pthread_mutex_init(&simulation->print_mutex, NULL);
 	pthread_mutex_init(&simulation->death_mutex, NULL);
+	pthread_mutex_init(&simulation->starvation_mutex, NULL);
 	pthread_mutex_init(&simulation->table->nbr_forks_mutex, NULL);
 	simulation->philosophers = (t_philosopher *) \
 		ft_calloc(simulation->table->num_philosophers, sizeof(t_philosopher));

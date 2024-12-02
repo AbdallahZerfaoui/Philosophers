@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 17:56:50 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/02 13:01:10 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/02 20:55:50 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	report_death(t_philosopher *philosopher)
 
 	simulation = philosopher->simulation;
 	pthread_mutex_lock(&simulation->death_mutex);
-	simulation->someone_died = 1;
+	simulation->someone_died = philosopher->id + 1;
 	print_action(simulation, philosopher->id, "died");
 	pthread_mutex_unlock(&simulation->death_mutex);
 }
@@ -101,13 +101,16 @@ static void	take_forks(t_philosopher *philosopher, int side)
  */
 static void	eat(t_philosopher *philosopher)
 {
-	t_table	*table;
-	int		left_fork;
-	int		right_fork;
+	t_table			*table;
+	int				left_fork;
+	int				right_fork;
+	t_forks_data	forks_data;
 
 	table = philosopher->simulation->table;
 	get_forks_ids(philosopher->id, &left_fork, &right_fork,
 		table->num_philosophers);
+	sprintf(forks_data.message_left, "has taken the left fork %d", left_fork);
+	sprintf(forks_data.message_right, "has taken the right fork %d", right_fork);
 	if (is_alive(philosopher))
 	{
 		print_action(philosopher->simulation, philosopher->id, "is eating");
@@ -118,13 +121,13 @@ static void	eat(t_philosopher *philosopher)
 		table->nbr_forks++;
 		pthread_mutex_unlock(&table->nbr_forks_mutex);
 		print_action(philosopher->simulation, philosopher->id,
-			"has released the left fork");
+			forks_data.message_left);
 		pthread_mutex_unlock(&table->forks[right_fork].fork_mutex);
 		pthread_mutex_lock(&table->nbr_forks_mutex);
 		table->nbr_forks++;
 		pthread_mutex_unlock(&table->nbr_forks_mutex);
 		print_action(philosopher->simulation, philosopher->id,
-			"has released the right fork");
+			forks_data.message_right);
 		philosopher->times_eaten++;
 	}
 	else
@@ -154,25 +157,29 @@ static void	get_a_nap(t_philosopher *philosopher)
 	}
 }
 
-static void	think(t_philosopher *philosopher, int time_to_think)
-{
-	t_table		*table;
-	long long	start;
+// static void	think(t_philosopher *philosopher, int time_to_think)
+// {
+// 	t_table		*table;
+// 	long long	start;
 
-	table = philosopher->simulation->table;
-	start = current_time();
-	if (is_alive(philosopher))
-	{
-		print_action(philosopher->simulation, philosopher->id, "is thinking");
-		while (is_alive(philosopher) && current_time() - start < time_to_think)
-		{
-			sleep_ms(MINI_TIME);
-		}
-		if (!is_alive(philosopher))
-		{
-			report_death(philosopher);
-		}
-	}
+// 	table = philosopher->simulation->table;
+// 	start = current_time();
+// 	if (is_alive(philosopher))
+// 	{
+// 		print_action(philosopher->simulation, philosopher->id, "is thinking");
+// 		while (is_alive(philosopher) && current_time() - start < time_to_think)
+// 		{
+// 			sleep_ms(MINI_TIME);
+// 		}
+// 		if (!is_alive(philosopher))
+// 		{
+// 			report_death(philosopher);
+// 		}
+// 	}
+// }
+static void think(t_philosopher *philosopher)
+{
+	print_action(philosopher->simulation, philosopher->id, "is thinking");
 }
 
 void	*philosopher_routine(t_philosopher *philosopher)
@@ -180,9 +187,7 @@ void	*philosopher_routine(t_philosopher *philosopher)
 	t_table	*table;
 	int		left_fork;
 	int		right_fork;
-	int		time_to_think;
 
-	time_to_think = TIME_TO_THINK;
 	table = philosopher->simulation->table;
 	get_forks_ids(philosopher->id, &left_fork, &right_fork,
 		table->num_philosophers);
@@ -201,16 +206,16 @@ void	*philosopher_routine(t_philosopher *philosopher)
 			get_a_nap(philosopher);
 			if (is_simulation_over(philosopher->simulation))
 				break ;
-			think(philosopher, time_to_think);
+			think(philosopher);
 		}
 		else
 		{
 			if (is_simulation_over(philosopher->simulation))
 				break ;
 			get_a_nap(philosopher);
-			if (is_simulation_over(philosopher->simulation))
+			if (is_simulation_over(philosopher->simulation) && is_alive(philosopher))
 				break ;
-			think(philosopher, time_to_think);
+			think(philosopher);
 		}
 	}
 	return (NULL);

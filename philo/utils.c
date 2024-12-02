@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 11:39:33 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/02 12:58:38 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/02 21:14:23 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,11 @@ void	print_action(t_simulation *simulation, int philo_id, const char *action)
 
 	timestamp = current_time() - simulation->table->start_time;
 	pthread_mutex_lock(&simulation->print_mutex);
+	if (simulation->someone_died)
+	{
+		pthread_mutex_unlock(&simulation->print_mutex);
+		return ;
+	}
 	printf("%lld - philo : %d - %s - Nforks : %d\n", timestamp, philo_id,
 		action, simulation->table->nbr_forks);
 	if (timestamp < 0)
@@ -137,4 +142,50 @@ int	is_simulation_over(t_simulation *simulation)
 	if (simulation->someone_died || dinner_is_over(simulation))
 		return (1);
 	return (0);
+}
+
+void	print_simu_status(t_simulation *simulation)
+{
+	int	i;
+
+	printf("someone died : %d\n", simulation->someone_died - 1);
+	if (simulation->someone_died)
+	{
+		i = simulation->someone_died - 1;
+		printf("last meal of %d at %lld\n", i,
+			simulation->philosophers[i].last_meal_time
+			- simulation->table->start_time);
+	}
+	printf("dinner is over : %d\n", dinner_is_over(simulation));
+	printf("nbr of meals eaten by 0: %d\n",
+		simulation->philosophers[0].times_eaten);
+}
+
+void	report_starvation(t_philosopher *philosopher)
+{
+	t_simulation	*simulation;
+
+	simulation = philosopher->simulation;
+	pthread_mutex_lock(&simulation->starvation_mutex);
+	simulation->someone_starved = philosopher->id + 1;
+	// pthread_cond_signal(&simulation->starvation_done);
+	pthread_mutex_unlock(&simulation->starvation_mutex);
+}
+
+int	check_starvation(t_philosopher *philosopher)
+{
+	long long		time_left;
+	long long		starvation_limit;
+	t_simulation	*simulation;
+
+	simulation = philosopher->simulation;
+	starvation_limit = simulation->table->time_to_eat + 2 * MINI_TIME;
+	time_left = simulation->table->time_to_die
+		- (current_time() - philosopher->last_meal_time);
+	if (time_left > starvation_limit)
+	{
+		return (0);
+	}
+	report_starvation(philosopher);
+	return (1);
 }

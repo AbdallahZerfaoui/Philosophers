@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 15:17:03 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/02 11:26:04 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/02 18:49:55 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	run_simulation(t_simulation *simulation)
 		simulation->philosophers[i].last_meal_time = current_time();
 		pthread_create(&simulation->philosophers[i].thread, NULL,
 			(void *)philosopher_routine, &simulation->philosophers[i]);
-		printf("philo %d has started\n", i);
+		// printf("philo %d has started\n", i);
 		// sleep_ms(100 * i + 100);
 		i++;
 	}
@@ -68,6 +68,7 @@ int	main(int argc, char **argv)
 	// {
 	// 	print_logs(simulation->log_lst);
 	// }
+	print_simu_status(simulation);
 	free_simulation(simulation);
 	return (0);
 }

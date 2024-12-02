@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 14:58:47 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/02 12:49:36 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/02 21:03:40 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 
 # define MINIMUM_INPUTS 5
 # define ALL_INPUTS 6
-# define TIME_TO_THINK 100
 # define SIMU_DURATION 5000
 # define ACTION_STR_LEN 50
 # define MINI_TIME 10
@@ -79,6 +78,9 @@ typedef struct s_simulation
 	t_table				*table;
 	t_philosopher		*philosophers;
 	int					someone_died;
+	int					someone_starved;
+	pthread_mutex_t		starvation_mutex;
+	pthread_cond_t		starvation_done;
 	pthread_mutex_t		print_mutex;
 	pthread_mutex_t		death_mutex;
 }						t_simulation;
@@ -102,6 +104,10 @@ long long				current_time(void);
 int						alles_gut(t_simulation *simulation);
 int						dinner_is_over(t_simulation *simulation);
 int						is_simulation_over(t_simulation *simulation);
+void					print_simu_status(t_simulation *simulation);
+// Utils - Starvation
+void					report_starvation(t_philosopher *philosopher);
+int						check_starvation(t_philosopher *philosopher);
 
 // Initialization
 t_simulation			*parse_inputs(char **argv);
