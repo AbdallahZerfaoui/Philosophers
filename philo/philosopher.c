@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 17:56:50 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/01 20:14:57 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/02 13:01:10 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,16 @@ static void	take_forks(t_philosopher *philosopher, int side)
 	t_table			*table;
 	int				left_fork;
 	int				right_fork;
+	t_forks_data	forks_data;
 
 	simulation = philosopher->simulation;
 	table = simulation->table;
-	get_forks_ids(philosopher->id, &left_fork, &right_fork,
+	get_forks_ids(philosopher->id, &forks_data.left_fork, &forks_data.right_fork,
 		simulation->table->num_philosophers);
+	left_fork = forks_data.left_fork;
+	right_fork = forks_data.right_fork;
+	sprintf(forks_data.message_left, "has taken the left fork %d", left_fork);
+	sprintf(forks_data.message_right, "has taken the right fork %d", right_fork);
 	if (is_alive(philosopher))
 	{
 		if (side == 0)
@@ -61,13 +66,13 @@ static void	take_forks(t_philosopher *philosopher, int side)
 			table->nbr_forks--;
 			pthread_mutex_unlock(&table->nbr_forks_mutex);
 			print_action(simulation, philosopher->id,
-				"has taken the left fork");
+				forks_data.message_left);
 			pthread_mutex_lock(&table->forks[right_fork].fork_mutex);
 			pthread_mutex_lock(&table->nbr_forks_mutex);
 			table->nbr_forks--;
 			pthread_mutex_unlock(&table->nbr_forks_mutex);
 			print_action(simulation, philosopher->id,
-				"has taken the right fork");
+				forks_data.message_right);
 		}
 		else
 		{
@@ -76,13 +81,13 @@ static void	take_forks(t_philosopher *philosopher, int side)
 			table->nbr_forks--;
 			pthread_mutex_unlock(&table->nbr_forks_mutex);
 			print_action(simulation, philosopher->id,
-				"has taken the right fork");
+				forks_data.message_right);
 			pthread_mutex_lock(&table->forks[left_fork].fork_mutex);
 			pthread_mutex_lock(&table->nbr_forks_mutex);
 			table->nbr_forks--;
 			pthread_mutex_unlock(&table->nbr_forks_mutex);
 			print_action(simulation, philosopher->id,
-				"has taken the left fork");
+				forks_data.message_left);
 		}
 	}
 	else

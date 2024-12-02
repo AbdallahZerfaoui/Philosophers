@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 14:58:47 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/01 20:01:47 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/02 12:49:36 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,14 @@ typedef struct s_log
 	char				*action;
 	struct s_log		*next;
 }						t_log;
+
+typedef struct s_forks_data
+{
+	int					left_fork;
+	char				message_left[256];
+	int					right_fork;
+	char				message_right[256];
+}						t_forks_data;
 
 typedef struct s_fork
 {

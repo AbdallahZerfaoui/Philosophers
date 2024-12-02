@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 11:39:33 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/02 12:01:38 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/02 12:58:38 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	get_forks_ids(int philo_id, int *left_fork, int *right_fork,
 		int num_philosophers)
 {
 	*left_fork = philo_id;
-	*right_fork = (philo_id - 1) % num_philosophers;
+	*right_fork = (philo_id + num_philosophers - 1) % num_philosophers;
 }
 
 /**
