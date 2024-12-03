@@ -1,21 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   memory_management.c                                :+:      :+:    :+:   */
+/*   maths.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/29 21:03:25 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/03 17:52:52 by azerfaou         ###   ########.fr       */
+/*   Created: 2024/12/03 15:19:48 by azerfaou          #+#    #+#             */
+/*   Updated: 2024/12/03 15:20:26 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	free_simulation(t_simulation *simulation)
+int	ft_abs(int x)
 {
-	free(simulation->table->forks);
-	free(simulation->table->philosophers);
-	free(simulation->table);
-	free(simulation);
+	if (x < 0)
+		return (-x);
+	return (x);
 }

@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 11:39:33 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/02 21:14:23 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:26:50 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ long long	current_time(void)
 	struct timespec	ts;
 	long long		time;
 
-	clock_gettime(CLOCK_MONOTONIC, &ts);
+	clock_gettime(CLOCK_MONOTONIC, &ts); // clock_gettime is more precise than gettimeofday but forbiden in the subject
 	time = (ts.tv_sec * 1000000000LL + ts.tv_nsec) / 1000000LL;
 	return (time);
 }
@@ -38,6 +38,9 @@ void	sleep_ms(int ms)
 		usleep(1000LL * (ms - (current_time() - start)));
 }
 
+/**
+ * @note i don't know why im checking if someone died in the print_action function
+ */
 void	print_action(t_simulation *simulation, int philo_id, const char *action)
 {
 	long long	timestamp;
@@ -51,11 +54,11 @@ void	print_action(t_simulation *simulation, int philo_id, const char *action)
 	}
 	printf("%lld - philo : %d - %s - Nforks : %d\n", timestamp, philo_id,
 		action, simulation->table->nbr_forks);
-	if (timestamp < 0)
-	{
-		pthread_mutex_unlock(&simulation->print_mutex);
-		exit(1);
-	}
+	// if (timestamp < 0)
+	// {
+	// 	pthread_mutex_unlock(&simulation->print_mutex);
+	// 	exit(1);
+	// }
 	pthread_mutex_unlock(&simulation->print_mutex);
 }
 
@@ -147,8 +150,11 @@ int	is_simulation_over(t_simulation *simulation)
 void	print_simu_status(t_simulation *simulation)
 {
 	int	i;
+	int	dead_id;
 
-	printf("someone died : %d\n", simulation->someone_died - 1);
+	dead_id = simulation->someone_died - 1;
+	printf("someone died : %d\n", dead_id);
+	printf("someone is starving : %d\n", simulation->someone_starving - 1);
 	if (simulation->someone_died)
 	{
 		i = simulation->someone_died - 1;
@@ -161,31 +167,22 @@ void	print_simu_status(t_simulation *simulation)
 		simulation->philosophers[0].times_eaten);
 }
 
-void	report_starvation(t_philosopher *philosopher)
+
+void	handle_greediness(t_philosopher philosopher)
 {
-	t_simulation	*simulation;
+	long long	ref_time;
+	long long	now;
+	long long	margin;
+	long long	time_left;
 
-	simulation = philosopher->simulation;
-	pthread_mutex_lock(&simulation->starvation_mutex);
-	simulation->someone_starved = philosopher->id + 1;
-	// pthread_cond_signal(&simulation->starvation_done);
-	pthread_mutex_unlock(&simulation->starvation_mutex);
-}
-
-int	check_starvation(t_philosopher *philosopher)
-{
-	long long		time_left;
-	long long		starvation_limit;
-	t_simulation	*simulation;
-
-	simulation = philosopher->simulation;
-	starvation_limit = simulation->table->time_to_eat + 2 * MINI_TIME;
-	time_left = simulation->table->time_to_die
-		- (current_time() - philosopher->last_meal_time);
-	if (time_left > starvation_limit)
+	ref_time = philosopher.times_eaten * (philosopher.simulation->table->time_to_eat
+			+ philosopher.simulation->table->time_to_sleep);
+	now = current_time() - philosopher.simulation->table->start_time;
+	margin = philosopher.simulation->table->time_to_eat / 4;
+	time_left = philosopher.simulation->table->time_to_die - (current_time() - philosopher.last_meal_time);
+	if (now > margin && ft_abs(now - ref_time) < margin && time_left > margin)
 	{
-		return (0);
+		print_action(philosopher.simulation, philosopher.id, "is greedy");
+		sleep_ms(GREEDINESS);
 	}
-	report_starvation(philosopher);
-	return (1);
 }

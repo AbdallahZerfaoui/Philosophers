@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 15:45:59 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/02 20:49:23 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:27:16 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,9 @@ void	destroy_mutexes(t_simulation *simulation)
 		i++;
 	}
 	pthread_mutex_destroy(&simulation->print_mutex);
+	pthread_mutex_destroy(&simulation->death_mutex);
+	pthread_mutex_destroy(&simulation->starvation_mutex);
+	pthread_mutex_destroy(&simulation->table->nbr_forks_mutex);
 }
 
 /***
@@ -69,7 +72,7 @@ t_simulation	*parse_inputs(char **argv)
 
 	simulation = ft_calloc(1, sizeof(t_simulation));
 	simulation->someone_died = 0;
-	simulation->someone_starved = 0;
+	simulation->someone_starving = 0;
 	simulation->table = ft_calloc(1, sizeof(t_table));
 	simulation->table->num_philosophers = ft_atoi(argv[1]);
 	simulation->table->nbr_forks = ft_atoi(argv[1]);

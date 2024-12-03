@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 15:17:03 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/02 18:49:55 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:23:04 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	run_simulation(t_simulation *simulation)
 {
 	int	i;
-	int	duration;
+	// int	duration;
 
 	i = 0;
 	while (i < simulation->table->num_philosophers)
@@ -24,16 +24,16 @@ static void	run_simulation(t_simulation *simulation)
 		pthread_create(&simulation->philosophers[i].thread, NULL,
 			(void *)philosopher_routine, &simulation->philosophers[i]);
 		// printf("philo %d has started\n", i);
-		// sleep_ms(100 * i + 100);
+		// sleep_ms(100 * i + 100); 
 		i++;
 	}
-	duration = 0;
-	// printf("mini meals : %d\n", simulation->philosophers[0].mini_nbr_meals);
-	while (!is_simulation_over(simulation) && duration < SIMU_DURATION)
-	{
-		duration = current_time() - simulation->table->start_time;
-		// printf("alles gut : %d\n", simulation->someone_died);
-	}
+	pthread_create(&simulation->monitor, NULL, (void *)monitoring_routine, simulation);
+	// duration = 0;
+	// while (!is_simulation_over(simulation) && duration < SIMU_DURATION)
+	// {
+	// 	duration = current_time() - simulation->table->start_time;
+	// 	// printf("alles gut : %d\n", simulation->someone_died);
+	// }
 	i = 0;
 	while (i < simulation->table->num_philosophers)
 	{
@@ -41,6 +41,7 @@ static void	run_simulation(t_simulation *simulation)
 		// printf("philo abdallah %d has finished\n", i);
 		i++;
 	}
+	pthread_join(simulation->monitor, NULL);
 }
 
 /***

@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 14:58:47 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/02 21:03:40 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:04:27 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # define SIMU_DURATION 5000
 # define ACTION_STR_LEN 50
 # define MINI_TIME 10
+# define GREEDINESS 10
 
 // Action description (e.g., "is eating")
 typedef struct s_log
@@ -77,13 +78,20 @@ typedef struct s_simulation
 {
 	t_table				*table;
 	t_philosopher		*philosophers;
+	pthread_t			monitor;
 	int					someone_died;
-	int					someone_starved;
+	int					someone_starving;
 	pthread_mutex_t		starvation_mutex;
 	pthread_cond_t		starvation_done;
 	pthread_mutex_t		print_mutex;
 	pthread_mutex_t		death_mutex;
 }						t_simulation;
+
+// Maths
+int						ft_abs(int x);
+
+// Monitor
+void					monitoring_routine(t_simulation *simulation);
 
 // Errors
 void					handle_missing_values(void);
@@ -108,6 +116,10 @@ void					print_simu_status(t_simulation *simulation);
 // Utils - Starvation
 void					report_starvation(t_philosopher *philosopher);
 int						check_starvation(t_philosopher *philosopher);
+// Utils - Philosophers
+void					report_death(t_philosopher *philosopher);
+int						is_alive(t_philosopher *philosopher);
+void					handle_greediness(t_philosopher philosopher);
 
 // Initialization
 t_simulation			*parse_inputs(char **argv);
