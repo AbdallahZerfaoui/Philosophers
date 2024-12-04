@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 14:58:47 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/04 19:24:09 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/04 20:42:50 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # define SIMU_DURATION 5000
 # define ACTION_STR_LEN 50
 # define MINI_TIME 10
-# define GREEDINESS 10
+# define GREEDINESS 30
 # define FORK_TIME_OUT 10
 
 // Action description (e.g., "is eating")

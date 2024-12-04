@@ -8,3 +8,5 @@ test*
 ./*.txt
 
 // Specific for the project
+
+backup/
