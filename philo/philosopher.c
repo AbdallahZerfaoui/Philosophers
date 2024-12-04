@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 17:56:50 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/04 19:25:22 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/04 20:05:06 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,29 +230,27 @@ void	*philosopher_routine(t_philosopher *philosopher)
 	{
 		if (table->num_philosophers >= 1)
 		{
-			if (is_simulation_over(philosopher->simulation))
-				break ;
+			// if (is_simulation_over(philosopher->simulation))
+			// 	break ;
 			think(philosopher);
 			handle_greediness(*philosopher);
-			// if (is_neighbor_starving(philosopher))
-			// 	wait_neighbor_to_eat(philosopher);
-			if (is_simulation_over(philosopher->simulation))
-				break ;
+			// if (is_simulation_over(philosopher->simulation))
+			// 	break ;
 			// take_forks(philosopher, philosopher->id % 2);
 			take_forks(philosopher, 0);
-			if (is_simulation_over(philosopher->simulation))
-			{
-				pthread_mutex_unlock(&table->forks[left_fork].fork_mutex);
-				print_action(philosopher->simulation, philosopher->id,
-					"has released the left fork");
-				pthread_mutex_unlock(&table->forks[right_fork].fork_mutex);
-				print_action(philosopher->simulation, philosopher->id,
-					"has released the right fork");
-				break ;
-			}
+			// if (is_simulation_over(philosopher->simulation))
+			// {
+			// 	pthread_mutex_unlock(&table->forks[left_fork].fork_mutex);
+			// 	print_action(philosopher->simulation, philosopher->id,
+			// 		"has released the left fork");
+			// 	pthread_mutex_unlock(&table->forks[right_fork].fork_mutex);
+			// 	print_action(philosopher->simulation, philosopher->id,
+			// 		"has released the right fork");
+			// 	break ;
+			// }
 			eat(philosopher);
-			if (is_simulation_over(philosopher->simulation))
-				break ;
+			// if (is_simulation_over(philosopher->simulation))
+			// 	break ;
 			get_a_nap(philosopher);
 		}
 		// if (dinner_is_over(philosopher->simulation))

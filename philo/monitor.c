@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:04:57 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/04 13:55:13 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/04 20:04:55 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,9 @@ void	monitoring_routine(t_simulation *simulation)
 			// printf("DINNER IS OVER\n");
 			// pthread_mutex_unlock(&simulation->print_mutex);
 			print_action(simulation, 0, "DINNER IS OVER");
-			exit(0);
+			break ;
 		}
+		
 	}
 }
 
