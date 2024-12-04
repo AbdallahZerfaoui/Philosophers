@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 11:39:33 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/03 20:26:50 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:32:07 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,3 +186,5 @@ void	handle_greediness(t_philosopher philosopher)
 		sleep_ms(GREEDINESS);
 	}
 }
+
+

@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 14:58:47 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/03 20:04:27 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/04 19:24:09 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # define ACTION_STR_LEN 50
 # define MINI_TIME 10
 # define GREEDINESS 10
+# define FORK_TIME_OUT 10
 
 // Action description (e.g., "is eating")
 typedef struct s_log
@@ -116,6 +117,8 @@ void					print_simu_status(t_simulation *simulation);
 // Utils - Starvation
 void					report_starvation(t_philosopher *philosopher);
 int						check_starvation(t_philosopher *philosopher);
+int						is_neighbor_starving(t_philosopher *philosopher);
+void					wait_neighbor_to_eat(t_philosopher *philosopher);
 // Utils - Philosophers
 void					report_death(t_philosopher *philosopher);
 int						is_alive(t_philosopher *philosopher);

@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:04:57 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/03 20:35:36 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/04 13:55:13 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,21 @@ void	monitoring_routine(t_simulation *simulation)
 	while (!simulation->someone_died)
 	{
 		i = 0;
+		// reset the starvation flag if the philosopher is not starving anymore
+		if (simulation->someone_starving && !check_starvation(&simulation->philosophers[simulation->someone_starving - 1]))
+		{
+			pthread_mutex_lock(&simulation->starvation_mutex);
+			simulation->someone_starving = 0;
+			pthread_mutex_unlock(&simulation->starvation_mutex);
+		}
+
 		while (i < simulation->table->num_philosophers)
 		{
 			if (!is_alive(&simulation->philosophers[i]))
 			{
 				report_death(&simulation->philosophers[i]);
-				// exit(1);
-				break ;
+				exit(1);
+				// break ;
 			}
 			if (check_starvation(&simulation->philosophers[i]) && !simulation->someone_starving)
 			{
@@ -44,8 +52,7 @@ void	monitoring_routine(t_simulation *simulation)
 			// printf("DINNER IS OVER\n");
 			// pthread_mutex_unlock(&simulation->print_mutex);
 			print_action(simulation, 0, "DINNER IS OVER");
-			break ;
-			// exit(0);
+			exit(0);
 		}
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 15:17:03 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/03 20:23:04 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/04 13:07:26 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	run_simulation(t_simulation *simulation)
 	while (i < simulation->table->num_philosophers)
 	{
 		pthread_join(simulation->philosophers[i].thread, NULL);
-		// printf("philo abdallah %d has finished\n", i);
+		printf("philo %d has finished\n", i);
 		i++;
 	}
 	pthread_join(simulation->monitor, NULL);

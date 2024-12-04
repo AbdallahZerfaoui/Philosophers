@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 17:56:50 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/03 19:53:08 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/04 19:25:22 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,20 @@ int	is_alive(t_philosopher *philosopher)
 	return (1);
 }
 
+int	take_fork_time_out(t_fork *fork, int philo_id)
+{
+	long long	start;
+
+	start = current_time();
+	while (current_time() - start < FORK_TIME_OUT + philo_id)
+	{
+		if (pthread_mutex_trylock(&fork->fork_mutex) == 0)
+		{
+			return (1);
+		}
+	}
+	return (0);
+}
 /***
  * @brief The philosopher takes the forks
  * so we lock the mutexes of the forks, no other philosopher can take them
@@ -66,11 +80,24 @@ static void	take_forks(t_philosopher *philosopher, int side)
 			table->nbr_forks--;
 			pthread_mutex_unlock(&table->nbr_forks_mutex);
 			print_action(simulation, philosopher->id, forks_data.message_left);
-			pthread_mutex_lock(&table->forks[right_fork].fork_mutex);
-			pthread_mutex_lock(&table->nbr_forks_mutex);
-			table->nbr_forks--;
-			pthread_mutex_unlock(&table->nbr_forks_mutex);
-			print_action(simulation, philosopher->id, forks_data.message_right);
+			// pthread_mutex_lock(&table->forks[right_fork].fork_mutex);
+
+			if (take_fork_time_out(&table->forks[right_fork], philosopher->id))
+			{
+				print_action(simulation, philosopher->id, forks_data.message_right);
+				pthread_mutex_lock(&table->nbr_forks_mutex);
+				table->nbr_forks--;
+				pthread_mutex_unlock(&table->nbr_forks_mutex);
+			}
+			else
+			{
+				pthread_mutex_unlock(&table->forks[left_fork].fork_mutex);
+				pthread_mutex_lock(&table->nbr_forks_mutex);
+				table->nbr_forks++;
+				pthread_mutex_unlock(&table->nbr_forks_mutex);
+				// print_action(simulation, philosopher->id, "has released the left fork");
+				take_forks(philosopher, 0);
+			}
 		}
 		else
 		{
@@ -203,10 +230,16 @@ void	*philosopher_routine(t_philosopher *philosopher)
 	{
 		if (table->num_philosophers >= 1)
 		{
-			handle_greediness(*philosopher);
 			if (is_simulation_over(philosopher->simulation))
 				break ;
-			take_forks(philosopher, philosopher->id % 2);
+			think(philosopher);
+			handle_greediness(*philosopher);
+			// if (is_neighbor_starving(philosopher))
+			// 	wait_neighbor_to_eat(philosopher);
+			if (is_simulation_over(philosopher->simulation))
+				break ;
+			// take_forks(philosopher, philosopher->id % 2);
+			take_forks(philosopher, 0);
 			if (is_simulation_over(philosopher->simulation))
 			{
 				pthread_mutex_unlock(&table->forks[left_fork].fork_mutex);
@@ -221,9 +254,6 @@ void	*philosopher_routine(t_philosopher *philosopher)
 			if (is_simulation_over(philosopher->simulation))
 				break ;
 			get_a_nap(philosopher);
-			if (is_simulation_over(philosopher->simulation))
-				break ;
-			think(philosopher);
 		}
 		// if (dinner_is_over(philosopher->simulation))
 		// 	break ;

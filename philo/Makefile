@@ -11,7 +11,7 @@ SRC = main.c init.c philosopher.c \
 	
 OBJ = $(SRC:.c=.o)
 
-all: $(EXE)
+all: art $(EXE)
 
 $(EXE): $(OBJ)
 	$(CC) $(CFLAGS) -I. -o $(EXE) $(OBJ)
@@ -24,3 +24,16 @@ fclean: clean
 	$(RM) -r *.dSYM
 
 re: fclean all
+
+art:
+	@echo " ____  _     _ _                       _                   ";
+	@echo "|  _ \| |__ (_) | ___  ___  ___  _ __ | |__   ___ _ __ ___ ";
+	@echo "| |_) | '_ \| | |/ _ \/ __|/ _ \| '_ \| '_ \ / _ \ '__/ __|";
+	@echo "|  __/| | | | | | (_) \__ \ (_) | |_) | | | |  __/ |  \__ \\";
+	@echo "|_|   |_| |_|_|_|\___/|___/\___/| .__/|_| |_|\___|_|  |___/";
+	@echo "                                |_|         by The Greatest";
+
+
+
+
+.PHONY: all clean fclean re

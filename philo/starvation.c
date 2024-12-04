@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 20:19:33 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/03 20:35:16 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:04:59 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,30 @@ int	check_starvation(t_philosopher *philosopher)
 	// if (!simulation->someone_starving)
 	// 	report_starvation(philosopher);
 	return (1);
+}
+
+int	is_neighbor_starving(t_philosopher *philosopher)
+{
+	int	starving_id;
+
+	starving_id = philosopher->simulation->someone_starving;
+	if (starving_id)
+		starving_id--;
+	if(ft_abs(philosopher->id - starving_id) == 1)
+		return (1);
+	return (0);
+}
+
+void	wait_neighbor_to_eat(t_philosopher *philosopher)
+{
+	int	print = 1;
+
+	while(is_neighbor_starving(philosopher))
+	{
+		if (print)
+			print_action(philosopher->simulation, philosopher->id, "is waiting for his neighbor to eat");
+		print = 0;
+		pthread_cond_wait(&philosopher->simulation->starvation_done, &philosopher->simulation->starvation_mutex);
+	}
+	print_action(philosopher->simulation, philosopher->id, "is not waiting anymore");
 }
