@@ -106,6 +106,7 @@ void	print_logs(t_log *log_lst)
 		// 	current->timestamp, current->philo_id, current->action);
 		printf("%lld %d %s\n",
 			current->timestamp, current->philo_id, current->action);
+		free_log(current);
 		current = current->next;
 	}
 }
