@@ -10,3 +10,4 @@ test*
 // Specific for the project
 
 backup/
+philo_ohne_log/

@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 11:39:33 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/04 16:32:07 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/05 12:29:51 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,40 +41,36 @@ void	sleep_ms(int ms)
 /**
  * @note i don't know why im checking if someone died in the print_action function
  */
-void	print_action(t_simulation *simulation, int philo_id, const char *action)
-{
-	long long	timestamp;
-
-	timestamp = current_time() - simulation->table->start_time;
-	pthread_mutex_lock(&simulation->print_mutex);
-	if (simulation->someone_died)
-	{
-		pthread_mutex_unlock(&simulation->print_mutex);
-		return ;
-	}
-	printf("%lld - philo : %d - %s - Nforks : %d\n", timestamp, philo_id,
-		action, simulation->table->nbr_forks);
-	// if (timestamp < 0)
-	// {
-	// 	pthread_mutex_unlock(&simulation->print_mutex);
-	// 	exit(1);
-	// }
-	pthread_mutex_unlock(&simulation->print_mutex);
-}
-
-// void	log_action(t_simulation *simulation, int philo_id, const char *action)
+// void	print_action(t_simulation *simulation, int philo_id, const char *action)
 // {
-// 	t_log		*log;
 // 	long long	timestamp;
 
 // 	timestamp = current_time() - simulation->table->start_time;
-// 	log = create_log(timestamp, philo_id, action);
-// 	if (log == NULL)
+// 	pthread_mutex_lock(&simulation->print_mutex);
+// 	if (simulation->someone_died)
+// 	{
+// 		pthread_mutex_unlock(&simulation->print_mutex);
 // 		return ;
-// 	pthread_mutex_lock(&simulation->log_mutex);
-// 	simulation->log_lst = add_log(simulation->log_lst, log);
-// 	pthread_mutex_unlock(&simulation->log_mutex);
+// 	}
+// 	// printf("%lld - philo : %d - %s - Nforks : %d\n", timestamp, philo_id,
+// 	// 	action, simulation->table->nbr_forks);
+// 	printf("%lld %d %s\n", timestamp, philo_id, action);
+// 	pthread_mutex_unlock(&simulation->print_mutex);
 // }
+
+void	log_action(t_simulation *simulation, int philo_id, const char *action)
+{
+	t_log		*log;
+	long long	timestamp;
+
+	timestamp = current_time() - simulation->table->start_time;
+	log = create_log(timestamp, philo_id, action);
+	if (log == NULL)
+		return ;
+	pthread_mutex_lock(&simulation->log_mutex);
+	simulation->log_lst = add_log(simulation->log_lst, log);
+	pthread_mutex_unlock(&simulation->log_mutex);
+}
 
 /***
  * @brief Get the forks ids for the philosopher with its given id
@@ -110,8 +106,8 @@ void	get_forks_ids(int philo_id, int *left_fork, int *right_fork,
 // 			time = current_time()
 // - simulation->table->philosophers[i].last_meal_time;
 // 			// printf("%lld - philo : %d - died - time to die :\n", time, i);
-// 			// print_action(simulation->table, i, "died");
-// 			print_action(simulation, i, "died");
+// 			// log_action(simulation->table, i, "died");
+// 			log_action(simulation, i, "died");
 // 			return (0);
 // 		}
 // 		i++;
@@ -163,28 +159,35 @@ void	print_simu_status(t_simulation *simulation)
 			- simulation->table->start_time);
 	}
 	printf("dinner is over : %d\n", dinner_is_over(simulation));
-	printf("nbr of meals eaten by 0: %d\n",
-		simulation->philosophers[0].times_eaten);
-}
-
-
-void	handle_greediness(t_philosopher philosopher)
-{
-	long long	ref_time;
-	long long	now;
-	long long	margin;
-	long long	time_left;
-
-	ref_time = philosopher.times_eaten * (philosopher.simulation->table->time_to_eat
-			+ philosopher.simulation->table->time_to_sleep);
-	now = current_time() - philosopher.simulation->table->start_time;
-	margin = philosopher.simulation->table->time_to_eat / 4;
-	time_left = philosopher.simulation->table->time_to_die - (current_time() - philosopher.last_meal_time);
-	if (now > margin && ft_abs(now - ref_time) < margin && time_left > margin)
+	// printf("nbr of meals eaten by 0: %d\n",
+	// 	simulation->philosophers[0].times_eaten);
+	printf("nbr of meals eaten by each philosopher : ");
+	for (int i = 0; i < simulation->table->num_philosophers; i++)
 	{
-		print_action(philosopher.simulation, philosopher.id, "is greedy");
-		sleep_ms(GREEDINESS);
+		printf("%d ", simulation->philosophers[i].times_eaten);
+		if (i == simulation->table->num_philosophers - 1)
+			printf("\n");
 	}
 }
+
+
+// void	handle_greediness(t_philosopher philosopher)
+// {
+// 	long long	ref_time;
+// 	long long	now;
+// 	long long	margin;
+// 	long long	time_left;
+
+// 	ref_time = philosopher.times_eaten * (philosopher.simulation->table->time_to_eat
+// 			+ philosopher.simulation->table->time_to_sleep);
+// 	now = current_time() - philosopher.simulation->table->start_time;
+// 	margin = philosopher.simulation->table->time_to_eat / 4;
+// 	time_left = philosopher.simulation->table->time_to_die - (current_time() - philosopher.last_meal_time);
+// 	if (now > margin && ft_abs(now - ref_time) < margin && time_left > margin)
+// 	{
+// 		log_action(philosopher.simulation, philosopher.id, "is greedy");
+// 		sleep_ms(GREEDINESS);
+// 	}
+// }
 
 

@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 20:19:33 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/04 17:04:59 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/05 15:16:26 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	report_starvation(t_philosopher *philosopher)
 	t_simulation	*simulation;
 
 	simulation = philosopher->simulation;
-	print_action(simulation, philosopher->id, "is starving");
+	log_action(simulation, philosopher->id, "is starving");
 	pthread_mutex_lock(&simulation->starvation_mutex);
 	simulation->someone_starving = philosopher->id + 1;
 	// pthread_cond_signal(&simulation->starvation_done);
@@ -55,16 +55,16 @@ int	is_neighbor_starving(t_philosopher *philosopher)
 	return (0);
 }
 
-void	wait_neighbor_to_eat(t_philosopher *philosopher)
-{
-	int	print = 1;
+// void	wait_neighbor_to_eat(t_philosopher *philosopher)
+// {
+// 	int	print = 1;
 
-	while(is_neighbor_starving(philosopher))
-	{
-		if (print)
-			print_action(philosopher->simulation, philosopher->id, "is waiting for his neighbor to eat");
-		print = 0;
-		pthread_cond_wait(&philosopher->simulation->starvation_done, &philosopher->simulation->starvation_mutex);
-	}
-	print_action(philosopher->simulation, philosopher->id, "is not waiting anymore");
-}
+// 	while(is_neighbor_starving(philosopher))
+// 	{
+// 		if (print)
+// 			log_action(philosopher->simulation, philosopher->id, "is waiting for his neighbor to eat");
+// 		print = 0;
+// 		pthread_cond_wait(&philosopher->simulation->starvation_done, &philosopher->simulation->starvation_mutex);
+// 	}
+// 	log_action(philosopher->simulation, philosopher->id, "is not waiting anymore");
+// }

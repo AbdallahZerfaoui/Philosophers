@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 14:58:47 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/04 20:42:50 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/05 20:01:55 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 # define ACTION_STR_LEN 50
 # define MINI_TIME 10
 # define GREEDINESS 30
-# define FORK_TIME_OUT 10
+# define FORK_TIME_OUT 1
 
 // Action description (e.g., "is eating")
 typedef struct s_log
@@ -79,6 +79,7 @@ typedef struct s_simulation
 {
 	t_table				*table;
 	t_philosopher		*philosophers;
+	t_log				*log_lst;
 	pthread_t			monitor;
 	int					someone_died;
 	int					someone_starving;
@@ -86,6 +87,7 @@ typedef struct s_simulation
 	pthread_cond_t		starvation_done;
 	pthread_mutex_t		print_mutex;
 	pthread_mutex_t		death_mutex;
+	pthread_mutex_t		log_mutex;
 }						t_simulation;
 
 // Maths
@@ -101,7 +103,7 @@ void					handle_missing_values(void);
 void					free_simulation(t_simulation *simulation);
 
 // Utils
-void					print_action(t_simulation *simulation, int id,
+void					log_action(t_simulation *simulation, int id,
 							const char *action);
 void					log_action(t_simulation *simulation, int philo_id,
 							const char *action);
@@ -124,6 +126,13 @@ void					report_death(t_philosopher *philosopher);
 int						is_alive(t_philosopher *philosopher);
 void					handle_greediness(t_philosopher philosopher);
 
+// Actions
+void					think(t_philosopher *philosopher);
+void					take_forks(t_philosopher *philosopher, int is_greedy);
+int						take_fork_time_out(t_fork *fork, int philo_id);
+void					eat(t_philosopher *philosopher);
+void					get_a_nap(t_philosopher *philosopher);
+
 // Initialization
 t_simulation			*parse_inputs(char **argv);
 void					destroy_mutexes(t_simulation *simulation);
@@ -142,6 +151,7 @@ t_log					*create_log(long long timestamp, int philo_id,
 t_log					*insert_after(t_log *lst, t_log *target, t_log *log);
 t_log					*add_log(t_log *log_lst, t_log *log);
 void					print_logs(t_log *log_lst);
+t_log					*print_logs_before(t_log *log_lst, long long limit);
 int						log_size(t_log *lst);
 
 #endif

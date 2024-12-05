@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:04:57 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/04 20:04:55 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/05 19:04:25 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@
 void	monitoring_routine(t_simulation *simulation)
 {
 	int	i;
+	int	death_detected;
 
+	death_detected = 0;
 	while (!simulation->someone_died)
 	{
 		i = 0;
@@ -34,27 +36,25 @@ void	monitoring_routine(t_simulation *simulation)
 
 		while (i < simulation->table->num_philosophers)
 		{
-			if (!is_alive(&simulation->philosophers[i]))
+			if (!is_alive(&simulation->philosophers[i]) && !death_detected)
 			{
 				report_death(&simulation->philosophers[i]);
-				exit(1);
-				// break ;
+				death_detected = 1;
+				// exit(1);
+				break ;
 			}
-			if (check_starvation(&simulation->philosophers[i]) && !simulation->someone_starving)
-			{
-				report_starvation(&simulation->philosophers[i]);
-			}
+			// if (check_starvation(&simulation->philosophers[i]) && !simulation->someone_starving)
+			// {
+			// 	report_starvation(&simulation->philosophers[i]);
+			// }
 			i++;
 		}
 		if (dinner_is_over(simulation))
 		{
-			// pthread_mutex_lock(&simulation->print_mutex);
-			// printf("DINNER IS OVER\n");
-			// pthread_mutex_unlock(&simulation->print_mutex);
-			print_action(simulation, 0, "DINNER IS OVER");
+			// log_action(simulation, 0, "DINNER IS OVER");
 			break ;
 		}
-		
+		simulation->log_lst = print_logs_before(simulation->log_lst, current_time() - simulation->table->start_time);
 	}
 }
 
@@ -70,7 +70,7 @@ void	monitoring_routine(t_simulation *simulation)
 // 			if (simulation->someone_died)
 // 			{
 // 				pthread_mutex_lock(&simulation->print_mutex);
-// 				print_action(simulation, simulation->someone_died - 1, "died");
+// 				log_action(simulation, simulation->someone_died - 1, "died");
 // 				pthread_mutex_unlock(&simulation->print_mutex);
 // 				exit(1);
 // 			}
@@ -84,7 +84,7 @@ void	monitoring_routine(t_simulation *simulation)
 // 		if (dinner_is_over(simulation))
 // 		{
 // 			pthread_mutex_lock(&simulation->print_mutex);
-// 			print_action(simulation, 0, "dinner is over");
+// 			log_action(simulation, 0, "dinner is over");
 // 			pthread_mutex_unlock(&simulation->print_mutex);
 // 			exit(0);
 // 		}

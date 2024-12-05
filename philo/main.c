@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 15:17:03 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/04 13:07:26 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/05 19:10:03 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	run_simulation(t_simulation *simulation)
 	while (i < simulation->table->num_philosophers)
 	{
 		pthread_join(simulation->philosophers[i].thread, NULL);
-		printf("philo %d has finished\n", i);
+		// printf("philo %d has finished\n", i);
 		i++;
 	}
 	pthread_join(simulation->monitor, NULL);
@@ -64,12 +64,14 @@ int	main(int argc, char **argv)
 			return (1);
 		run_simulation(simulation);
 	}
-	destroy_mutexes(simulation);
-	// if (simulation->log_lst != NULL)
-	// {
-	// 	print_logs(simulation->log_lst);
-	// }
+	// printf("im here\n");
+	// printf("log size : %d\n", log_size(simulation->log_lst));
+	if (simulation->log_lst != NULL)
+	{
+		print_logs(simulation->log_lst);
+	}
 	print_simu_status(simulation);
+	destroy_mutexes(simulation);
 	free_simulation(simulation);
 	return (0);
 }
