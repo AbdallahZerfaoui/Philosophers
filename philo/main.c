@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 15:17:03 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/05 19:10:03 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/05 20:36:49 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,15 @@ int	main(int argc, char **argv)
 		if (simulation == NULL)
 			return (1);
 		run_simulation(simulation);
+		// printf("im here\n");
 	}
 	// printf("im here\n");
-	// printf("log size : %d\n", log_size(simulation->log_lst));
+	printf("log size : %d\n", log_size(simulation->log_lst));
 	if (simulation->log_lst != NULL)
 	{
 		print_logs(simulation->log_lst);
 	}
-	print_simu_status(simulation);
+	// print_simu_status(simulation);
 	destroy_mutexes(simulation);
 	free_simulation(simulation);
 	return (0);

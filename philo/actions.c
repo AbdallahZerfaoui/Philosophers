@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 19:48:21 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/05 19:59:01 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/05 20:37:54 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,11 @@ void	take_forks(t_philosopher *philosopher, int side)
 			pthread_mutex_lock(&table->nbr_forks_mutex);
 			table->nbr_forks--;
 			pthread_mutex_unlock(&table->nbr_forks_mutex);
+			if (table->num_philosophers == 1)
+			{
+				log_action(simulation, philosopher->id, forks_data.message_left);
+				sleep_ms(2 * table->time_to_die);
+			}
 			// log_action(simulation, philosopher->id, forks_data.message_left);
 			// pthread_mutex_lock(&table->forks[right_fork].fork_mutex);
 			if (philosopher->simulation->table->num_philosophers % 2 >= 0) // != 0
@@ -175,10 +180,10 @@ void	get_a_nap(t_philosopher *philosopher)
 
 void	think(t_philosopher *philosopher)
 {
-	if (!is_alive(philosopher))
-	{
-		// report_death(philosopher);
-		return ;
-	}
+	// if (!is_alive(philosopher))
+	// {
+	// 	// report_death(philosopher);
+	// 	return ;
+	// }
 	log_action(philosopher->simulation, philosopher->id, "is thinking");
 }

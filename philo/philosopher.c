@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 17:56:50 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/05 19:48:58 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/05 20:14:58 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ int	is_alive(t_philosopher *philosopher)
 	}
 	return (1);
 }
-
-
 
 /***
  * @note the condition number of philosophers >= 1 is useless

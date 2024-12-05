@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 14:58:47 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/05 20:01:55 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/05 20:51:39 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ t_log					*create_log(long long timestamp, int philo_id,
 t_log					*insert_after(t_log *lst, t_log *target, t_log *log);
 t_log					*add_log(t_log *log_lst, t_log *log);
 void					print_logs(t_log *log_lst);
-t_log					*print_logs_before(t_log *log_lst, long long limit);
+void					print_logs_before(t_simulation *simulation, long long limit);
 int						log_size(t_log *lst);
 
 #endif

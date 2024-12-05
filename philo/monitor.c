@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:04:57 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/05 19:04:25 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/05 20:51:50 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	monitoring_routine(t_simulation *simulation)
 			// log_action(simulation, 0, "DINNER IS OVER");
 			break ;
 		}
-		simulation->log_lst = print_logs_before(simulation->log_lst, current_time() - simulation->table->start_time);
+		print_logs_before(simulation, current_time() - simulation->table->start_time);
 	}
 }
 

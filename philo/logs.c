@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 15:18:01 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/05 13:37:16 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/05 20:57:21 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,24 +110,28 @@ void	print_logs(t_log *log_lst)
 	}
 }
 
-t_log	*print_logs_before(t_log *log_lst, long long limit)
+void	print_logs_before(t_simulation *simulation, long long limit)
 {
 	t_log	*current;
 	t_log	*tmp;
+	t_log	*log_lst;
 
+	log_lst = simulation->log_lst;
 	if (log_lst == NULL)
-		return (NULL);
+		return ;
 	current = log_lst;
 	// printf("Size of the log: %d\n", log_size(log_lst));
 	while (current != NULL && current->timestamp < limit)
 	{
 		// printf("%lld - philo : %d - %s\n",
 		// 	current->timestamp, current->philo_id, current->action);
+		pthread_mutex_lock(&simulation->log_mutex);
 		printf("%lld %d %s\n",
 			current->timestamp, current->philo_id, current->action);
+		pthread_mutex_unlock(&simulation->log_mutex);
 		tmp = current;
 		current = current->next;
 		free(tmp);
 	}
-	return (current);
+	simulation->log_lst = current;
 }
