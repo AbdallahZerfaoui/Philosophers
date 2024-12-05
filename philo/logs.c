@@ -131,7 +131,16 @@ void	print_logs_before(t_simulation *simulation, long long limit)
 		pthread_mutex_unlock(&simulation->log_mutex);
 		tmp = current;
 		current = current->next;
-		free(tmp);
+		free_log(tmp);
 	}
 	simulation->log_lst = current;
+}
+
+/***
+ * @brief Free the log properly
+ */
+void free_log(t_log *log)
+{
+	free(log->action);
+	free(log);
 }

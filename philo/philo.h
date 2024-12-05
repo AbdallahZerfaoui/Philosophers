@@ -20,6 +20,7 @@
 # include <string.h>
 # include <sys/time.h>
 # include <unistd.h>
+# include <stdint.h>
 
 # define MINIMUM_INPUTS 5
 # define ALL_INPUTS 6
@@ -153,5 +154,6 @@ t_log					*add_log(t_log *log_lst, t_log *log);
 void					print_logs(t_log *log_lst);
 void					print_logs_before(t_simulation *simulation, long long limit);
 int						log_size(t_log *lst);
+void					free_log(t_log *log);
 
 #endif

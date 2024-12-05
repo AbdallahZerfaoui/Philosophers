@@ -26,6 +26,9 @@ fclean: clean
 
 re: fclean all
 
+valgrind: re
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(EXE) 1 800 200 200
+
 art:
 	@echo " ____  _     _ _                       _                   ";
 	@echo "|  _ \| |__ (_) | ___  ___  ___  _ __ | |__   ___ _ __ ___ ";
