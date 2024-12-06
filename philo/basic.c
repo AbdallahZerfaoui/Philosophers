@@ -83,3 +83,18 @@ char	*ft_strdup(const char *s)
 	}
 	return (ptr);
 }
+
+size_t	strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
+void	ft_putstr(char *str)
+{
+	write(1, str, strlen(str));
+}

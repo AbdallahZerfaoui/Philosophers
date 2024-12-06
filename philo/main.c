@@ -66,7 +66,7 @@ int	main(int argc, char **argv)
 		// printf("im here\n");
 	}
 	// printf("im here\n");
-	printf("log size : %d\n", log_size(simulation->log_lst));
+	// printf("log size : %d\n", log_size(simulation->log_lst));
 	if (simulation->log_lst != NULL)
 	{
 		print_logs(simulation->log_lst);
