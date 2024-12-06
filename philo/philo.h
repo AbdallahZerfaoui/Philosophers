@@ -63,6 +63,8 @@ typedef struct s_philosopher
 	long long			meal_end_time;
 	long long			wake_up_time;
 	pthread_t			thread;
+	int					is_eating;
+	long long			got_left_fork_time;
 	struct s_simulation	*simulation;
 }						t_philosopher;
 
@@ -116,6 +118,8 @@ void					get_forks_ids(int philo_id, int *left_fork,
 void					sleep_ms(int ms);
 void					sleep_till(long long target_time);
 long long				current_time(void);
+long long				current_time_us(void);
+int						custom_mutex_trylock(pthread_mutex_t *mutex);
 // Utils - Simulation
 int						alles_gut(t_simulation *simulation);
 int						dinner_is_over(t_simulation *simulation);

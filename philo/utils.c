@@ -34,6 +34,17 @@ long long	current_time(void)
 	return (time);
 }
 
+long long	current_time_us(void)
+{
+	struct timespec ts;
+	long long time;
+
+	clock_gettime(CLOCK_MONOTONIC, &ts);
+		// clock_gettime is more precise than gettimeofday but forbiden in the subject
+	time = (ts.tv_sec * 1000000000LL + ts.tv_nsec)/1000LL;
+	return (time);
+}
+
 void	sleep_ms(int ms)
 {
 	long long start;
@@ -190,6 +201,7 @@ void	print_simu_status(t_simulation *simulation)
 			printf("\n");
 	}
 }
+
 
 // void	handle_greediness(t_philosopher philosopher)
 // {

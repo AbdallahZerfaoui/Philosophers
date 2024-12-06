@@ -40,6 +40,7 @@ void	monitoring_routine(t_simulation *simulation)
 			{
 				report_death(&simulation->philosophers[i]);
 				death_detected = 1;
+				// printf("someone died\n");
 				// exit(1);
 				break ;
 			}
@@ -54,6 +55,8 @@ void	monitoring_routine(t_simulation *simulation)
 			// log_action(simulation, 0, "DINNER IS OVER");
 			break ;
 		}
+		// printf("death detected : %d\n", death_detected);
+		// printf("someone died : %d\n", simulation->someone_died);
 		print_logs_before(simulation, current_time() - simulation->table->start_time);
 	}
 }

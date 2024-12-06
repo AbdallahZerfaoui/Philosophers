@@ -25,6 +25,8 @@ static void	init_philosophers(t_simulation *simulation, int mini_nbr_meals)
 		simulation->philosophers[i].last_meal_time = 0;
 		simulation->philosophers[i].meal_end_time = 0;
 		simulation->philosophers[i].wake_up_time = 0;
+		simulation->philosophers[i].is_eating = 0;
+		simulation->philosophers[i].got_left_fork_time = 0;
 		simulation->philosophers[i].simulation = simulation;
 		i++;
 	}
