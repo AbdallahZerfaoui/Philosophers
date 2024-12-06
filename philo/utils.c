@@ -2,15 +2,19 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
+/*                                                    +:+ +:+        
+	+:+     */
+/*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+      
+	+#+        */
+/*                                                +#+#+#+#+#+  
+	+#+           */
 /*   Created: 2024/11/29 11:39:33 by azerfaou          #+#    #+#             */
 /*   Updated: 2024/12/05 12:29:51 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
 
 // long long	current_time(void)
 // {
@@ -21,27 +25,44 @@
 // }
 long long	current_time(void)
 {
-	struct timespec	ts;
-	long long		time;
+	struct timespec ts;
+	long long time;
 
-	clock_gettime(CLOCK_MONOTONIC, &ts); // clock_gettime is more precise than gettimeofday but forbiden in the subject
+	clock_gettime(CLOCK_MONOTONIC, &ts);
+		// clock_gettime is more precise than gettimeofday but forbiden in the subject
 	time = (ts.tv_sec * 1000000000LL + ts.tv_nsec) / 1000000LL;
 	return (time);
 }
 
 void	sleep_ms(int ms)
 {
-	long long	start;
+	long long start;
 
 	start = current_time();
 	if (current_time() - start < ms)
 		usleep(1000LL * (ms - (current_time() - start)));
 }
 
+void	sleep_till(long long target_time)
+{
+	long long	diff;
+
+	diff = target_time - current_time();
+	while (diff > 1)
+	{
+		usleep(1000LL * (diff / 2));
+		diff = target_time - current_time();
+	}
+	while(current_time() < target_time)
+		;
+}
+
 /**
- * @note i don't know why im checking if someone died in the print_action function
+
+	* @note i don't know why im checking if someone died in the print_action function
  */
-// void	print_action(t_simulation *simulation, int philo_id, const char *action)
+// void	print_action(t_simulation *simulation, int philo_id,
+//		const char *action)
 // {
 // 	long long	timestamp;
 
@@ -60,8 +81,8 @@ void	sleep_ms(int ms)
 
 void	log_action(t_simulation *simulation, int philo_id, const char *action)
 {
-	t_log		*log;
-	long long	timestamp;
+	t_log *log;
+	long long timestamp;
 
 	timestamp = current_time() - simulation->table->start_time;
 	log = create_log(timestamp, philo_id, action);
@@ -120,8 +141,8 @@ void	get_forks_ids(int philo_id, int *left_fork, int *right_fork,
  */
 int	dinner_is_over(t_simulation *simulation)
 {
-	int	i;
-	int	mini_nbr_meals;
+	int i;
+	int mini_nbr_meals;
 
 	i = 0;
 	mini_nbr_meals = simulation->philosophers[0].mini_nbr_meals;
@@ -145,8 +166,8 @@ int	is_simulation_over(t_simulation *simulation)
 
 void	print_simu_status(t_simulation *simulation)
 {
-	int	i;
-	int	dead_id;
+	int i;
+	int dead_id;
 
 	dead_id = simulation->someone_died - 1;
 	printf("someone died : %d\n", dead_id);
@@ -170,7 +191,6 @@ void	print_simu_status(t_simulation *simulation)
 	}
 }
 
-
 // void	handle_greediness(t_philosopher philosopher)
 // {
 // 	long long	ref_time;
@@ -182,12 +202,11 @@ void	print_simu_status(t_simulation *simulation)
 // 			+ philosopher.simulation->table->time_to_sleep);
 // 	now = current_time() - philosopher.simulation->table->start_time;
 // 	margin = philosopher.simulation->table->time_to_eat / 4;
-// 	time_left = philosopher.simulation->table->time_to_die - (current_time() - philosopher.last_meal_time);
+// 	time_left = philosopher.simulation->table->time_to_die - (current_time()
+//			- philosopher.last_meal_time);
 // 	if (now > margin && ft_abs(now - ref_time) < margin && time_left > margin)
 // 	{
 // 		log_action(philosopher.simulation, philosopher.id, "is greedy");
 // 		sleep_ms(GREEDINESS);
 // 	}
 // }
-
-

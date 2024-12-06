@@ -21,6 +21,7 @@
 # include <sys/time.h>
 # include <unistd.h>
 # include <stdint.h>
+# include <time.h>
 
 # define MINIMUM_INPUTS 5
 # define ALL_INPUTS 6
@@ -58,7 +59,9 @@ typedef struct s_philosopher
 	int					id;
 	int					times_eaten;
 	int					mini_nbr_meals;
-	long long			last_meal_time;
+	long long			last_meal_time; // when the meal started
+	long long			meal_end_time;
+	long long			wake_up_time;
 	pthread_t			thread;
 	struct s_simulation	*simulation;
 }						t_philosopher;
@@ -111,6 +114,7 @@ void					log_action(t_simulation *simulation, int philo_id,
 void					get_forks_ids(int philo_id, int *left_fork,
 							int *right_fork, int num_philosophers);
 void					sleep_ms(int ms);
+void					sleep_till(long long target_time);
 long long				current_time(void);
 // Utils - Simulation
 int						alles_gut(t_simulation *simulation);

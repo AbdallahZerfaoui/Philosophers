@@ -23,7 +23,7 @@ int	take_fork_time_out(t_fork *fork, int philo_id)
 	start = current_time();
 	while (current_time() - start < FORK_TIME_OUT + philo_id)
 	{
-		if (pthread_mutex_trylock(&fork->fork_mutex) == 0)
+		if (pthread_mutex_trylock(&fork->fork_mutex) == 0) //forbidden
 		{
 			return (1);
 		}
@@ -134,9 +134,14 @@ void	eat(t_philosopher *philosopher)
 		right_fork);
 	if (is_alive(philosopher))
 	{
-		log_action(philosopher->simulation, philosopher->id, "is eating");
 		philosopher->last_meal_time = current_time();
-		sleep_ms(table->time_to_eat);
+		philosopher->meal_end_time = philosopher->last_meal_time
+			+ table->time_to_eat;
+		philosopher->wake_up_time = philosopher->meal_end_time
+			+ table->time_to_sleep;
+		log_action(philosopher->simulation, philosopher->id, "is eating");
+		// sleep_ms(table->time_to_eat);
+		sleep_till(philosopher->meal_end_time);
 		pthread_mutex_unlock(&table->forks[left_fork].fork_mutex);
 		pthread_mutex_lock(&table->nbr_forks_mutex);
 		table->nbr_forks++;
@@ -170,7 +175,8 @@ void	get_a_nap(t_philosopher *philosopher)
 	if (is_alive(philosopher))
 	{
 		log_action(philosopher->simulation, philosopher->id, "is sleeping");
-		sleep_ms(nap_duration);
+		// sleep_ms(nap_duration);
+		sleep_till(philosopher->wake_up_time);
 	}
 	// else
 	// {
