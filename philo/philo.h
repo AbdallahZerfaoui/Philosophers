@@ -75,8 +75,8 @@ typedef struct s_table
 	long long			time_to_eat;
 	long long			time_to_sleep;
 	t_fork				*forks;
-	int					nbr_forks;
-	pthread_mutex_t		nbr_forks_mutex;
+	// int					nbr_forks;
+	// pthread_mutex_t		nbr_forks_mutex;
 	t_philosopher		*philosophers;
 	long long			start_time;
 }						t_table;
@@ -137,7 +137,7 @@ void					handle_greediness(t_philosopher philosopher);
 
 // Actions
 void					think(t_philosopher *philosopher);
-void					take_forks(t_philosopher *philosopher, int is_greedy);
+void					take_forks(t_philosopher *philosopher, int side);
 int						take_fork_time_out(t_fork *fork, int philo_id);
 void					eat(t_philosopher *philosopher);
 void					get_a_nap(t_philosopher *philosopher);

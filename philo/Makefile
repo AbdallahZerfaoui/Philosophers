@@ -38,5 +38,4 @@ art:
 	@echo "|_|   |_| |_|_|_|\___/|___/\___/| .__/|_| |_|\___|_|  |___/";
 	@echo "                                |_|         by The Greatest";
 
-
 .PHONY: all clean fclean re art

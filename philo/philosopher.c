@@ -38,14 +38,17 @@ int	is_alive(t_philosopher *philosopher)
 
 /***
  * @note the condition number of philosophers >= 1 is useless
+ * the first philo starts left and then we alternate
  */
 void	*philosopher_routine(t_philosopher *philosopher)
 {
 	t_table	*table;
 	int		left_fork;
 	int		right_fork;
+	int		side;
 
 	table = philosopher->simulation->table;
+	side = philosopher->id % 2;
 	get_forks_ids(philosopher->id, &left_fork, &right_fork,
 		table->num_philosophers);
 	while (!is_simulation_over(philosopher->simulation))
@@ -54,7 +57,7 @@ void	*philosopher_routine(t_philosopher *philosopher)
 		// {
 		think(philosopher);
 		// handle_greediness(*philosopher);
-		take_forks(philosopher, 0);
+		take_forks(philosopher, side);
 		eat(philosopher);
 		get_a_nap(philosopher);
 		// }
