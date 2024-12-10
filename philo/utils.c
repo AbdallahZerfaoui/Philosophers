@@ -23,6 +23,9 @@
 // 	gettimeofday(&tv, NULL);
 // 	return (tv.tv_sec * 1000LL + (tv.tv_usec / 1000LL));
 // }
+/***
+ * @brief Get the current time in milliseconds
+ */
 long long	current_time(void)
 {
 	struct timespec ts;
@@ -92,14 +95,17 @@ void	sleep_till(long long target_time)
 
 void	log_action(t_simulation *simulation, int philo_id, const char *action)
 {
-	t_log *log;
-	long long timestamp;
+	t_log		*log;
+	long long	timestamp;
 
 	timestamp = current_time() - simulation->table->start_time;
-	log = create_log(timestamp, philo_id, action);
-	if (log == NULL)
-		return ;
 	pthread_mutex_lock(&simulation->log_mutex);
+	log = create_log(timestamp, philo_id, action);
+	if (!log)
+	{
+		pthread_mutex_unlock(&simulation->log_mutex);
+		return ;
+	}
 	simulation->log_lst = add_log(simulation->log_lst, log);
 	pthread_mutex_unlock(&simulation->log_mutex);
 }
@@ -114,38 +120,6 @@ void	get_forks_ids(int philo_id, int *left_fork, int *right_fork,
 	*left_fork = philo_id;
 	*right_fork = (philo_id + num_philosophers - 1) % num_philosophers;
 }
-
-/**
- * @brief Check if all the philosophers are still alive
-//  */
-// int	alles_gut(t_simulation *simulation)
-// {
-// 	int			i;
-// 	long long	time;
-
-// 	i = 0;
-// 	time = 0;
-// 	while (i < simulation->table->num_philosophers)
-// 	{
-// 		if (simulation->table->philosophers == NULL)
-// 			// printf("philosophers is NULL\n");
-// 			// printf("id : %d\n", simulation->table->philosophers[i].id);
-// 			// t_philosopher philo = simulation->table->philosophers[i];
-// 			time = current_time()
-// - simulation->table->philosophers[i].last_meal_time;
-// 		if (time > simulation->table->time_to_die)
-// 		{
-// 			time = current_time()
-// - simulation->table->philosophers[i].last_meal_time;
-// 			// printf("%lld - philo : %d - died - time to die :\n", time, i);
-// 			// log_action(simulation->table, i, "died");
-// 			log_action(simulation, i, "died");
-// 			return (0);
-// 		}
-// 		i++;
-// 	}
-// 	return (1);
-// }
 
 /***
  * @brief Check if the dinner is over

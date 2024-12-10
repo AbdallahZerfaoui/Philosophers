@@ -21,12 +21,13 @@ t_log	*create_log(long long timestamp, int philo_id, const char *action)
 		return (NULL);
 	log->timestamp = timestamp;
 	log->philo_id = philo_id;
-	log->action = ft_strdup(action);
-	if (log->action == NULL)
-	{
-		free(log);
-		return (NULL);
-	}
+	// log->action = ft_strdup(action);
+	ft_strcpy(log->action, action);
+	// if (log->action == NULL)
+	// {
+	// 	free(log);
+	// 	return (NULL);
+	// }
 	log->next = NULL;
 	return (log);
 }
@@ -116,6 +117,7 @@ void	print_logs_before(t_simulation *simulation, long long limit)
 	t_log	*current;
 	t_log	*tmp;
 	t_log	*log_lst;
+	char	message[256];
 
 	log_lst = simulation->log_lst;
 	if (log_lst == NULL)
@@ -126,9 +128,12 @@ void	print_logs_before(t_simulation *simulation, long long limit)
 	{
 		// printf("%lld - philo : %d - %s\n",
 		// 	current->timestamp, current->philo_id, current->action);
-		pthread_mutex_lock(&simulation->log_mutex);
-		printf("%lld %d %s\n",
+		sprintf(message, "%lld %d %s\n",
 			current->timestamp, current->philo_id, current->action);
+		pthread_mutex_lock(&simulation->log_mutex);
+		ft_putstr(message);
+		// printf("%lld %d %s\n",
+		// 	current->timestamp, current->philo_id, current->action);
 		pthread_mutex_unlock(&simulation->log_mutex);
 		tmp = current;
 		current = current->next;
@@ -142,6 +147,6 @@ void	print_logs_before(t_simulation *simulation, long long limit)
  */
 void free_log(t_log *log)
 {
-	free(log->action);
+	// free(log->action);
 	free(log);
 }

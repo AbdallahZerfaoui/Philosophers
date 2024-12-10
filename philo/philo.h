@@ -30,13 +30,15 @@
 # define MINI_TIME 10
 # define GREEDINESS 30
 # define FORK_TIME_OUT 1
+# define DELAY_AFTER_CREATION 1000 //in us
+
 
 // Action description (e.g., "is eating")
 typedef struct s_log
 {
 	long long			timestamp;
 	int					philo_id;
-	char				*action;
+	char				action[50];
 	struct s_log		*next;
 }						t_log;
 
@@ -75,8 +77,6 @@ typedef struct s_table
 	long long			time_to_eat;
 	long long			time_to_sleep;
 	t_fork				*forks;
-	// int					nbr_forks;
-	// pthread_mutex_t		nbr_forks_mutex;
 	t_philosopher		*philosophers;
 	long long			start_time;
 }						t_table;
@@ -85,6 +85,7 @@ typedef struct s_simulation
 {
 	t_table				*table;
 	t_philosopher		*philosophers;
+	long long			start_simulation;
 	t_log				*log_lst;
 	pthread_t			monitor;
 	int					someone_died;
@@ -153,6 +154,9 @@ void					*philosopher_routine(t_philosopher *philosopher);
 void					*ft_calloc(size_t nitems, size_t size);
 int						ft_atoi(const char *str);
 char					*ft_strdup(const char *s);
+size_t					ft_strlen(const char *s);
+void					ft_putstr(char *str);
+void					ft_strcpy(char *dst, const char *src);
 
 // Logs
 t_log					*create_log(long long timestamp, int philo_id,

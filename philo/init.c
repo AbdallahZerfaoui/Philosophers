@@ -76,10 +76,17 @@ t_simulation	*parse_inputs(char **argv)
 	int				mini_nbr_meals;
 
 	simulation = ft_calloc(1, sizeof(t_simulation));
+	if (simulation == NULL)
+		return (NULL);
 	simulation->someone_died = 0;
 	simulation->someone_starving = 0;
 	simulation->log_lst = NULL;
 	simulation->table = ft_calloc(1, sizeof(t_table));
+	if (simulation->table == NULL)
+	{
+		free(simulation);
+		return (NULL);
+	}
 	simulation->table->num_philosophers = ft_atoi(argv[1]);
 	// simulation->table->nbr_forks = ft_atoi(argv[1]);
 	simulation->table->time_to_die = ft_atoi(argv[2]);
@@ -91,6 +98,12 @@ t_simulation	*parse_inputs(char **argv)
 		mini_nbr_meals = INT_MAX;
 	simulation->table->forks = (t_fork *) \
 		ft_calloc(simulation->table->num_philosophers, sizeof(t_fork));
+	if (simulation->table->forks == NULL)
+	{
+		free(simulation->table);
+		free(simulation);
+		return (NULL);
+	}
 	init_forks(simulation);
 	pthread_mutex_init(&simulation->print_mutex, NULL);
 	pthread_mutex_init(&simulation->log_mutex, NULL);
@@ -99,8 +112,17 @@ t_simulation	*parse_inputs(char **argv)
 	// pthread_mutex_init(&simulation->table->nbr_forks_mutex, NULL);
 	simulation->philosophers = (t_philosopher *) \
 		ft_calloc(simulation->table->num_philosophers, sizeof(t_philosopher));
+	if (simulation->philosophers == NULL)
+	{
+		destroy_mutexes(simulation);
+		free(simulation->table->forks);
+		free(simulation->table);
+		free(simulation);
+		return (NULL);
+	}
 	simulation->table->philosophers = simulation->philosophers;
 	init_philosophers(simulation, mini_nbr_meals);
 	simulation->table->start_time = current_time();
+	simulation->start_simulation = simulation->table->start_time + 10;
 	return (simulation);
 }

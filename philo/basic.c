@@ -2,15 +2,19 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   basic.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
+/*                                                    +:+ +:+        
+	+:+     */
+/*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+      
+	+#+        */
+/*                                                +#+#+#+#+#+  
+	+#+           */
 /*   Created: 2024/11/29 11:39:26 by azerfaou          #+#    #+#             */
 /*   Updated: 2024/11/30 15:51:17 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
 
 // The calloc() function allocates memory for an array of nmemb elements of
 // size bytes each and returns a pointer to the allocated memory.
@@ -30,8 +34,8 @@
 
 void	*ft_calloc(size_t nitems, size_t size)
 {
-	void	*ptr;
-	size_t	total_size;
+	void *ptr;
+	size_t total_size;
 
 	if (nitems != 0 && size > SIZE_MAX / nitems)
 		return (NULL);
@@ -45,15 +49,14 @@ void	*ft_calloc(size_t nitems, size_t size)
 
 int	ft_atoi(const char *str)
 {
-	int	res;
-	int	sign;
-	int	i;
+	int res;
+	int sign;
+	int i;
 
 	res = 0;
 	sign = 1;
 	i = 0;
-	while (str[i] == ' ' || str[i] == '\t'
-		|| str[i] == '\n' || str[i] == '\v'
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n' || str[i] == '\v'
 		|| str[i] == '\f' || str[i] == '\r')
 		i++;
 	while (str[i] == '0')
@@ -67,8 +70,8 @@ int	ft_atoi(const char *str)
 
 char	*ft_strdup(const char *s)
 {
-	char	*ptr;
-	size_t	size;
+	char *ptr;
+	size_t size;
 
 	size = 0;
 	while (s[size])
@@ -84,9 +87,9 @@ char	*ft_strdup(const char *s)
 	return (ptr);
 }
 
-size_t	strlen(const char *s)
+size_t	ft_strlen(const char *s)
 {
-	size_t	i;
+	size_t i;
 
 	i = 0;
 	while (s[i])
@@ -96,5 +99,12 @@ size_t	strlen(const char *s)
 
 void	ft_putstr(char *str)
 {
-	write(1, str, strlen(str));
+	write(1, str, ft_strlen(str));
+}
+
+void	ft_strcpy(char *dst, const char *src)
+{
+	while (*src)
+		*dst++ = *src++;
+	*dst = '\0';
 }

@@ -5,7 +5,7 @@ RM = rm -f
 CFLAGS = -Wall -Wextra -Werror
 
 SRC = main.c init.c philosopher.c \
-	utils.c simulation.c errors.c \
+	utils.c errors.c \
 	memory_management.c basic.c maths.c \
 	monitor.c starvation.c logs.c \
 	actions.c
@@ -27,8 +27,8 @@ fclean: clean
 re: fclean all
 
 valgrind: re
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes  ./$(EXE) 5 800 200 200 3
-	valgrind --tool=helgrind ./philo 2 800 200 200 3
+# valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes  ./$(EXE) 5 800 200 200 3
+	valgrind --tool=helgrind ./$(EXE) 50 800 200 200 3
 
 art:
 	@echo " ____  _     _ _                       _                   ";

@@ -15,7 +15,6 @@
 static void	run_simulation(t_simulation *simulation)
 {
 	int	i;
-	// int	duration;
 
 	i = 0;
 	while (i < simulation->table->num_philosophers)
@@ -23,10 +22,10 @@ static void	run_simulation(t_simulation *simulation)
 		simulation->philosophers[i].last_meal_time = current_time();
 		pthread_create(&simulation->philosophers[i].thread, NULL,
 			(void *)philosopher_routine, &simulation->philosophers[i]);
-		// printf("philo %d has started\n", i);
-		// sleep_ms(100 * i + 100); 
 		i++;
 	}
+	simulation->table->start_time = current_time();
+	// simulation->go_flag = 1; // start the simulation
 	pthread_create(&simulation->monitor, NULL, (void *)monitoring_routine, simulation);
 	// duration = 0;
 	// while (!is_simulation_over(simulation) && duration < SIMU_DURATION)

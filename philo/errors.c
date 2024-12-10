@@ -14,7 +14,7 @@
 
 void	handle_missing_values(void)
 {
-	printf("Missing values\n");
-	printf("Usage: ./philo [nbr_of_philosophers] [time_to_die] [time_to_eat] [time_to_sleep] [minimum_nbr_meals]\n");
+	ft_putstr("Missing values\n");
+	ft_putstr("Usage: ./philo [nbr_of_philosophers] [time_to_die] [time_to_eat] [time_to_sleep] [minimum_nbr_meals]\n");
 	exit(1);
 }
