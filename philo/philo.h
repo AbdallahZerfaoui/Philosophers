@@ -30,7 +30,7 @@
 # define MINI_TIME 10
 # define GREEDINESS 30
 # define FORK_TIME_OUT 1
-# define DELAY_AFTER_CREATION 1000 //in us
+# define DELAY_AFTER_CREATION 500 //in us
 
 
 // Action description (e.g., "is eating")
@@ -61,6 +61,7 @@ typedef struct s_philosopher
 	int					id;
 	int					times_eaten;
 	int					mini_nbr_meals;
+	int					ready_to_eat;
 	long long			last_meal_time; // when the meal started
 	long long			meal_end_time;
 	long long			wake_up_time;

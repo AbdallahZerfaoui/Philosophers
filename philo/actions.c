@@ -71,6 +71,7 @@ void	take_forks(t_philosopher *philosopher, int side)
 					// pthread_mutex_lock(&table->nbr_forks_mutex);
 					// table->nbr_forks--;
 					// pthread_mutex_unlock(&table->nbr_forks_mutex);
+					philosopher->is_eating = 1;
 				}
 				else
 				{
@@ -83,13 +84,14 @@ void	take_forks(t_philosopher *philosopher, int side)
 					take_forks(philosopher, 0);
 				}
 			}
-			else
+			else 
 			{
 				pthread_mutex_lock(&table->forks[right_fork].fork_mutex);
 				// pthread_mutex_lock(&table->nbr_forks_mutex);
 				// table->nbr_forks--;
 				// pthread_mutex_unlock(&table->nbr_forks_mutex);
 				log_action(simulation, philosopher->id, forks_data.message_right);
+				philosopher->is_eating = 1;
 			}
 		}
 		else // side 1
@@ -104,6 +106,7 @@ void	take_forks(t_philosopher *philosopher, int side)
 			// table->nbr_forks--;
 			// pthread_mutex_unlock(&table->nbr_forks_mutex);
 			log_action(simulation, philosopher->id, forks_data.message_left);
+			philosopher->is_eating = 1;
 		}
 	}
 }
@@ -147,9 +150,10 @@ void	eat(t_philosopher *philosopher)
 		// pthread_mutex_unlock(&table->nbr_forks_mutex);
 		// log_action(philosopher->simulation, philosopher->id,
 		// 	forks_data.message_right);
+		philosopher->is_eating = 0;
 		philosopher->times_eaten++;
 	}
-	else
+	else if (philosopher->is_eating)
 	{
 		// report_death(philosopher);
 		pthread_mutex_unlock(&table->forks[left_fork].fork_mutex);
