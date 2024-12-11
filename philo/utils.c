@@ -142,11 +142,21 @@ int	dinner_is_over(t_simulation *simulation)
 	return (1);
 }
 
+/***
+ * @brief Check if the simulation is over
+ * The simulation is over if someone died or if the dinner is over
+ * @note dinner_over variable is used to decrease the lock time
+ */
 int	is_simulation_over(t_simulation *simulation)
 {
-	if (simulation->someone_died || dinner_is_over(simulation))
-		return (1);
-	return (0);
+	int result;
+	int dinner_over;
+
+	dinner_over = dinner_is_over(simulation);
+	pthread_mutex_lock(&simulation->death_mutex);
+	result = (simulation->someone_died || dinner_over);
+	pthread_mutex_unlock(&simulation->death_mutex);
+	return (result);
 }
 
 void	print_simu_status(t_simulation *simulation)

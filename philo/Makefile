@@ -1,8 +1,8 @@
 EXE = philo
 
-CC = cc -g -pthread
+CC = gcc
 RM = rm -f
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize=thread
 
 SRC = main.c init.c philosopher.c \
 	utils.c errors.c \
@@ -12,7 +12,7 @@ SRC = main.c init.c philosopher.c \
 	
 OBJ = $(SRC:.c=.o)
 
-all: art $(EXE)
+all: art2 $(EXE)
 
 $(EXE): $(OBJ)
 	$(CC) $(CFLAGS) -I. -o $(EXE) $(OBJ)
@@ -28,8 +28,8 @@ re: fclean all
 
 valgrind: re
 # valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes  ./$(EXE) 5 800 200 200 3
-	valgrind --tool=helgrind ./$(EXE) 50 800 200 200 3 
-# valgrind --tool=drd ./$(EXE) 50 800 200 200 3
+	valgrind --tool=helgrind ./$(EXE) 1 800 200 200 3 
+# valgrind --tool=drd ./$(EXE) 1 800 200 200 3
 
 art2:
 	@echo " ____  _     _ _                       _                   ";
