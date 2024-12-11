@@ -65,5 +65,7 @@ void	*philosopher_routine(t_philosopher *philosopher)
 		get_a_nap(philosopher);
 		// }
 	}
+	// ft_putstr("im out\n");
+	unlock_my_forks(philosopher);
 	return (NULL);
 }

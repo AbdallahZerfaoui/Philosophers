@@ -27,9 +27,13 @@ fclean: clean
 re: fclean all
 
 valgrind: re
-# valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes  ./$(EXE) 5 800 200 200 3
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes  ./$(EXE) 5 800 200 200 3
+
+halgrind: fclean re
 	valgrind --tool=helgrind ./$(EXE) 1 800 200 200 3 
-# valgrind --tool=drd ./$(EXE) 1 800 200 200 3
+
+drd: fclean re
+	valgrind --tool=drd ./$(EXE) 1 800 200 200 3
 
 art2:
 	@echo " ____  _     _ _                       _                   ";

@@ -92,20 +92,22 @@ void	sleep_till(long long target_time)
 // 	printf("%lld %d %s\n", timestamp, philo_id, action);
 // 	pthread_mutex_unlock(&simulation->print_mutex);
 // }
-
+/***
+ * @note should i create the log before or after locking the mutex???
+ */
 void	log_action(t_simulation *simulation, int philo_id, const char *action)
 {
 	t_log		*log;
 	long long	timestamp;
 
 	timestamp = current_time() - simulation->table->start_time;
-	pthread_mutex_lock(&simulation->log_mutex);
 	log = create_log(timestamp, philo_id, action);
 	if (!log)
 	{
-		pthread_mutex_unlock(&simulation->log_mutex);
+		// pthread_mutex_unlock(&simulation->log_mutex);
 		return ;
 	}
+	pthread_mutex_lock(&simulation->log_mutex);
 	simulation->log_lst = add_log(simulation->log_lst, log);
 	pthread_mutex_unlock(&simulation->log_mutex);
 }
@@ -166,7 +168,7 @@ void	print_simu_status(t_simulation *simulation)
 
 	dead_id = simulation->someone_died - 1;
 	printf("someone died : %d\n", dead_id);
-	printf("someone is starving : %d\n", simulation->someone_starving - 1);
+	// printf("someone is starving : %d\n", simulation->someone_starving - 1);
 	if (simulation->someone_died)
 	{
 		i = simulation->someone_died - 1;
@@ -184,7 +186,24 @@ void	print_simu_status(t_simulation *simulation)
 		if (i == simulation->table->num_philosophers - 1)
 			printf("\n");
 	}
+	printf("forks status : ");
+	for (int i = 0; i < simulation->table->num_philosophers; i++)
+	{
+		printf("%d ", simulation->table->forks[i].owner);
+		if (i == simulation->table->num_philosophers - 1)
+			printf("\n");
+	}
 }
+
+// void unlock_philo_forks(t_simulation *simulation, int philo_id)
+// {
+// 	int left_fork;
+// 	int right_fork;
+
+// 	get_forks_ids(philo_id, &left_fork, &right_fork, simulation->table->num_philosophers);
+// 	pthread_mutex_unlock(&simulation->table->forks[left_fork].fork_mutex);
+// 	pthread_mutex_unlock(&simulation->table->forks[right_fork].fork_mutex);
+// }
 
 
 // void	handle_greediness(t_philosopher philosopher)

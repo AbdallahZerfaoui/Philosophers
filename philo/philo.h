@@ -54,6 +54,7 @@ typedef struct s_fork
 {
 	int					id;
 	pthread_mutex_t		fork_mutex;
+	int					owner;
 }						t_fork;
 
 typedef struct s_philosopher
@@ -143,6 +144,7 @@ void					take_forks(t_philosopher *philosopher, int side);
 int						take_fork_time_out(t_fork *fork, int philo_id);
 void					eat(t_philosopher *philosopher);
 void					get_a_nap(t_philosopher *philosopher);
+void					unlock_my_forks(t_philosopher *philosopher);
 
 // Initialization
 t_simulation			*parse_inputs(char **argv);

@@ -60,16 +60,22 @@ int	main(int argc, char **argv)
 	{
 		simulation = parse_inputs(argv);
 		if (simulation == NULL)
+		{
 			return (1);
+		}
 		run_simulation(simulation);
 		// printf("im here\n");
 	}
 	// printf("im here\n");
 	// printf("log size : %d\n", log_size(simulation->log_lst));
+	pthread_mutex_lock(&simulation->print_mutex);
+	pthread_mutex_lock(&simulation->log_mutex);
 	if (simulation->log_lst != NULL)
 	{
 		print_logs(simulation->log_lst);
 	}
+	pthread_mutex_unlock(&simulation->print_mutex);
+	pthread_mutex_unlock(&simulation->log_mutex);
 	// print_simu_status(simulation);
 	destroy_mutexes(simulation);
 	free_simulation(simulation);

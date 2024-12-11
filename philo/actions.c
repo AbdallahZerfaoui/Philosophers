@@ -55,6 +55,7 @@ void	take_forks(t_philosopher *philosopher, int side)
 		if (side == 0)
 		{
 			pthread_mutex_lock(&table->forks[left_fork].fork_mutex);
+			table->forks[left_fork].owner = philosopher->id;
 			log_action(simulation, philosopher->id, forks_data.message_left);
 			// pthread_mutex_lock(&table->nbr_forks_mutex);
 			// table->nbr_forks--;
@@ -67,6 +68,7 @@ void	take_forks(t_philosopher *philosopher, int side)
 			{
 				if (pthread_mutex_lock(&table->forks[right_fork].fork_mutex) == 0)
 				{
+					table->forks[right_fork].owner = philosopher->id;
 					log_action(simulation, philosopher->id, forks_data.message_right);
 					// pthread_mutex_lock(&table->nbr_forks_mutex);
 					// table->nbr_forks--;
@@ -76,6 +78,7 @@ void	take_forks(t_philosopher *philosopher, int side)
 				else
 				{
 					pthread_mutex_unlock(&table->forks[left_fork].fork_mutex);
+					table->forks[left_fork].owner = -1;
 					log_action(simulation, philosopher->id, "has released the left fork"); // to remove
 					// pthread_mutex_lock(&table->nbr_forks_mutex);
 					// table->nbr_forks++;
@@ -87,6 +90,7 @@ void	take_forks(t_philosopher *philosopher, int side)
 			else 
 			{
 				pthread_mutex_lock(&table->forks[right_fork].fork_mutex);
+				table->forks[right_fork].owner = philosopher->id;
 				// pthread_mutex_lock(&table->nbr_forks_mutex);
 				// table->nbr_forks--;
 				// pthread_mutex_unlock(&table->nbr_forks_mutex);
@@ -97,11 +101,13 @@ void	take_forks(t_philosopher *philosopher, int side)
 		else // side 1
 		{
 			pthread_mutex_lock(&table->forks[right_fork].fork_mutex);
+			table->forks[right_fork].owner = philosopher->id;
 			// pthread_mutex_lock(&table->nbr_forks_mutex);
 			// table->nbr_forks--;
 			// pthread_mutex_unlock(&table->nbr_forks_mutex);
 			log_action(simulation, philosopher->id, forks_data.message_right);
 			pthread_mutex_lock(&table->forks[left_fork].fork_mutex);
+			table->forks[left_fork].owner = philosopher->id;
 			// pthread_mutex_lock(&table->nbr_forks_mutex);
 			// table->nbr_forks--;
 			// pthread_mutex_unlock(&table->nbr_forks_mutex);
@@ -139,12 +145,14 @@ void	eat(t_philosopher *philosopher)
 		// sleep_ms(table->time_to_eat);
 		sleep_till(philosopher->meal_end_time);
 		pthread_mutex_unlock(&table->forks[left_fork].fork_mutex);
+		table->forks[left_fork].owner = -1;
 		// pthread_mutex_lock(&table->nbr_forks_mutex);
 		// table->nbr_forks++;
 		// pthread_mutex_unlock(&table->nbr_forks_mutex);
 		// log_action(philosopher->simulation, philosopher->id,
 		// 	forks_data.message_left);
 		pthread_mutex_unlock(&table->forks[right_fork].fork_mutex);
+		table->forks[right_fork].owner = -1;
 		// pthread_mutex_lock(&table->nbr_forks_mutex);
 		// table->nbr_forks++;
 		// pthread_mutex_unlock(&table->nbr_forks_mutex);
@@ -157,7 +165,9 @@ void	eat(t_philosopher *philosopher)
 	{
 		// report_death(philosopher);
 		pthread_mutex_unlock(&table->forks[left_fork].fork_mutex);
+		table->forks[left_fork].owner = -1;
 		pthread_mutex_unlock(&table->forks[right_fork].fork_mutex);
+		table->forks[right_fork].owner = -1;
 		// pthread_mutex_lock(&table->nbr_forks_mutex);
 		// table->nbr_forks += 2;
 		// pthread_mutex_unlock(&table->nbr_forks_mutex);
@@ -185,4 +195,25 @@ void	think(t_philosopher *philosopher)
 {
 	if (is_alive(philosopher))
 		log_action(philosopher->simulation, philosopher->id, "is thinking");
+}
+
+void	unlock_my_forks(t_philosopher *philosopher)
+{
+	t_simulation	*simulation;
+	int	left_fork;
+	int	right_fork;
+
+	simulation = philosopher->simulation;
+	get_forks_ids(philosopher->id, &left_fork, &right_fork, simulation->table->num_philosophers);
+	// printf("fork left : %d, fork right : %d\n", left_fork, right_fork);
+	if (simulation->table->forks[left_fork].owner == philosopher->id)
+	{
+		pthread_mutex_unlock(&simulation->table->forks[left_fork].fork_mutex);
+		simulation->table->forks[left_fork].owner = -1;
+	}
+	if(simulation->table->forks[right_fork].owner == philosopher->id)
+	{
+		pthread_mutex_unlock(&simulation->table->forks[right_fork].fork_mutex);
+		simulation->table->forks[right_fork].owner = -1;
+	}
 }

@@ -40,16 +40,34 @@ static void	init_forks(t_simulation *simulation)
 	while (i < simulation->table->num_philosophers)
 	{
 		simulation->table->forks[i].id = i;
+		simulation->table->forks[i].owner = -1;
 		pthread_mutex_init(&simulation->table->forks[i].fork_mutex, NULL);
 		i++;
 	}
 }
+
+/***
+ * @brief Unlock all the forks
+ * @note this function is called when a philosopher dies
+ */
+// void unlock_all_forks(t_simulation *simulation)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (i < simulation->table->num_philosophers)
+// 	{
+// 		pthread_mutex_unlock(&simulation->table->forks[i].fork_mutex);
+// 		i++;
+// 	}
+// }
 
 void	destroy_mutexes(t_simulation *simulation)
 {
 	int	i;
 
 	i = 0;
+	// unlock_all_forks(simulation);
 	while (i < simulation->table->num_philosophers)
 	{
 		pthread_mutex_destroy(&simulation->table->forks[i].fork_mutex);
