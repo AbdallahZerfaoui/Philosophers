@@ -76,7 +76,7 @@ int	main(int argc, char **argv)
 	}
 	pthread_mutex_unlock(&simulation->print_mutex);
 	pthread_mutex_unlock(&simulation->log_mutex);
-	// print_simu_status(simulation);
+	print_simu_status(simulation);
 	destroy_mutexes(simulation);
 	free_simulation(simulation);
 	return (0);

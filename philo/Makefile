@@ -1,4 +1,5 @@
 EXE = philo
+NBR_PHILO = 2
 
 CC = gcc
 RM = rm -f
@@ -27,13 +28,13 @@ fclean: clean
 re: fclean all
 
 valgrind: re
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes  ./$(EXE) 5 800 200 200 3
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes  ./$(EXE) $(NBR_PHILO) 800 200 200 3
 
 halgrind: fclean re
-	valgrind --tool=helgrind ./$(EXE) 1 800 200 200 3 
+	valgrind --tool=helgrind ./$(EXE) $(NBR_PHILO) 800 200 200 3 
 
 drd: fclean re
-	valgrind --tool=drd ./$(EXE) 1 800 200 200 3
+	valgrind --tool=drd ./$(EXE) $(NBR_PHILO) 800 200 200 3
 
 art2:
 	@echo " ____  _     _ _                       _                   ";
@@ -52,4 +53,4 @@ art:
 	@echo "                                             by The Greatest";
 
 
-.PHONY: all clean fclean re art
+.PHONY: all clean fclean re art art2 valgrind helgrind drd

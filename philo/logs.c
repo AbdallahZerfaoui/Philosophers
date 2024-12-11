@@ -119,9 +119,13 @@ void	print_logs_before(t_simulation *simulation, long long limit)
 	t_log	*log_lst;
 	char	message[256];
 
+	pthread_mutex_lock(&simulation->log_mutex);
 	log_lst = simulation->log_lst;
 	if (log_lst == NULL)
+	{
+		pthread_mutex_unlock(&simulation->log_mutex);
 		return ;
+	}
 	current = log_lst;
 	// printf("Size of the log: %d\n", log_size(log_lst));
 	while (current != NULL && current->timestamp < limit)
@@ -130,16 +134,15 @@ void	print_logs_before(t_simulation *simulation, long long limit)
 		// 	current->timestamp, current->philo_id, current->action);
 		sprintf(message, "%lld %d %s\n",
 			current->timestamp, current->philo_id, current->action);
-		pthread_mutex_lock(&simulation->log_mutex);
 		ft_putstr(message);
 		// printf("%lld %d %s\n",
 		// 	current->timestamp, current->philo_id, current->action);
-		pthread_mutex_unlock(&simulation->log_mutex);
 		tmp = current;
 		current = current->next;
 		free_log(tmp);
 	}
 	simulation->log_lst = current;
+	pthread_mutex_unlock(&simulation->log_mutex);
 }
 
 /***
@@ -147,6 +150,5 @@ void	print_logs_before(t_simulation *simulation, long long limit)
  */
 void free_log(t_log *log)
 {
-	// free(log->action);
 	free(log);
 }

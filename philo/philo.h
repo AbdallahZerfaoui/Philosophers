@@ -31,6 +31,8 @@
 # define GREEDINESS 30
 # define FORK_TIME_OUT 1
 # define DELAY_AFTER_CREATION 500 //in us
+# define TAKE 1
+# define RELEASE -1
 
 
 // Action description (e.g., "is eating")
@@ -55,18 +57,20 @@ typedef struct s_fork
 	int					id;
 	pthread_mutex_t		fork_mutex;
 	int					owner;
+	pthread_mutex_t		owner_mutex;
 }						t_fork;
 
 typedef struct s_philosopher
 {
 	int					id;
-	int					times_eaten;
 	int					mini_nbr_meals;
+	pthread_t			thread;
+	int					times_eaten;
+	pthread_mutex_t		times_eaten_mutex;
 	int					ready_to_eat;
 	long long			last_meal_time; // when the meal started
 	long long			meal_end_time;
 	long long			wake_up_time;
-	pthread_t			thread;
 	int					is_eating;
 	long long			got_left_fork_time;
 	struct s_simulation	*simulation;
@@ -145,6 +149,7 @@ int						take_fork_time_out(t_fork *fork, int philo_id);
 void					eat(t_philosopher *philosopher);
 void					get_a_nap(t_philosopher *philosopher);
 void					unlock_my_forks(t_philosopher *philosopher);
+int						set_fork_owner(t_philosopher *philosopher, int fork_id, int action);
 
 // Initialization
 t_simulation			*parse_inputs(char **argv);

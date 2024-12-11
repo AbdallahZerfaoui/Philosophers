@@ -50,6 +50,7 @@ void	monitoring_routine(t_simulation *simulation)
 			// }
 			i++;
 		}
+		// ft_putstr("someone died\n");
 		if (dinner_is_over(simulation))
 		{
 			// log_action(simulation, 0, "DINNER IS OVER");
