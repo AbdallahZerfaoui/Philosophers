@@ -18,18 +18,23 @@ void	report_death(t_philosopher *philosopher)
 
 	simulation = philosopher->simulation;
 	log_action(simulation, philosopher->id, "died");
-	pthread_mutex_lock(&simulation->death_mutex);
-	simulation->someone_died = philosopher->id + 1;
-	pthread_mutex_unlock(&simulation->death_mutex);
+	// pthread_mutex_lock(&simulation->death_mutex);
+	// simulation->someone_died = philosopher->id + 1;
+	// pthread_mutex_unlock(&simulation->death_mutex);
+	set_someone_died(philosopher);
 }
 
 int	is_alive(t_philosopher *philosopher)
 {
 	long long	time_since_last_meal;
+	int			nbr_meals_eaten;
 
-	time_since_last_meal = current_time() - philosopher->last_meal_time;
+	pthread_mutex_lock(&philosopher->times_eaten_mutex);
+	nbr_meals_eaten = philosopher->times_eaten;
+	pthread_mutex_unlock(&philosopher->times_eaten_mutex);
+	time_since_last_meal = current_time() - get_last_time_meal(philosopher);
 	if (time_since_last_meal > philosopher->simulation->table->time_to_die
-		&& philosopher->times_eaten < philosopher->mini_nbr_meals)
+		&& nbr_meals_eaten < philosopher->mini_nbr_meals)
 	{
 		return (0);
 	}

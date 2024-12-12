@@ -69,8 +69,11 @@ typedef struct s_philosopher
 	pthread_mutex_t		times_eaten_mutex;
 	int					ready_to_eat;
 	long long			last_meal_time; // when the meal started
+	pthread_mutex_t		last_meal_time_mutex;
 	long long			meal_end_time;
+	pthread_mutex_t		meal_end_time_mutex;
 	long long			wake_up_time;
+	pthread_mutex_t		wake_up_time_mutex;
 	int					is_eating;
 	long long			got_left_fork_time;
 	struct s_simulation	*simulation;
@@ -128,7 +131,6 @@ void					sleep_till(long long target_time);
 long long				current_time(void);
 long long				current_time_us(void);
 int						custom_mutex_trylock(pthread_mutex_t *mutex);
-void					set_start_time(t_simulation *simulation);
 // Utils - Simulation
 int						alles_gut(t_simulation *simulation);
 int						dinner_is_over(t_simulation *simulation);
@@ -151,7 +153,6 @@ int						take_fork_time_out(t_fork *fork, int philo_id);
 void					eat(t_philosopher *philosopher);
 void					get_a_nap(t_philosopher *philosopher);
 void					unlock_my_forks(t_philosopher *philosopher);
-int						set_fork_owner(t_philosopher *philosopher, int fork_id, int action);
 
 // Initialization
 t_simulation			*parse_inputs(char **argv);
@@ -177,5 +178,23 @@ void					print_logs(t_log *log_lst);
 void					print_logs_before(t_simulation *simulation, long long limit);
 int						log_size(t_log *lst);
 void					free_log(t_log *log);
+
+// Setters
+void					set_last_time_meal(t_philosopher *philosopher);
+int						set_fork_owner(t_philosopher *philosopher, int fork_id, int action);
+void					set_start_time(t_simulation *simulation);
+void					set_eaten_meals(t_philosopher *philosopher, int increment);
+void					set_wake_up_time(t_philosopher *philosopher);
+void					set_meal_end_time(t_philosopher *philosopher);
+void					set_someone_died(t_philosopher *philosopher);
+
+// Getters
+long long				get_last_time_meal(t_philosopher *philosopher);
+long long				get_meal_end_time(t_philosopher *philosopher);
+long long				get_wake_up_time(t_philosopher *philosopher);
+long long				get_start_time(t_simulation *simulation);
+t_log					*get_log_lst(t_simulation *simulation);
+int						get_times_eaten(t_philosopher *philosopher);
+int						get_someone_died(t_simulation *simulation);
 
 #endif

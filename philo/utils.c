@@ -99,10 +99,13 @@ void	log_action(t_simulation *simulation, int philo_id, const char *action)
 {
 	t_log		*log;
 	long long	timestamp;
+	long long	start_time;
 
-	pthread_mutex_lock(&simulation->table->start_time_mutex);
-	timestamp = current_time() - simulation->table->start_time;
-	pthread_mutex_unlock(&simulation->table->start_time_mutex);
+	// pthread_mutex_lock(&simulation->table->start_time_mutex);
+	// timestamp = current_time() - simulation->table->start_time;
+	// pthread_mutex_unlock(&simulation->table->start_time_mutex);
+	start_time = get_start_time(simulation);
+	timestamp = current_time() - start_time;
 	log = create_log(timestamp, philo_id, action);
 	if (!log)
 	{
@@ -129,20 +132,30 @@ void	get_forks_ids(int philo_id, int *left_fork, int *right_fork,
  */
 int	dinner_is_over(t_simulation *simulation)
 {
-	int i;
-	int mini_nbr_meals;
+	int	i;
+	int	mini_nbr_meals;
+	int	result;
+	int	nbr_meals_eaten;
 
 	i = 0;
+	result = 1;
 	mini_nbr_meals = simulation->philosophers[0].mini_nbr_meals;
 	if (mini_nbr_meals == INT_MAX)
 		return (0);
 	while (i < simulation->table->num_philosophers)
 	{
-		if (simulation->philosophers[i].times_eaten < mini_nbr_meals)
-			return (0);
+		// pthread_mutex_lock(&simulation->philosophers[i].times_eaten_mutex);
+		// nbr_meals_eaten = simulation->philosophers[i].times_eaten;
+		// pthread_mutex_unlock(&simulation->philosophers[i].times_eaten_mutex);
+		nbr_meals_eaten = get_times_eaten(&simulation->philosophers[i]);
+		if (nbr_meals_eaten < mini_nbr_meals)
+		{
+			result = 0;
+			break ;
+		}
 		i++;
 	}
-	return (1);
+	return (result);
 }
 
 /***
@@ -154,11 +167,13 @@ int	is_simulation_over(t_simulation *simulation)
 {
 	int result;
 	int dinner_over;
+	int someone_died;
 
 	dinner_over = dinner_is_over(simulation);
-	pthread_mutex_lock(&simulation->death_mutex);
-	result = (simulation->someone_died || dinner_over);
-	pthread_mutex_unlock(&simulation->death_mutex);
+	someone_died = get_someone_died(simulation);
+	// pthread_mutex_lock(&simulation->death_mutex);
+	result = (someone_died || dinner_over);
+	// pthread_mutex_unlock(&simulation->death_mutex);
 	return (result);
 }
 
@@ -167,15 +182,14 @@ void	print_simu_status(t_simulation *simulation)
 	int i;
 	int dead_id;
 
-	dead_id = simulation->someone_died - 1;
+	dead_id = get_someone_died(simulation) - 1;
 	printf("someone died : %d\n", dead_id);
 	// printf("someone is starving : %d\n", simulation->someone_starving - 1);
-	if (simulation->someone_died)
+	if (get_someone_died(simulation))
 	{
 		i = simulation->someone_died - 1;
 		printf("last meal of %d at %lld\n", i,
-			simulation->philosophers[i].last_meal_time
-			- simulation->table->start_time);
+			get_last_time_meal(&simulation->philosophers[i]) - get_start_time(simulation));
 	}
 	printf("dinner is over : %d\n", dinner_is_over(simulation));
 	// printf("nbr of meals eaten by 0: %d\n",
@@ -196,10 +210,4 @@ void	print_simu_status(t_simulation *simulation)
 	// }
 }
 
-void	set_start_time(t_simulation *simulation)
-{
-	pthread_mutex_lock(&simulation->table->start_time_mutex);
-	simulation->table->start_time = current_time();
-	pthread_mutex_unlock(&simulation->table->start_time_mutex);
-}
 

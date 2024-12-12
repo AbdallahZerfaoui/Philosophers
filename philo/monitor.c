@@ -23,7 +23,7 @@ void	monitoring_routine(t_simulation *simulation)
 	int	death_detected;
 
 	death_detected = 0;
-	while (!simulation->someone_died)
+	while (!get_someone_died(simulation))
 	{
 		i = 0;
 		// reset the starvation flag if the philosopher is not starving anymore
@@ -58,7 +58,7 @@ void	monitoring_routine(t_simulation *simulation)
 		}
 		// printf("death detected : %d\n", death_detected);
 		// printf("someone died : %d\n", simulation->someone_died);
-		print_logs_before(simulation, current_time() - simulation->table->start_time);
+		print_logs_before(simulation, current_time() - get_start_time(simulation));
 	}
 }
 

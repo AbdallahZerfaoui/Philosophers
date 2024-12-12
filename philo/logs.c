@@ -96,6 +96,7 @@ int	log_size(t_log *lst)
 void	print_logs(t_log *log_lst)
 {
 	t_log	*current;
+	t_log	*prev;
 
 	if (log_lst == NULL)
 		return ;
@@ -107,8 +108,9 @@ void	print_logs(t_log *log_lst)
 		// 	current->timestamp, current->philo_id, current->action);
 		printf("%lld %d %s\n",
 			current->timestamp, current->philo_id, current->action);
-		free_log(current);
+		prev = current;
 		current = current->next;
+		free_log(prev);
 	}
 }
 
@@ -119,13 +121,15 @@ void	print_logs_before(t_simulation *simulation, long long limit)
 	t_log	*log_lst;
 	char	message[256];
 
-	pthread_mutex_lock(&simulation->log_mutex);
-	log_lst = simulation->log_lst;
+	log_lst = get_log_lst(simulation);
 	if (log_lst == NULL)
-	{
-		pthread_mutex_unlock(&simulation->log_mutex);
 		return ;
-	}
+	// if (log_lst == NULL)
+	// {
+	// 	pthread_mutex_unlock(&simulation->log_mutex);
+	// 	return ;
+	// }
+	pthread_mutex_lock(&simulation->log_mutex);
 	current = log_lst;
 	// printf("Size of the log: %d\n", log_size(log_lst));
 	while (current != NULL && current->timestamp < limit)

@@ -30,37 +30,7 @@
 // 	}
 // 	return (0);
 // }
-/***
- * @brief The philosopher takes a fork and set the ownernship of it
- * when he finishes eating, he releases the fork and set the owner to -1
- * @param philosopher the philosopher
- * @param action 1 for take, -1 for release
- * @return the old owner id because it's needed in the function unlock_my_forks
- */
-int set_fork_owner(t_philosopher *philosopher, int fork_id, int action)
-{
-	t_table *table;
-	int		old_owner_id;
 
-	old_owner_id = -1;
-	table = philosopher->simulation->table;
-	pthread_mutex_lock(&table->forks[fork_id].owner_mutex);
-	if (action == TAKE)
-	{
-		if (table->forks[fork_id].owner == -1)
-			table->forks[fork_id].owner = philosopher->id;
-	}
-	else if (action == RELEASE)
-	{
-		if (table->forks[fork_id].owner == philosopher->id)
-		{
-			table->forks[fork_id].owner = -1;
-			old_owner_id = philosopher->id;
-		}
-	}
-	pthread_mutex_unlock(&table->forks[fork_id].owner_mutex);
-	return (old_owner_id);
-}
 
 /***
  * @brief The philosopher takes the forks
@@ -168,14 +138,18 @@ void	eat(t_philosopher *philosopher)
 		right_fork);
 	if (is_alive(philosopher))
 	{
-		philosopher->last_meal_time = current_time();
-		philosopher->meal_end_time = philosopher->last_meal_time
-			+ table->time_to_eat;
-		philosopher->wake_up_time = philosopher->meal_end_time
-			+ table->time_to_sleep;
+		// philosopher->last_meal_time = current_time();
+		set_last_time_meal(philosopher);
+		set_meal_end_time(philosopher);
+		set_wake_up_time(philosopher);
+		// philosopher->meal_end_time = philosopher->last_meal_time
+		// 	+ table->time_to_eat;
+		// philosopher->wake_up_time = philosopher->meal_end_time
+		// 	+ table->time_to_sleep;
 		log_action(philosopher->simulation, philosopher->id, "is eating");
 		// sleep_ms(table->time_to_eat);
-		sleep_till(philosopher->meal_end_time);
+		// sleep_till(philosopher->meal_end_time);
+		sleep_till(get_meal_end_time(philosopher));
 		set_fork_owner(philosopher, left_fork, RELEASE);
 		pthread_mutex_unlock(&table->forks[left_fork].fork_mutex);
 		// pthread_mutex_lock(&table->nbr_forks_mutex);
@@ -191,15 +165,20 @@ void	eat(t_philosopher *philosopher)
 		// log_action(philosopher->simulation, philosopher->id,
 		// 	forks_data.message_right);
 		philosopher->is_eating = 0;
-		philosopher->times_eaten++;
+		// pthread_mutex_lock(&philosopher->times_eaten_mutex);
+		// philosopher->times_eaten++;
+		// pthread_mutex_unlock(&philosopher->times_eaten_mutex);
+		set_eaten_meals(philosopher, 1);
 	}
 	else if (philosopher->is_eating)
 	{
 		// report_death(philosopher);
-		set_fork_owner(philosopher, left_fork, RELEASE);
-		pthread_mutex_unlock(&table->forks[left_fork].fork_mutex);
-		set_fork_owner(philosopher, right_fork, RELEASE);
-		pthread_mutex_unlock(&table->forks[right_fork].fork_mutex);
+		// if (set_fork_owner(philosopher, left_fork, RELEASE) == philosopher->id)
+		// 	pthread_mutex_unlock(&table->forks[left_fork].fork_mutex);
+		// if (set_fork_owner(philosopher, right_fork, RELEASE) == philosopher->id)
+		// 	pthread_mutex_unlock(&table->forks[right_fork].fork_mutex);
+		unlock_my_forks(philosopher);
+		// philosopher->is_eating = 0; // im not sure about it
 		// pthread_mutex_lock(&table->nbr_forks_mutex);
 		// table->nbr_forks += 2;
 		// pthread_mutex_unlock(&table->nbr_forks_mutex);
@@ -215,7 +194,8 @@ void	get_a_nap(t_philosopher *philosopher)
 	{
 		log_action(philosopher->simulation, philosopher->id, "is sleeping");
 		// if (current_time() < philosopher->wake_up_time)
-		sleep_till(philosopher->wake_up_time);
+		// sleep_till(philosopher->wake_up_time);
+		sleep_till(get_wake_up_time(philosopher));
 	}
 	// else
 	// {
