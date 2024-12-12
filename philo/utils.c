@@ -100,7 +100,9 @@ void	log_action(t_simulation *simulation, int philo_id, const char *action)
 	t_log		*log;
 	long long	timestamp;
 
+	pthread_mutex_lock(&simulation->table->start_time_mutex);
 	timestamp = current_time() - simulation->table->start_time;
+	pthread_mutex_unlock(&simulation->table->start_time_mutex);
 	log = create_log(timestamp, philo_id, action);
 	if (!log)
 	{
@@ -194,33 +196,10 @@ void	print_simu_status(t_simulation *simulation)
 	// }
 }
 
-// void unlock_philo_forks(t_simulation *simulation, int philo_id)
-// {
-// 	int left_fork;
-// 	int right_fork;
+void	set_start_time(t_simulation *simulation)
+{
+	pthread_mutex_lock(&simulation->table->start_time_mutex);
+	simulation->table->start_time = current_time();
+	pthread_mutex_unlock(&simulation->table->start_time_mutex);
+}
 
-// 	get_forks_ids(philo_id, &left_fork, &right_fork, simulation->table->num_philosophers);
-// 	pthread_mutex_unlock(&simulation->table->forks[left_fork].fork_mutex);
-// 	pthread_mutex_unlock(&simulation->table->forks[right_fork].fork_mutex);
-// }
-
-
-// void	handle_greediness(t_philosopher philosopher)
-// {
-// 	long long	ref_time;
-// 	long long	now;
-// 	long long	margin;
-// 	long long	time_left;
-
-// 	ref_time = philosopher.times_eaten * (philosopher.simulation->table->time_to_eat
-// 			+ philosopher.simulation->table->time_to_sleep);
-// 	now = current_time() - philosopher.simulation->table->start_time;
-// 	margin = philosopher.simulation->table->time_to_eat / 4;
-// 	time_left = philosopher.simulation->table->time_to_die - (current_time()
-//			- philosopher.last_meal_time);
-// 	if (now > margin && ft_abs(now - ref_time) < margin && time_left > margin)
-// 	{
-// 		log_action(philosopher.simulation, philosopher.id, "is greedy");
-// 		sleep_ms(GREEDINESS);
-// 	}
-// }

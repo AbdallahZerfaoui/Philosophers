@@ -1,7 +1,7 @@
 EXE = philo
-NBR_PHILO = 2
+NBR_PHILO = 3
 
-CC = gcc
+CC = cc
 RM = rm -f
 CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize=thread
 
@@ -13,7 +13,7 @@ SRC = main.c init.c philosopher.c \
 	
 OBJ = $(SRC:.c=.o)
 
-all: art2 $(EXE)
+all: art $(EXE)
 
 $(EXE): $(OBJ)
 	$(CC) $(CFLAGS) -I. -o $(EXE) $(OBJ)

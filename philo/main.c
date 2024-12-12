@@ -24,7 +24,8 @@ static void	run_simulation(t_simulation *simulation)
 			(void *)philosopher_routine, &simulation->philosophers[i]);
 		i++;
 	}
-	simulation->table->start_time = current_time();
+	// simulation->table->start_time = current_time();
+	set_start_time(simulation);
 	// simulation->go_flag = 1; // start the simulation
 	pthread_create(&simulation->monitor, NULL, (void *)monitoring_routine, simulation);
 	// duration = 0;
@@ -76,7 +77,7 @@ int	main(int argc, char **argv)
 	}
 	pthread_mutex_unlock(&simulation->print_mutex);
 	pthread_mutex_unlock(&simulation->log_mutex);
-	print_simu_status(simulation);
+	// print_simu_status(simulation);
 	destroy_mutexes(simulation);
 	free_simulation(simulation);
 	return (0);

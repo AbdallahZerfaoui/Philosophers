@@ -85,6 +85,7 @@ typedef struct s_table
 	t_fork				*forks;
 	t_philosopher		*philosophers;
 	long long			start_time;
+	pthread_mutex_t		start_time_mutex;
 }						t_table;
 
 typedef struct s_simulation
@@ -127,6 +128,7 @@ void					sleep_till(long long target_time);
 long long				current_time(void);
 long long				current_time_us(void);
 int						custom_mutex_trylock(pthread_mutex_t *mutex);
+void					set_start_time(t_simulation *simulation);
 // Utils - Simulation
 int						alles_gut(t_simulation *simulation);
 int						dinner_is_over(t_simulation *simulation);

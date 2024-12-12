@@ -82,6 +82,7 @@ void	destroy_mutexes(t_simulation *simulation)
 	pthread_mutex_destroy(&simulation->log_mutex);
 	pthread_mutex_destroy(&simulation->death_mutex);
 	pthread_mutex_destroy(&simulation->starvation_mutex);
+	pthread_mutex_destroy(&simulation->table->start_time_mutex);
 	// pthread_mutex_destroy(&simulation->table->nbr_forks_mutex);
 }
 
@@ -132,6 +133,7 @@ t_simulation	*parse_inputs(char **argv)
 	pthread_mutex_init(&simulation->log_mutex, NULL);
 	pthread_mutex_init(&simulation->death_mutex, NULL);
 	pthread_mutex_init(&simulation->starvation_mutex, NULL);
+	pthread_mutex_init(&simulation->table->start_time_mutex, NULL);
 	// pthread_mutex_init(&simulation->table->nbr_forks_mutex, NULL);
 	simulation->philosophers = (t_philosopher *) \
 		ft_calloc(simulation->table->num_philosophers, sizeof(t_philosopher));
@@ -146,6 +148,6 @@ t_simulation	*parse_inputs(char **argv)
 	simulation->table->philosophers = simulation->philosophers;
 	init_philosophers(simulation, mini_nbr_meals);
 	simulation->table->start_time = current_time();
-	simulation->start_simulation = simulation->table->start_time + 10;
+	simulation->start_simulation = simulation->table->start_time + 10; // should i keep this variable?
 	return (simulation);
 }
