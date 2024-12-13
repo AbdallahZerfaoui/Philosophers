@@ -23,18 +23,36 @@ void	report_death(t_philosopher *philosopher)
 	// pthread_mutex_unlock(&simulation->death_mutex);
 	set_someone_died(philosopher);
 }
-
-int	is_alive(t_philosopher *philosopher)
+/***
+ *@note the difference between im alive and is alive is that im alive takes 
+ the last meal time from the philosopher structure
+ without using the mutex, while is alive uses the getter 
+ function to get the last meal time
+ */
+int	im_alive(t_philosopher *philosopher)
 {
 	long long	time_since_last_meal;
-	int			nbr_meals_eaten;
+	// int			nbr_meals_eaten;
 
-	pthread_mutex_lock(&philosopher->times_eaten_mutex);
-	nbr_meals_eaten = philosopher->times_eaten;
-	pthread_mutex_unlock(&philosopher->times_eaten_mutex);
-	time_since_last_meal = current_time() - get_last_time_meal(philosopher);
-	if (time_since_last_meal > philosopher->simulation->table->time_to_die
-		&& nbr_meals_eaten < philosopher->mini_nbr_meals)
+	// pthread_mutex_lock(&philosopher->times_eaten_mutex);
+	// nbr_meals_eaten = philosopher->times_eaten;
+	// pthread_mutex_unlock(&philosopher->times_eaten_mutex);
+	time_since_last_meal = current_time() - philosopher->last_meal_time;
+	// if (time_since_last_meal > philosopher->simulation->table->time_to_die
+	// 	&& nbr_meals_eaten < philosopher->mini_nbr_meals)
+	if (time_since_last_meal > philosopher->simulation->table->time_to_die)
+	{
+		return (0);
+	}
+	return (1);
+}
+
+int	is_alive(t_simulation *simulation, t_philo_shared_data *data)
+{
+	long long	time_since_last_meal;
+
+	time_since_last_meal = current_time() - data->last_meal_time;
+	if (time_since_last_meal > simulation->table->time_to_die)
 	{
 		return (0);
 	}

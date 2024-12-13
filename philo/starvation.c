@@ -12,17 +12,17 @@
 
 #include "philo.h"
 
-void	report_starvation(t_philosopher *philosopher)
-{
-	t_simulation	*simulation;
+// void	report_starvation(t_philosopher *philosopher)
+// {
+// 	t_simulation	*simulation;
 
-	simulation = philosopher->simulation;
-	log_action(simulation, philosopher->id, "is starving");
-	pthread_mutex_lock(&simulation->starvation_mutex);
-	simulation->someone_starving = philosopher->id + 1;
-	// pthread_cond_signal(&simulation->starvation_done);
-	pthread_mutex_unlock(&simulation->starvation_mutex);
-}
+// 	simulation = philosopher->simulation;
+// 	log_action(simulation, philosopher->id, "is starving");
+// 	pthread_mutex_lock(&simulation->starvation_mutex);
+// 	simulation->someone_starving = philosopher->id + 1;
+// 	// pthread_cond_signal(&simulation->starvation_done);
+// 	pthread_mutex_unlock(&simulation->starvation_mutex);
+// }
 
 int	check_starvation(t_philosopher *philosopher)
 {

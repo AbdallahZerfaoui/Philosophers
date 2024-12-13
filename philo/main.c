@@ -19,7 +19,8 @@ static void	run_simulation(t_simulation *simulation)
 	i = 0;
 	while (i < simulation->table->num_philosophers)
 	{
-		simulation->philosophers[i].last_meal_time = current_time();
+		// simulation->philosophers[i].last_meal_time = current_time();
+		set_last_time_meal(&simulation->philosophers[i]);
 		pthread_create(&simulation->philosophers[i].thread, NULL,
 			(void *)philosopher_routine, &simulation->philosophers[i]);
 		i++;
@@ -71,10 +72,10 @@ int	main(int argc, char **argv)
 	// printf("log size : %d\n", log_size(simulation->log_lst));
 	if (get_log_lst(simulation) != NULL)
 	{
-		pthread_mutex_lock(&simulation->print_mutex);
+		// pthread_mutex_lock(&simulation->print_mutex);
 		pthread_mutex_lock(&simulation->log_mutex);
 		print_logs(simulation->log_lst);
-		pthread_mutex_unlock(&simulation->print_mutex);
+		// pthread_mutex_unlock(&simulation->print_mutex);
 		pthread_mutex_unlock(&simulation->log_mutex);
 	}
 	print_simu_status(simulation);

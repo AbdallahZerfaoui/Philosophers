@@ -63,28 +63,30 @@ typedef struct s_fork
 typedef struct s_philosopher
 {
 	int					id;
+	pthread_mutex_t		philo_mutex;
 	int					mini_nbr_meals;
 	pthread_t			thread;
 	int					times_eaten;
-	pthread_mutex_t		times_eaten_mutex;
 	int					ready_to_eat;
 	long long			last_meal_time; // when the meal started
-	pthread_mutex_t		last_meal_time_mutex;
 	long long			meal_end_time;
-	pthread_mutex_t		meal_end_time_mutex;
 	long long			wake_up_time;
-	pthread_mutex_t		wake_up_time_mutex;
 	int					is_eating;
-	long long			got_left_fork_time;
 	struct s_simulation	*simulation;
 }						t_philosopher;
+
+typedef struct s_philo_shared_data
+{
+	int					times_eaten;
+	long long			last_meal_time;
+}						t_philo_shared_data;
 
 typedef struct s_table
 {
 	int					num_philosophers;
 	long long			time_to_die;
-	long long			time_to_eat;
 	long long			time_to_sleep;
+	long long			time_to_eat;
 	t_fork				*forks;
 	t_philosopher		*philosophers;
 	long long			start_time;
@@ -99,10 +101,6 @@ typedef struct s_simulation
 	t_log				*log_lst;
 	pthread_t			monitor;
 	int					someone_died;
-	int					someone_starving;
-	pthread_mutex_t		starvation_mutex;
-	pthread_cond_t		starvation_done;
-	pthread_mutex_t		print_mutex;
 	pthread_mutex_t		death_mutex;
 	pthread_mutex_t		log_mutex;
 }						t_simulation;
@@ -143,7 +141,8 @@ int						is_neighbor_starving(t_philosopher *philosopher);
 void					wait_neighbor_to_eat(t_philosopher *philosopher);
 // Utils - Philosophers
 void					report_death(t_philosopher *philosopher);
-int						is_alive(t_philosopher *philosopher);
+int						is_alive(t_simulation *simulation, t_philo_shared_data *data);
+int						im_alive(t_philosopher *philosopher);
 void					handle_greediness(t_philosopher philosopher);
 
 // Actions
@@ -187,6 +186,7 @@ void					set_eaten_meals(t_philosopher *philosopher, int increment);
 void					set_wake_up_time(t_philosopher *philosopher);
 void					set_meal_end_time(t_philosopher *philosopher);
 void					set_someone_died(t_philosopher *philosopher);
+void					set_philo_times(t_philosopher *philosopher);
 
 // Getters
 long long				get_last_time_meal(t_philosopher *philosopher);
@@ -196,5 +196,6 @@ long long				get_start_time(t_simulation *simulation);
 t_log					*get_log_lst(t_simulation *simulation);
 int						get_times_eaten(t_philosopher *philosopher);
 int						get_someone_died(t_simulation *simulation);
+t_philo_shared_data		*get_philo_data(t_philosopher *philosopher);
 
 #endif

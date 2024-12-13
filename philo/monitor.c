@@ -21,22 +21,24 @@ void	monitoring_routine(t_simulation *simulation)
 {
 	int	i;
 	int	death_detected;
+	t_philo_shared_data	*data = NULL;
 
 	death_detected = 0;
 	while (!get_someone_died(simulation))
 	{
 		i = 0;
 		// reset the starvation flag if the philosopher is not starving anymore
-		if (simulation->someone_starving && !check_starvation(&simulation->philosophers[simulation->someone_starving - 1]))
-		{
-			pthread_mutex_lock(&simulation->starvation_mutex);
-			simulation->someone_starving = 0;
-			pthread_mutex_unlock(&simulation->starvation_mutex);
-		}
+		// if (simulation->someone_starving && !check_starvation(&simulation->philosophers[simulation->someone_starving - 1]))
+		// {
+		// 	pthread_mutex_lock(&simulation->starvation_mutex);
+		// 	simulation->someone_starving = 0;
+		// 	pthread_mutex_unlock(&simulation->starvation_mutex);
+		// }
 
 		while (i < simulation->table->num_philosophers)
 		{
-			if (!is_alive(&simulation->philosophers[i]) && !death_detected)
+			data = get_philo_data(&simulation->philosophers[i]); //check valgrind
+			if (!is_alive(simulation, data) && !death_detected)
 			{
 				report_death(&simulation->philosophers[i]);
 				death_detected = 1;
@@ -48,8 +50,11 @@ void	monitoring_routine(t_simulation *simulation)
 			// {
 			// 	report_starvation(&simulation->philosophers[i]);
 			// }
+			free(data);
+			data = NULL;
 			i++;
 		}
+		free(data); // think about removing this allocation
 		// ft_putstr("someone died\n");
 		if (dinner_is_over(simulation))
 		{

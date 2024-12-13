@@ -52,7 +52,7 @@ void	take_forks(t_philosopher *philosopher, int side)
 	right_fork = forks_data.right_fork;
 	sprintf(forks_data.message_left, "has taken the left fork %d", left_fork);
 	sprintf(forks_data.message_right, "has taken the right fork %d", right_fork);
-	if (is_alive(philosopher))
+	if (im_alive(philosopher))
 	{
 		if (side == 0)
 		{
@@ -136,12 +136,13 @@ void	eat(t_philosopher *philosopher)
 		left_fork);
 	sprintf(forks_data.message_right, "has released the right fork %d",
 		right_fork);
-	if (is_alive(philosopher))
+	if (im_alive(philosopher))
 	{
 		// philosopher->last_meal_time = current_time();
-		set_last_time_meal(philosopher);
-		set_meal_end_time(philosopher);
-		set_wake_up_time(philosopher);
+		// set_last_time_meal(philosopher);
+		// set_meal_end_time(philosopher);
+		// set_wake_up_time(philosopher);
+		set_philo_times(philosopher);
 		// philosopher->meal_end_time = philosopher->last_meal_time
 		// 	+ table->time_to_eat;
 		// philosopher->wake_up_time = philosopher->meal_end_time
@@ -190,7 +191,7 @@ void	get_a_nap(t_philosopher *philosopher)
 	// long long	nap_duration;
 
 	// nap_duration = philosopher->simulation->table->time_to_sleep;
-	if (is_alive(philosopher))
+	if (im_alive(philosopher))
 	{
 		log_action(philosopher->simulation, philosopher->id, "is sleeping");
 		// if (current_time() < philosopher->wake_up_time)
@@ -205,7 +206,7 @@ void	get_a_nap(t_philosopher *philosopher)
 
 void	think(t_philosopher *philosopher)
 {
-	if (is_alive(philosopher))
+	if (im_alive(philosopher))
 		log_action(philosopher->simulation, philosopher->id, "is thinking");
 }
 

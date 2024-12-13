@@ -23,16 +23,18 @@ static void	init_philosophers(t_simulation *simulation, int mini_nbr_meals)
 		philosopher = &simulation->philosophers[i];
 		philosopher->id = i;
 		philosopher->times_eaten = 0;
-		pthread_mutex_init(&philosopher->times_eaten_mutex, NULL);
-		pthread_mutex_init(&philosopher->last_meal_time_mutex, NULL);
-		pthread_mutex_init(&philosopher->meal_end_time_mutex, NULL);
-		pthread_mutex_init(&philosopher->wake_up_time_mutex, NULL);
+		philosopher->last_meal_time = 0;
+		pthread_mutex_init(&philosopher->philo_mutex, NULL);
+		// pthread_mutex_init(&philosopher->times_eaten_mutex, NULL);
+		// pthread_mutex_init(&philosopher->last_meal_time_mutex, NULL);
+		// pthread_mutex_init(&philosopher->meal_end_time_mutex, NULL);
+		// pthread_mutex_init(&philosopher->wake_up_time_mutex, NULL);
 		philosopher->mini_nbr_meals = mini_nbr_meals;
 		set_last_time_meal(philosopher);
 		philosopher->meal_end_time = 0;
 		philosopher->wake_up_time = 0;
 		philosopher->is_eating = 0;
-		philosopher->got_left_fork_time = 0;
+		// philosopher->got_left_fork_time = 0;
 		philosopher->simulation = simulation;
 		i++;
 	}
@@ -79,16 +81,17 @@ void	destroy_mutexes(t_simulation *simulation)
 	{
 		pthread_mutex_destroy(&simulation->table->forks[i].fork_mutex);
 		pthread_mutex_destroy(&simulation->table->forks[i].owner_mutex);
-		pthread_mutex_destroy(&simulation->philosophers[i].times_eaten_mutex);
-		pthread_mutex_destroy(&simulation->philosophers[i].last_meal_time_mutex);
-		pthread_mutex_destroy(&simulation->philosophers[i].meal_end_time_mutex);
-		pthread_mutex_destroy(&simulation->philosophers[i].wake_up_time_mutex);
+		pthread_mutex_destroy(&simulation->philosophers[i].philo_mutex);
+		// pthread_mutex_destroy(&simulation->philosophers[i].times_eaten_mutex);
+		// pthread_mutex_destroy(&simulation->philosophers[i].last_meal_time_mutex);
+		// pthread_mutex_destroy(&simulation->philosophers[i].meal_end_time_mutex);
+		// pthread_mutex_destroy(&simulation->philosophers[i].wake_up_time_mutex);
 		i++;
 	}
-	pthread_mutex_destroy(&simulation->print_mutex);
+	// pthread_mutex_destroy(&simulation->print_mutex);
 	pthread_mutex_destroy(&simulation->log_mutex);
 	pthread_mutex_destroy(&simulation->death_mutex);
-	pthread_mutex_destroy(&simulation->starvation_mutex);
+	// pthread_mutex_destroy(&simulation->starvation_mutex);
 	pthread_mutex_destroy(&simulation->table->start_time_mutex);
 	// pthread_mutex_destroy(&simulation->table->nbr_forks_mutex);
 }
@@ -110,7 +113,7 @@ t_simulation	*parse_inputs(char **argv)
 	if (simulation == NULL)
 		return (NULL);
 	simulation->someone_died = 0;
-	simulation->someone_starving = 0;
+	// simulation->someone_starving = 0;
 	simulation->log_lst = NULL;
 	simulation->table = ft_calloc(1, sizeof(t_table));
 	if (simulation->table == NULL)
@@ -136,10 +139,10 @@ t_simulation	*parse_inputs(char **argv)
 		return (NULL);
 	}
 	init_forks(simulation);
-	pthread_mutex_init(&simulation->print_mutex, NULL);
+	// pthread_mutex_init(&simulation->print_mutex, NULL);
 	pthread_mutex_init(&simulation->log_mutex, NULL);
 	pthread_mutex_init(&simulation->death_mutex, NULL);
-	pthread_mutex_init(&simulation->starvation_mutex, NULL);
+	// pthread_mutex_init(&simulation->starvation_mutex, NULL);
 	pthread_mutex_init(&simulation->table->start_time_mutex, NULL);
 	// pthread_mutex_init(&simulation->table->nbr_forks_mutex, NULL);
 	simulation->philosophers = (t_philosopher *) \

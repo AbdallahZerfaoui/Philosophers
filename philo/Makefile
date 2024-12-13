@@ -1,5 +1,5 @@
 EXE = philo
-NBR_PHILO = 129
+NBR_PHILO = 142
 
 CC = cc
 RM = rm -f
@@ -8,7 +8,7 @@ CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize=thread
 SRC = main.c init.c philosopher.c \
 	utils.c errors.c \
 	memory_management.c basic.c maths.c \
-	monitor.c starvation.c logs.c \
+	monitor.c logs.c \
 	actions.c setters.c getters.c \
 	
 OBJ = $(SRC:.c=.o)
@@ -28,12 +28,12 @@ fclean: clean
 re: fclean all
 
 run_test: re
-	./$(EXE) $(NBR_PHILO) 800 200 200 3
+	./$(EXE) $(NBR_PHILO) 800 200 200
 
 valgrind: re
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes  ./$(EXE) $(NBR_PHILO) 800 200 200 3
 
-halgrind: re
+helgrind: re
 	valgrind --tool=helgrind ./$(EXE) $(NBR_PHILO) 800 200 200 3 
 
 drd: re
