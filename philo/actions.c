@@ -56,8 +56,8 @@ void	take_forks(t_philosopher *philosopher, int side)
 	{
 		if (side == 0)
 		{
-			pthread_mutex_lock(&table->forks[left_fork].fork_mutex);
-			set_fork_owner(philosopher, left_fork, TAKE);
+			lock_safely(&table->forks[left_fork].fork_mutex);
+			set_fork_owner(&philosopher->left_fork, left_fork, TAKE);
 			log_action(simulation, philosopher->id, forks_data.message_left);
 			// pthread_mutex_lock(&table->nbr_forks_mutex);
 			// table->nbr_forks--;
@@ -68,9 +68,9 @@ void	take_forks(t_philosopher *philosopher, int side)
 			// pthread_mutex_lock(&table->forks[right_fork].fork_mutex);
 			else if (philosopher->simulation->table->num_philosophers % 2 >= 0) // != 0
 			{
-				if (pthread_mutex_lock(&table->forks[right_fork].fork_mutex) == 0)
+				if (lock_safely(&table->forks[right_fork].fork_mutex) == 0)
 				{
-					set_fork_owner(philosopher, right_fork, TAKE);
+					set_fork_owner(&philosopher->right_fork, right_fork, TAKE);
 					log_action(simulation, philosopher->id, forks_data.message_right);
 					// pthread_mutex_lock(&table->nbr_forks_mutex);
 					// table->nbr_forks--;
@@ -79,8 +79,8 @@ void	take_forks(t_philosopher *philosopher, int side)
 				}
 				else
 				{
-					set_fork_owner(philosopher, left_fork, RELEASE);
-					pthread_mutex_unlock(&table->forks[left_fork].fork_mutex);
+					unlock_safely(&table->forks[left_fork].fork_mutex);
+					set_fork_owner(&philosopher->left_fork, left_fork, RELEASE);
 					log_action(simulation, philosopher->id, "has released the left fork"); // to remove
 					// pthread_mutex_lock(&table->nbr_forks_mutex);
 					// table->nbr_forks++;
@@ -91,8 +91,8 @@ void	take_forks(t_philosopher *philosopher, int side)
 			}
 			else 
 			{
-				pthread_mutex_lock(&table->forks[right_fork].fork_mutex);
-				set_fork_owner(philosopher, right_fork, TAKE);
+				lock_safely(&table->forks[right_fork].fork_mutex);
+				set_fork_owner(&philosopher->right_fork, right_fork, TAKE);
 				// pthread_mutex_lock(&table->nbr_forks_mutex);
 				// table->nbr_forks--;
 				// pthread_mutex_unlock(&table->nbr_forks_mutex);
@@ -102,14 +102,14 @@ void	take_forks(t_philosopher *philosopher, int side)
 		}
 		else // side 1
 		{
-			pthread_mutex_lock(&table->forks[right_fork].fork_mutex);
-			set_fork_owner(philosopher, right_fork, TAKE);
+			lock_safely(&table->forks[right_fork].fork_mutex);
+			set_fork_owner(&philosopher->right_fork, right_fork, TAKE);
 			// pthread_mutex_lock(&table->nbr_forks_mutex);
 			// table->nbr_forks--;
 			// pthread_mutex_unlock(&table->nbr_forks_mutex);
 			log_action(simulation, philosopher->id, forks_data.message_right);
-			pthread_mutex_lock(&table->forks[left_fork].fork_mutex);
-			set_fork_owner(philosopher, left_fork, TAKE);
+			lock_safely(&table->forks[left_fork].fork_mutex);
+			set_fork_owner(&philosopher->left_fork, left_fork, TAKE);
 			// pthread_mutex_lock(&table->nbr_forks_mutex);
 			// table->nbr_forks--;
 			// pthread_mutex_unlock(&table->nbr_forks_mutex);
@@ -151,15 +151,15 @@ void	eat(t_philosopher *philosopher)
 		// sleep_ms(table->time_to_eat);
 		// sleep_till(philosopher->meal_end_time);
 		sleep_till(get_meal_end_time(philosopher));
-		set_fork_owner(philosopher, left_fork, RELEASE);
-		pthread_mutex_unlock(&table->forks[left_fork].fork_mutex);
+		unlock_safely(&table->forks[left_fork].fork_mutex);
+		set_fork_owner(&philosopher->left_fork, left_fork, RELEASE);
 		// pthread_mutex_lock(&table->nbr_forks_mutex);
 		// table->nbr_forks++;
 		// pthread_mutex_unlock(&table->nbr_forks_mutex);
 		// log_action(philosopher->simulation, philosopher->id,
 		// 	forks_data.message_left);
-		set_fork_owner(philosopher, right_fork, RELEASE);
-		pthread_mutex_unlock(&table->forks[right_fork].fork_mutex);
+		unlock_safely(&table->forks[right_fork].fork_mutex);
+		set_fork_owner(&philosopher->right_fork, right_fork, RELEASE);
 		// pthread_mutex_lock(&table->nbr_forks_mutex);
 		// table->nbr_forks++;
 		// pthread_mutex_unlock(&table->nbr_forks_mutex);
@@ -210,6 +210,29 @@ void	think(t_philosopher *philosopher)
 		log_action(philosopher->simulation, philosopher->id, "is thinking");
 }
 
+// void	unlock_my_forks(t_philosopher *philosopher)
+// {
+// 	t_simulation	*simulation;
+// 	int	left_fork;
+// 	int	right_fork;
+
+// 	simulation = philosopher->simulation;
+// 	get_forks_ids(philosopher->id, &left_fork, &right_fork, simulation->table->num_philosophers);
+// 	// printf("fork left : %d, fork right : %d\n", left_fork, right_fork);
+// 	// pthread_mutex_lock(&simulation->table->forks[left_fork].owner_mutex);
+// 	if (set_fork_owner(philosopher, left_fork, RELEASE) == philosopher->id)
+// 	{
+// 		pthread_mutex_unlock(&simulation->table->forks[left_fork].fork_mutex);
+// 	}
+// 	// pthread_mutex_unlock(&simulation->table->forks[left_fork].owner_mutex);
+// 	// pthread_mutex_lock(&simulation->table->forks[right_fork].owner_mutex);
+// 	if(set_fork_owner(philosopher, right_fork, RELEASE) == philosopher->id)
+// 	{
+// 		pthread_mutex_unlock(&simulation->table->forks[right_fork].fork_mutex);
+// 	}
+// 	// pthread_mutex_unlock(&simulation->table->forks[right_fork].owner_mutex);
+// }
+
 void	unlock_my_forks(t_philosopher *philosopher)
 {
 	t_simulation	*simulation;
@@ -217,18 +240,22 @@ void	unlock_my_forks(t_philosopher *philosopher)
 	int	right_fork;
 
 	simulation = philosopher->simulation;
-	get_forks_ids(philosopher->id, &left_fork, &right_fork, simulation->table->num_philosophers);
-	// printf("fork left : %d, fork right : %d\n", left_fork, right_fork);
-	// pthread_mutex_lock(&simulation->table->forks[left_fork].owner_mutex);
-	if (set_fork_owner(philosopher, left_fork, RELEASE) == philosopher->id)
+	// get_forks_ids(philosopher->id, &left_fork, &right_fork, simulation->table->num_philosophers);
+	left_fork = philosopher->left_fork;
+	right_fork = philosopher->right_fork;
+	// if (set_fork_owner(philosopher, left_fork, RELEASE) == philosopher->id)
+	if (left_fork != -1)
 	{
-		pthread_mutex_unlock(&simulation->table->forks[left_fork].fork_mutex);
+		unlock_safely(&simulation->table->forks[left_fork].fork_mutex);
+		philosopher->left_fork = -1;
 	}
 	// pthread_mutex_unlock(&simulation->table->forks[left_fork].owner_mutex);
 	// pthread_mutex_lock(&simulation->table->forks[right_fork].owner_mutex);
-	if(set_fork_owner(philosopher, right_fork, RELEASE) == philosopher->id)
+	// if(set_fork_owner(philosopher, right_fork, RELEASE) == philosopher->id)
+	if (right_fork != -1)
 	{
-		pthread_mutex_unlock(&simulation->table->forks[right_fork].fork_mutex);
+		unlock_safely(&simulation->table->forks[right_fork].fork_mutex);
+		philosopher->right_fork = -1;
 	}
 	// pthread_mutex_unlock(&simulation->table->forks[right_fork].owner_mutex);
 }

@@ -73,10 +73,10 @@ int	main(int argc, char **argv)
 	if (get_log_lst(simulation) != NULL)
 	{
 		// pthread_mutex_lock(&simulation->print_mutex);
-		pthread_mutex_lock(&simulation->log_mutex);
+		lock_safely(&simulation->log_mutex);
 		print_logs(simulation->log_lst);
 		// pthread_mutex_unlock(&simulation->print_mutex);
-		pthread_mutex_unlock(&simulation->log_mutex);
+		unlock_safely(&simulation->log_mutex);
 	}
 	print_simu_status(simulation);
 	destroy_mutexes(simulation);

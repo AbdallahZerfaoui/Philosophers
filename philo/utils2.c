@@ -12,31 +12,51 @@
 
 #include "philo.h"
 
-int	custom_mutex_trylock(pthread_mutex_t *mutex)
+int	lock_safely(pthread_mutex_t *mutex)
 {
-	// struct timeval start, now;
-	long long elapsed;
-	long long start, now;
-
-	// Record the start time
-	// gettimeofday(&start, NULL);
-	start = current_time_us();
-
-	// Attempt to lock the mutex
-	while (pthread_mutex_lock(mutex) != 0)
+	if (pthread_mutex_lock(mutex) != 0)
 	{
-		// Get the current time
-		now = current_time_us();
-
-		// Calculate elapsed time (in microseconds)
-		elapsed = now - start;
-
-		// Return failure if mutex couldn't be acquired within a minimal interval (non-blocking)
-		if (elapsed > 2)
-		{             // 10 microseconds as a non-blocking threshold
-			return (1); // Simulate failure (mutex already locked)
-		}
+		return (LOCK_ERROR);
+		// exit(LOCK_ERROR);
 	}
-	// Successfully locked the mutex
 	return (0);
 }
+
+int	unlock_safely(pthread_mutex_t *mutex)
+{
+	if (pthread_mutex_unlock(mutex) != 0)
+	{
+		// exit (UNLOCK_ERROR);
+		return (UNLOCK_ERROR);
+	}
+	return (0);
+}
+
+// int	custom_mutex_trylock(pthread_mutex_t *mutex)
+// {
+// 	// struct timeval start, now;
+// 	long long elapsed;
+// 	long long start, now;
+
+// 	// Record the start time
+// 	// gettimeofday(&start, NULL);
+// 	start = current_time_us();
+
+// 	// Attempt to lock the mutex
+// 	while (pthread_mutex_lock(mutex) != 0)
+// 	{
+// 		// Get the current time
+// 		now = current_time_us();
+
+// 		// Calculate elapsed time (in microseconds)
+// 		elapsed = now - start;
+
+// 		// Return failure if mutex couldn't be acquired within a minimal interval (non-blocking)
+// 		if (elapsed > 2)
+// 		{             // 10 microseconds as a non-blocking threshold
+// 			return (1); // Simulate failure (mutex already locked)
+// 		}
+// 	}
+// 	// Successfully locked the mutex
+// 	return (0);
+// }

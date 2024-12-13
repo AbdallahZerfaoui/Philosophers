@@ -1,12 +1,12 @@
 EXE = philo
-NBR_PHILO = 142
+NBR_PHILO = 145
 
 CC = cc
 RM = rm -f
 CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize=thread
 
 SRC = main.c init.c philosopher.c \
-	utils.c errors.c \
+	utils.c utils2.c errors.c \
 	memory_management.c basic.c maths.c \
 	monitor.c logs.c \
 	actions.c setters.c getters.c \
@@ -39,6 +39,21 @@ helgrind: re
 drd: re
 	valgrind --tool=drd ./$(EXE) $(NBR_PHILO) 800 200 200 3
 
+help: art
+	@echo "---------------------------------------------------------------"
+	@echo "                   Philosophers project help					"
+	@echo "---------------------------------------------------------------"
+	@echo "Available make targets:"
+	@echo "  all        - Compile the program."
+	@echo "  clean      - Remove object files."
+	@echo "  fclean     - Remove object files and the executable."
+	@echo "  re         - Clean and recompile the program."
+	@echo "  run_test   - Run the program with specified philosopher number."
+	@echo "  valgrind   - Run Valgrind with memory leak detection."
+	@echo "  helgrind   - Run Valgrind's Helgrind for thread race condition detection."
+	@echo "  drd        - Run Valgrind's DRD for thread-related errors."
+	@echo "  help       - Display this help message."
+
 art2:
 	@echo " ____  _     _ _                       _                   ";
 	@echo "|  _ \| |__ (_) | ___  ___  ___  _ __ | |__   ___ _ __ ___ ";
@@ -47,7 +62,6 @@ art2:
 	@echo "|_|   |_| |_|_|_|\___/|___/\___/| .__/|_| |_|\___|_|  |___/";
 	@echo "                                |_|         by The Greatest";
 
-
 art:
 	@echo "▗▄▄▖ ▗▖ ▗▖▗▄▄▄▖▗▖    ▗▄▖  ▗▄▄▖ ▗▄▖ ▗▄▄▖ ▗▖ ▗▖▗▄▄▄▖▗▄▄▖  ▗▄▄▖";
 	@echo "▐▌ ▐▌▐▌ ▐▌  █  ▐▌   ▐▌ ▐▌▐▌   ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌   ▐▌ ▐▌▐▌   ";
@@ -55,5 +69,4 @@ art:
 	@echo "▐▌   ▐▌ ▐▌▗▄█▄▖▐▙▄▄▖▝▚▄▞▘▗▄▄▞▘▝▚▄▞▘▐▌   ▐▌ ▐▌▐▙▄▄▖▐▌ ▐▌▗▄▄▞▘";
 	@echo "                                             by The Greatest";
 
-
-.PHONY: all clean fclean re art art2 valgrind helgrind drd
+.PHONY: all clean fclean re art art2 valgrind helgrind drd help

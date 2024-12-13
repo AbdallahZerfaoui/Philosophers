@@ -111,9 +111,9 @@ void	log_action(t_simulation *simulation, int philo_id, const char *action)
 	{
 		return ;
 	}
-	pthread_mutex_lock(&simulation->log_mutex);
+	lock_safely(&simulation->log_mutex);
 	simulation->log_lst = add_log(simulation->log_lst, log);
-	pthread_mutex_unlock(&simulation->log_mutex);
+	unlock_safely(&simulation->log_mutex);
 }
 
 /***
@@ -201,13 +201,13 @@ void	print_simu_status(t_simulation *simulation)
 		if (i == simulation->table->num_philosophers - 1)
 			printf("\n");
 	}
-	// printf("forks status : ");
-	// for (int i = 0; i < simulation->table->num_philosophers; i++)
-	// {
-	// 	printf("%d ", simulation->table->forks[i].owner);
-	// 	if (i == simulation->table->num_philosophers - 1)
-	// 		printf("\n");
-	// }
+	printf("forks status : ");
+	for (int i = 0; i < simulation->table->num_philosophers; i++)
+	{
+		printf("%d ", simulation->philosophers[i].left_fork);
+		if (i == simulation->table->num_philosophers - 1)
+			printf("\n");
+	}
 }
 
 

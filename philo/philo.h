@@ -33,6 +33,8 @@
 # define DELAY_AFTER_CREATION 500 //in us
 # define TAKE 1
 # define RELEASE -1
+# define LOCK_ERROR 1
+# define UNLOCK_ERROR 2
 
 
 // Action description (e.g., "is eating")
@@ -56,8 +58,6 @@ typedef struct s_fork
 {
 	int					id;
 	pthread_mutex_t		fork_mutex;
-	int					owner;
-	pthread_mutex_t		owner_mutex;
 }						t_fork;
 
 typedef struct s_philosopher
@@ -71,6 +71,8 @@ typedef struct s_philosopher
 	long long			last_meal_time; // when the meal started
 	long long			meal_end_time;
 	long long			wake_up_time;
+	int					left_fork;
+	int					right_fork;
 	int					is_eating;
 	struct s_simulation	*simulation;
 }						t_philosopher;
@@ -145,6 +147,10 @@ int						is_alive(t_simulation *simulation, t_philo_shared_data *data);
 int						im_alive(t_philosopher *philosopher);
 void					handle_greediness(t_philosopher philosopher);
 
+// Utils - mutex
+int						lock_safely(pthread_mutex_t *mutex);
+int						unlock_safely(pthread_mutex_t *mutex);
+
 // Actions
 void					think(t_philosopher *philosopher);
 void					take_forks(t_philosopher *philosopher, int side);
@@ -180,7 +186,8 @@ void					free_log(t_log *log);
 
 // Setters
 void					set_last_time_meal(t_philosopher *philosopher);
-int						set_fork_owner(t_philosopher *philosopher, int fork_id, int action);
+// int						set_fork_owner(t_philosopher *philosopher, int fork_id, int action);
+void					set_fork_owner(int *fork, int fork_id, int action);
 void					set_start_time(t_simulation *simulation);
 void					set_eaten_meals(t_philosopher *philosopher, int increment);
 void					set_wake_up_time(t_philosopher *philosopher);

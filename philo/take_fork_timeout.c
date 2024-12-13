@@ -23,7 +23,7 @@ void	*lock_thread_function(void *arg)
 	t_lock_data	*data;
 
 	data = (t_lock_data *)arg;
-	pthread_mutex_lock(data->mutex);
+	lock_safely(data->mutex);
 	data->lock_acquired = 1;
 	return (NULL);
 }
