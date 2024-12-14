@@ -1,13 +1,14 @@
 EXE = philo
 NBR_PHILO = 145
+NBR_MEALS = 3
 
 CC = cc
 RM = rm -f
-CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize=thread -Ofast
 
 SRC = main.c init.c philosopher.c \
 	utils.c utils2.c errors.c \
-	memory_management.c basic.c maths.c \
+	memory_management.c basic.c \
 	monitor.c logs.c \
 	actions.c setters.c getters.c \
 	
@@ -28,16 +29,20 @@ fclean: clean
 re: fclean all
 
 run_test: re
-	./$(EXE) $(NBR_PHILO) 800 200 200
+	./$(EXE) $(NBR_PHILO) 800 200 200 $(NBR_MEALS)
 
 valgrind: re
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes  ./$(EXE) $(NBR_PHILO) 800 200 200 3
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes  ./$(EXE) $(NBR_PHILO) 800 200 200 $(NBR_MEALS)
 
 helgrind: re
-	valgrind --tool=helgrind ./$(EXE) $(NBR_PHILO) 800 200 200 3 
+	valgrind --tool=helgrind ./$(EXE) $(NBR_PHILO) 800 200 200 $(NBR_MEALS) 
 
 drd: re
-	valgrind --tool=drd ./$(EXE) $(NBR_PHILO) 800 200 200 3
+	valgrind --tool=drd ./$(EXE) $(NBR_PHILO) 800 200 200 $(NBR_MEALS)
+
+cppcheck: re
+	cppcheck --enable=warning,style,performance,portability --enable=unusedFunction $(SRC)
+
 
 help: art
 	@echo "---------------------------------------------------------------"
@@ -52,6 +57,7 @@ help: art
 	@echo "  valgrind   - Run Valgrind with memory leak detection."
 	@echo "  helgrind   - Run Valgrind's Helgrind for thread race condition detection."
 	@echo "  drd        - Run Valgrind's DRD for thread-related errors."
+	@echo "  cppcheck   - Run cppcheck static analysis."
 	@echo "  help       - Display this help message."
 
 art2:
@@ -69,4 +75,4 @@ art:
 	@echo "▐▌   ▐▌ ▐▌▗▄█▄▖▐▙▄▄▖▝▚▄▞▘▗▄▄▞▘▝▚▄▞▘▐▌   ▐▌ ▐▌▐▙▄▄▖▐▌ ▐▌▗▄▄▞▘";
 	@echo "                                             by The Greatest";
 
-.PHONY: all clean fclean re art art2 valgrind helgrind drd help
+.PHONY: all clean fclean re art art2 valgrind helgrind drd help run_test cppcheck

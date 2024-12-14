@@ -29,7 +29,7 @@ void	report_death(t_philosopher *philosopher)
  without using the mutex, while is alive uses the getter 
  function to get the last meal time
  */
-int	im_alive(t_philosopher *philosopher)
+int	im_alive(const t_philosopher *philosopher)
 {
 	long long	time_since_last_meal;
 	// int			nbr_meals_eaten;
@@ -47,7 +47,7 @@ int	im_alive(t_philosopher *philosopher)
 	return (1);
 }
 
-int	is_alive(t_simulation *simulation, t_philo_shared_data *data)
+int	is_alive(const t_simulation *simulation, const t_philo_shared_data *data)
 {
 	long long	time_since_last_meal;
 
@@ -65,10 +65,10 @@ int	is_alive(t_simulation *simulation, t_philo_shared_data *data)
  */
 void	*philosopher_routine(t_philosopher *philosopher)
 {
-	t_table	*table;
-	int		left_fork;
-	int		right_fork;
-	int		side;
+	const t_table	*table;
+	int				left_fork;
+	int				right_fork;
+	int				side;
 
 	table = philosopher->simulation->table;
 	side = philosopher->id % 2;

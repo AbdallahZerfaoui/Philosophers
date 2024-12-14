@@ -15,6 +15,7 @@
 void	handle_missing_values(void)
 {
 	ft_putstr("Missing values\n");
-	ft_putstr("Usage: ./philo [nbr_of_philosophers] [time_to_die] [time_to_eat] [time_to_sleep] [minimum_nbr_meals]\n");
+	ft_putstr("Usage: ./philo [nbr_of_philosophers] [time_to_die] ");
+	ft_putstr("[time_to_eat] [time_to_sleep] [minimum_nbr_meals]\n");
 	exit(1);
 }

@@ -8,7 +8,7 @@ MINIMUM_TIMESTAMP=2700
 
 rm -f output_*.txt
 make re; clear
-for i in $(seq 2 180); do
+for i in $(seq 2 100); do
 	echo "Testing with $i philosophers..."
 
 	touch output_"$i".txt

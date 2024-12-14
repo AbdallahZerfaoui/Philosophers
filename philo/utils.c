@@ -2,19 +2,15 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+        
-	+:+     */
-/*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+      
-	+#+        */
-/*                                                +#+#+#+#+#+  
-	+#+           */
-/*   Created: 2024/11/29 11:39:33 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/05 12:29:51 by azerfaou         ###   ########.fr       */
+/*                                                    +:+ +:+         +:+     */
+/*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/14 16:57:54 by azerfaou          #+#    #+#             */
+/*   Updated: 2024/12/14 16:57:54 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
 
 // long long	current_time(void)
 // {
@@ -37,16 +33,16 @@ long long	current_time(void)
 	return (time);
 }
 
-long long	current_time_us(void)
-{
-	struct timespec ts;
-	long long time;
+// long long	current_time_us(void)
+// {
+// 	struct timespec ts;
+// 	long long time;
 
-	clock_gettime(CLOCK_MONOTONIC, &ts);
-		// clock_gettime is more precise than gettimeofday but forbiden in the subject
-	time = (ts.tv_sec * 1000000000LL + ts.tv_nsec)/1000LL;
-	return (time);
-}
+// 	clock_gettime(CLOCK_MONOTONIC, &ts);
+// 		// clock_gettime is more precise than gettimeofday but forbiden in the subject
+// 	time = (ts.tv_sec * 1000000000LL + ts.tv_nsec)/1000LL;
+// 	return (time);
+// }
 
 void	sleep_ms(int ms)
 {
@@ -201,13 +197,13 @@ void	print_simu_status(t_simulation *simulation)
 		if (i == simulation->table->num_philosophers - 1)
 			printf("\n");
 	}
-	printf("forks status : ");
-	for (int i = 0; i < simulation->table->num_philosophers; i++)
-	{
-		printf("%d ", simulation->philosophers[i].left_fork);
-		if (i == simulation->table->num_philosophers - 1)
-			printf("\n");
-	}
+	// printf("forks status : ");
+	// for (int i = 0; i < simulation->table->num_philosophers; i++)
+	// {
+	// 	printf("%d ", simulation->philosophers[i].left_fork);
+	// 	if (i == simulation->table->num_philosophers - 1)
+	// 		printf("\n");
+	// }
 }
 
 

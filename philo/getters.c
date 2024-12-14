@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 14:54:02 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/13 21:11:44 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/14 17:04:35 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,19 @@ long long	get_last_time_meal(t_philosopher *philosopher)
 	return (last_time_meal);
 }
 
-long long	get_meal_end_time(t_philosopher *philosopher)
+long long	get_meal_end_time(const t_philosopher *philosopher)
 {
 	long long	meal_end_time;
 
-	// pthread_mutex_lock(&philosopher->meal_end_time_mutex);
 	meal_end_time = philosopher->meal_end_time;
-	// pthread_mutex_unlock(&philosopher->meal_end_time_mutex);
 	return (meal_end_time);
 }
 
-long long	get_wake_up_time(t_philosopher *philosopher)
+long long	get_wake_up_time(const t_philosopher *philosopher)
 {
 	long long	wake_up_time;
 
-	// pthread_mutex_lock(&philosopher->wake_up_time_mutex);
 	wake_up_time = philosopher->wake_up_time;
-	// pthread_mutex_unlock(&philosopher->wake_up_time_mutex);
 	return (wake_up_time);
 }
 

@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 14:10:30 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/13 21:12:43 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/14 17:05:13 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,20 +83,20 @@ void	set_eaten_meals(t_philosopher *philosopher, int increment)
 	unlock_safely(&philosopher->philo_mutex);
 }
 
-void	set_wake_up_time(t_philosopher *philosopher)
-{
-	const t_table	*table;
+// void	set_wake_up_time(t_philosopher *philosopher)
+// {
+// 	const t_table	*table;
 
-	table = philosopher->simulation->table;
-	// pthread_mutex_lock(&philosopher->wake_up_time_mutex);
-	philosopher->wake_up_time = philosopher->meal_end_time
-		+ table->time_to_sleep;
-	// pthread_mutex_unlock(&philosopher->wake_up_time_mutex);
-}
+// 	table = philosopher->simulation->table;
+// 	// pthread_mutex_lock(&philosopher->wake_up_time_mutex);
+// 	philosopher->wake_up_time = philosopher->meal_end_time
+// 		+ table->time_to_sleep;
+// 	// pthread_mutex_unlock(&philosopher->wake_up_time_mutex);
+// }
 
 void	set_philo_times(t_philosopher *philosopher)
 {
-	t_table *table;
+	const t_table *table;
 
 	table = philosopher->simulation->table;
 	lock_safely(&philosopher->philo_mutex);
@@ -107,16 +107,16 @@ void	set_philo_times(t_philosopher *philosopher)
 	unlock_safely(&philosopher->philo_mutex);
 }
 
-void	set_meal_end_time(t_philosopher *philosopher)
-{
-	const t_table	*table;
+// void	set_meal_end_time(t_philosopher *philosopher)
+// {
+// 	const t_table	*table;
 
-	table = philosopher->simulation->table;
-	// pthread_mutex_lock(&philosopher->meal_end_time_mutex);
-	philosopher->meal_end_time = philosopher->last_meal_time
-		+ table->time_to_eat;
-	// pthread_mutex_unlock(&philosopher->meal_end_time_mutex);
-}
+// 	table = philosopher->simulation->table;
+// 	// pthread_mutex_lock(&philosopher->meal_end_time_mutex);
+// 	philosopher->meal_end_time = philosopher->last_meal_time
+// 		+ table->time_to_eat;
+// 	// pthread_mutex_unlock(&philosopher->meal_end_time_mutex);
+// }
 
 void set_someone_died(t_philosopher *philosopher)
 {

@@ -15,7 +15,6 @@
 
 #include "philo.h"
 
-
 // The calloc() function allocates memory for an array of nmemb elements of
 // size bytes each and returns a pointer to the allocated memory.
 // The memory is set to zero. If nmemb or size is 0, then calloc() returns
@@ -34,8 +33,8 @@
 
 void	*ft_calloc(size_t nitems, size_t size)
 {
-	void *ptr;
-	size_t total_size;
+	void	*ptr;
+	size_t	total_size;
 
 	if (nitems != 0 && size > SIZE_MAX / nitems)
 		return (NULL);
@@ -49,14 +48,15 @@ void	*ft_calloc(size_t nitems, size_t size)
 
 int	ft_atoi(const char *str)
 {
-	int res;
-	int sign;
-	int i;
+	int	res;
+	int	sign;
+	int	i;
 
 	res = 0;
 	sign = 1;
 	i = 0;
-	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n' || str[i] == '\v'
+	while (str[i] == ' ' || str[i] == '\t'
+		|| str[i] == '\n' || str[i] == '\v'
 		|| str[i] == '\f' || str[i] == '\r')
 		i++;
 	while (str[i] == '0')
@@ -68,28 +68,9 @@ int	ft_atoi(const char *str)
 	return (sign * res);
 }
 
-char	*ft_strdup(const char *s)
-{
-	char *ptr;
-	size_t size;
-
-	size = 0;
-	while (s[size])
-		size++;
-	ptr = (char *)ft_calloc(size + 1, sizeof(char));
-	if (!ptr)
-		return (NULL);
-	while (size > 0)
-	{
-		ptr[size - 1] = s[size - 1];
-		size--;
-	}
-	return (ptr);
-}
-
 size_t	ft_strlen(const char *s)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (s[i])

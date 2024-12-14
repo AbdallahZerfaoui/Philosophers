@@ -13,26 +13,6 @@
 #include "philo.h"
 
 /***
- * @brief The philosopher takes a fork
- * if the fork is not available, the function returns 0
- */
-// int	take_fork_time_out(t_fork *fork, int philo_id)
-// {
-// 	long long	start;
-
-// 	start = current_time();
-// 	while (current_time() - start < FORK_TIME_OUT + philo_id)
-// 	{
-// 		if (pthread_mutex_trylock(&fork->fork_mutex) == 0) //forbidden
-// 		{
-// 			return (1);
-// 		}
-// 	}
-// 	return (0);
-// }
-
-
-/***
  * @brief The philosopher takes the forks
  * so we lock the mutexes of the forks, no other philosopher can take them
  */

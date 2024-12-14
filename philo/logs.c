@@ -78,40 +78,66 @@ t_log	*add_log(t_log *log_lst, t_log *log)
 	return (head);
 }
 
-int	log_size(t_log *lst)
-{
-	int		len;
-	t_log	*current;
+// int	log_size(t_log *lst)
+// {
+// 	int		len;
+// 	t_log	*current;
 
-	len = 0;
-	current = lst;
-	while (current != NULL)
-	{
-		len++;
-		current = current->next;
-	}
-	return (len);
-}
+// 	len = 0;
+// 	current = lst;
+// 	while (current != NULL)
+// 	{
+// 		len++;
+// 		current = current->next;
+// 	}
+// 	return (len);
+// }
 
-void	print_logs(t_log *log_lst)
+// void	print_logs(t_log *log_lst)
+// {
+// 	t_log	*current;
+// 	t_log	*prev;
+// 	char	message[256];
+
+// 	if (log_lst == NULL)
+// 		return ;
+// 	current = log_lst;
+// 	while (current != NULL)
+// 	{
+// 		sprintf(message, "%lld %d %s\n",
+// 			current->timestamp, current->philo_id, current->action);
+// 		// printf("%lld %d %s\n",
+// 		// 	current->timestamp, current->philo_id, current->action);
+// 		ft_putstr(message);
+// 		prev = current;
+// 		current = current->next;
+// 		free_log(prev);
+// 	}
+// }
+
+void	print_logs(t_simulation *simulation)
 {
 	t_log	*current;
 	t_log	*prev;
-
+	t_log	*log_lst;
+	char	message[256];
+	lock_safely(&simulation->log_mutex);
+	log_lst = simulation->log_lst;
 	if (log_lst == NULL)
 		return ;
 	current = log_lst;
-	// printf("Size of the log: %d\n", log_size(log_lst));
 	while (current != NULL)
 	{
-		// printf("%lld - philo : %d - %s\n",
-		// 	current->timestamp, current->philo_id, current->action);
-		printf("%lld %d %s\n",
+		sprintf(message, "%lld %d %s\n",
 			current->timestamp, current->philo_id, current->action);
+		// printf("%lld %d %s\n",
+		// 	current->timestamp, current->philo_id, current->action);
+		ft_putstr(message);
 		prev = current;
 		current = current->next;
-		free_log(prev);
+		free(prev);
 	}
+	unlock_safely(&simulation->log_mutex);
 }
 
 void	print_logs_before(t_simulation *simulation, long long limit)
@@ -143,7 +169,7 @@ void	print_logs_before(t_simulation *simulation, long long limit)
 		// 	current->timestamp, current->philo_id, current->action);
 		tmp = current;
 		current = current->next;
-		free_log(tmp);
+		free(tmp);
 	}
 	simulation->log_lst = current;
 	unlock_safely(&simulation->log_mutex);
@@ -152,7 +178,7 @@ void	print_logs_before(t_simulation *simulation, long long limit)
 /***
  * @brief Free the log properly
  */
-void free_log(t_log *log)
-{
-	free(log);
-}
+// void free_log(t_log *log)
+// {
+// 	free(log);
+// }

@@ -143,8 +143,9 @@ int						is_neighbor_starving(t_philosopher *philosopher);
 void					wait_neighbor_to_eat(t_philosopher *philosopher);
 // Utils - Philosophers
 void					report_death(t_philosopher *philosopher);
-int						is_alive(t_simulation *simulation, t_philo_shared_data *data);
-int						im_alive(t_philosopher *philosopher);
+int						is_alive(const t_simulation *simulation, \
+		const t_philo_shared_data *data);
+int						im_alive(const t_philosopher *philosopher);
 void					handle_greediness(t_philosopher philosopher);
 
 // Utils - mutex
@@ -179,7 +180,8 @@ t_log					*create_log(long long timestamp, int philo_id,
 							const char *action);
 t_log					*insert_after(t_log *lst, t_log *target, t_log *log);
 t_log					*add_log(t_log *log_lst, t_log *log);
-void					print_logs(t_log *log_lst);
+// void					print_logs(t_log *log_lst);
+void					print_logs(t_simulation *simulation);
 void					print_logs_before(t_simulation *simulation, long long limit);
 int						log_size(t_log *lst);
 void					free_log(t_log *log);
@@ -197,8 +199,8 @@ void					set_philo_times(t_philosopher *philosopher);
 
 // Getters
 long long				get_last_time_meal(t_philosopher *philosopher);
-long long				get_meal_end_time(t_philosopher *philosopher);
-long long				get_wake_up_time(t_philosopher *philosopher);
+long long				get_meal_end_time(const t_philosopher *philosopher);
+long long				get_wake_up_time(const t_philosopher *philosopher);
 long long				get_start_time(t_simulation *simulation);
 t_log					*get_log_lst(t_simulation *simulation);
 int						get_times_eaten(t_philosopher *philosopher);
