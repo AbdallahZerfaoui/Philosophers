@@ -1,5 +1,5 @@
 EXE = philo
-NBR_PHILO = 145
+NBR_PHILO = 155
 NBR_MEALS = 3
 
 CC = cc
@@ -9,7 +9,7 @@ CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize=thread -Ofast
 SRC = main.c init.c philosopher.c \
 	utils.c utils2.c errors.c \
 	memory_management.c basic.c \
-	monitor.c logs.c \
+	monitor.c logs.c scribe.c \
 	actions.c setters.c getters.c \
 	
 OBJ = $(SRC:.c=.o)

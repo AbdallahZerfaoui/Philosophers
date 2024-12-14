@@ -57,7 +57,7 @@ void	take_forks(t_philosopher *philosopher, int side)
 					// pthread_mutex_unlock(&table->nbr_forks_mutex);
 					philosopher->is_eating = 1;
 				}
-				else
+				else // if he can't take the right fork
 				{
 					unlock_safely(&table->forks[left_fork].fork_mutex);
 					set_fork_owner(&philosopher->left_fork, left_fork, RELEASE);

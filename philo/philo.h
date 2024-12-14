@@ -28,9 +28,10 @@
 # define SIMU_DURATION 5000
 # define ACTION_STR_LEN 50
 # define MINI_TIME 10
-# define GREEDINESS 30
 # define FORK_TIME_OUT 1
 # define DELAY_AFTER_CREATION 500 //in us
+# define SCRIBE_TIME 3
+# define GREEDINESS 30
 # define TAKE 1
 # define RELEASE -1
 # define LOCK_ERROR 1
@@ -102,6 +103,7 @@ typedef struct s_simulation
 	long long			start_simulation;
 	t_log				*log_lst;
 	pthread_t			monitor;
+	pthread_t			scribe;
 	int					someone_died;
 	pthread_mutex_t		death_mutex;
 	pthread_mutex_t		log_mutex;
@@ -136,6 +138,7 @@ int						alles_gut(t_simulation *simulation);
 int						dinner_is_over(t_simulation *simulation);
 int						is_simulation_over(t_simulation *simulation);
 void					print_simu_status(t_simulation *simulation);
+void					scribe_routine(t_simulation *simulation);
 // Utils - Starvation
 void					report_starvation(t_philosopher *philosopher);
 int						check_starvation(t_philosopher *philosopher);

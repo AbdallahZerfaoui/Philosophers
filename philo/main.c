@@ -27,6 +27,8 @@ static void	run_simulation(t_simulation *simulation)
 	set_start_time(simulation);
 	pthread_create(&simulation->monitor, NULL, (void *)monitoring_routine,
 		simulation);
+	pthread_create(&simulation->scribe, NULL, (void *)scribe_routine,
+		simulation);
 	i = 0;
 	while (i < simulation->table->num_philosophers)
 	{
@@ -34,6 +36,7 @@ static void	run_simulation(t_simulation *simulation)
 		i++;
 	}
 	pthread_join(simulation->monitor, NULL);
+	pthread_join(simulation->scribe, NULL);
 }
 
 /***
@@ -56,11 +59,11 @@ int	main(int argc, char **argv)
 			return (1);
 		run_simulation(simulation);
 	}
-	if (get_log_lst(simulation) != NULL)
-	{
-		print_logs(simulation);
-	}
-	print_simu_status(simulation);
+	// if (get_log_lst(simulation) != NULL)
+	// {
+	// 	print_logs(simulation);
+	// }
+	// print_simu_status(simulation);
 	destroy_mutexes(simulation);
 	free_simulation(simulation);
 	return (0);

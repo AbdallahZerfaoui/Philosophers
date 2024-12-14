@@ -140,9 +140,6 @@ int	dinner_is_over(t_simulation *simulation)
 		return (0);
 	while (i < simulation->table->num_philosophers)
 	{
-		// pthread_mutex_lock(&simulation->philosophers[i].times_eaten_mutex);
-		// nbr_meals_eaten = simulation->philosophers[i].times_eaten;
-		// pthread_mutex_unlock(&simulation->philosophers[i].times_eaten_mutex);
 		nbr_meals_eaten = get_times_eaten(&simulation->philosophers[i]);
 		if (nbr_meals_eaten < mini_nbr_meals)
 		{

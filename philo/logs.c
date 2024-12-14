@@ -121,10 +121,14 @@ void	print_logs(t_simulation *simulation)
 	t_log	*prev;
 	t_log	*log_lst;
 	char	message[256];
+
 	lock_safely(&simulation->log_mutex);
 	log_lst = simulation->log_lst;
 	if (log_lst == NULL)
+	{
+		unlock_safely(&simulation->log_mutex);
 		return ;
+	}
 	current = log_lst;
 	while (current != NULL)
 	{
@@ -137,6 +141,7 @@ void	print_logs(t_simulation *simulation)
 		current = current->next;
 		free(prev);
 	}
+	simulation->log_lst = current;
 	unlock_safely(&simulation->log_mutex);
 }
 

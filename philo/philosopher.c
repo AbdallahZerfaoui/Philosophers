@@ -71,7 +71,6 @@ void	*philosopher_routine(t_philosopher *philosopher)
 	int				side;
 
 	table = philosopher->simulation->table;
-	side = philosopher->id % 2;
 	get_forks_ids(philosopher->id, &left_fork, &right_fork,
 		table->num_philosophers);
 	// sleep_till(philosopher->simulation->start_simulation);
@@ -79,6 +78,11 @@ void	*philosopher_routine(t_philosopher *philosopher)
 		usleep(DELAY_AFTER_CREATION);
 	while (!is_simulation_over(philosopher->simulation))
 	{
+
+		if (philosopher->id == 0)
+			side = (philosopher->id + philosopher->simulation->table->num_philosophers) % 2;
+		else
+			side = (philosopher->id) % 2;
 		// if (table->num_philosophers >= 1)
 		// {
 		think(philosopher);

@@ -45,7 +45,7 @@ void	monitoring_routine(t_simulation *simulation)
 		free(data); // think about removing this allocation
 		if (dinner_is_over(simulation))
 			break ;
-		print_logs_before(simulation, current_time()
-			- get_start_time(simulation));
+		// print_logs_before(simulation, current_time()
+		// 	- get_start_time(simulation));
 	}
 }
