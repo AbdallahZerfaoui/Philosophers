@@ -12,6 +12,22 @@
 
 #include "philo.h"
 
+static int	calculate_side(t_philosopher *philosopher)
+{
+	int	side;
+	// const t_table	*table;
+
+	// table = philosopher->simulation->table;
+	// if (table->num_philosophers % 2 == 0)
+	// 	side = philosopher->id % 2;
+	// else if (philosopher->id == 0)
+	// 	side = philosopher->times_eaten % 2;
+	// else
+	// 	side = (philosopher->id + 1) % 2;
+	side = philosopher->id % 2;
+	return (side);
+}
+
 void	report_death(t_philosopher *philosopher)
 {
 	t_simulation	*simulation;
@@ -79,10 +95,11 @@ void	*philosopher_routine(t_philosopher *philosopher)
 	while (!is_simulation_over(philosopher->simulation))
 	{
 
-		if (philosopher->id == 0)
-			side = (philosopher->id + philosopher->simulation->table->num_philosophers) % 2;
-		else
-			side = (philosopher->id) % 2;
+		// if (philosopher->id == 0)
+		// 	side = (philosopher->id + philosopher->simulation->table->num_philosophers) % 2;
+		// else
+		// 	side = (philosopher->id) % 2;
+		side = calculate_side(philosopher);
 		// if (table->num_philosophers >= 1)
 		// {
 		think(philosopher);

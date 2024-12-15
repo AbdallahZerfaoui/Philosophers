@@ -28,15 +28,14 @@
 # define SIMU_DURATION 5000
 # define ACTION_STR_LEN 50
 # define MINI_TIME 10
-# define FORK_TIME_OUT 1
+# define FORK_TIME_OUT 5
 # define DELAY_AFTER_CREATION 500 //in us
-# define SCRIBE_TIME 3
+# define SCRIBE_TIME 1
 # define GREEDINESS 30
 # define TAKE 1
 # define RELEASE -1
 # define LOCK_ERROR 1
 # define UNLOCK_ERROR 2
-
 
 // Action description (e.g., "is eating")
 typedef struct s_log
@@ -175,7 +174,7 @@ void					*ft_calloc(size_t nitems, size_t size);
 int						ft_atoi(const char *str);
 char					*ft_strdup(const char *s);
 size_t					ft_strlen(const char *s);
-void					ft_putstr(char *str);
+ssize_t					ft_putstr(char *str);
 void					ft_strcpy(char *dst, const char *src);
 
 // Logs

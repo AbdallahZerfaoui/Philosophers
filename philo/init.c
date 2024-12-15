@@ -160,6 +160,6 @@ t_simulation	*parse_inputs(char **argv)
 	simulation->table->philosophers = simulation->philosophers;
 	init_philosophers(simulation, mini_nbr_meals);
 	simulation->table->start_time = current_time();
-	simulation->start_simulation = simulation->table->start_time + 10; // should i keep this variable?
+	// simulation->start_simulation = simulation->table->start_time + 10; // should i keep this variable?
 	return (simulation);
 }

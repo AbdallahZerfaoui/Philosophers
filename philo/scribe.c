@@ -39,6 +39,6 @@ void	scribe_routine(t_simulation *simulation)
 		sleep_ms(time_between_prints);
 	}
 	print_logs(simulation);
-	print_simu_status(simulation);
+	// print_simu_status(simulation);
 	// return (NULL);
 }

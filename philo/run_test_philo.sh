@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Colors
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 RESET='\033[0m'
@@ -7,8 +8,9 @@ TIME=3
 MINIMUM_TIMESTAMP=2700
 
 rm -f output_*.txt
-make re; clear
-for i in $(seq 149 161); do
+make re; 
+clear;
+for i in $(seq 159 189); do
 	echo "Testing with $i philosophers..."
 
 	touch output_"$i".txt
@@ -37,5 +39,3 @@ for i in $(seq 149 161); do
 	# Kill the philo process if it's still running
 	kill $pid 2>/dev/null
 done
-
-

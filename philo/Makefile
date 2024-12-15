@@ -1,10 +1,10 @@
 EXE = philo
-NBR_PHILO = 155
+NBR_PHILO = 3
 NBR_MEALS = 3
 
-CC = cc
+CC = gcc
 RM = rm -f
-CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize=thread -Ofast
+CFLAGS = -Wall -Wextra -Werror -g -pthread -fsanitize=thread -Ofast
 
 SRC = main.c init.c philosopher.c \
 	utils.c utils2.c errors.c \
@@ -60,7 +60,7 @@ help: art
 	@echo "  cppcheck   - Run cppcheck static analysis."
 	@echo "  help       - Display this help message."
 
-art2:
+art:
 	@echo " ____  _     _ _                       _                   ";
 	@echo "|  _ \| |__ (_) | ___  ___  ___  _ __ | |__   ___ _ __ ___ ";
 	@echo "| |_) | '_ \| | |/ _ \/ __|/ _ \| '_ \| '_ \ / _ \ '__/ __|";
@@ -68,7 +68,7 @@ art2:
 	@echo "|_|   |_| |_|_|_|\___/|___/\___/| .__/|_| |_|\___|_|  |___/";
 	@echo "                                |_|         by The Greatest";
 
-art:
+art2:
 	@echo "▗▄▄▖ ▗▖ ▗▖▗▄▄▄▖▗▖    ▗▄▖  ▗▄▄▖ ▗▄▖ ▗▄▄▖ ▗▖ ▗▖▗▄▄▄▖▗▄▄▖  ▗▄▄▖";
 	@echo "▐▌ ▐▌▐▌ ▐▌  █  ▐▌   ▐▌ ▐▌▐▌   ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌   ▐▌ ▐▌▐▌   ";
 	@echo "▐▛▀▘ ▐▛▀▜▌  █  ▐▌   ▐▌ ▐▌ ▝▀▚▖▐▌ ▐▌▐▛▀▘ ▐▛▀▜▌▐▛▀▀▘▐▛▀▚▖ ▝▀▚▖";
