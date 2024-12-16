@@ -6,8 +6,10 @@
 test*
 *.txt
 ./*.txt
+*.o
 
 // Specific for the project
 
 backup/
 philo_ohne_log/
+philo

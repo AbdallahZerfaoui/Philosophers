@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 19:26:32 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/14 20:05:43 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/16 11:40:43 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,6 @@ void	scribe_routine(t_simulation *simulation)
 		sleep_ms(time_between_prints);
 	}
 	print_logs(simulation);
-	print_simu_status(simulation);
+	// print_simu_status(simulation);
 	// return (NULL);
 }

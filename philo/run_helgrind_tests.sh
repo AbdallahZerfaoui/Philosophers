@@ -8,7 +8,7 @@ FLAG=helgrind #drd helgrind
 rm -f helgrind_output_*.txt
 make re; clear
 # Loop through a range of tests
-for i in $(seq 2 20); do
+for i in $(seq 2 10); do
     echo "Running Helgrind for test: ./philo $i 800 200 200 3"
 
     # Run Helgrind and capture the output

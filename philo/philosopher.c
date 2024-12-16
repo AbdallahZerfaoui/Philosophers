@@ -12,12 +12,36 @@
 
 #include "philo.h"
 
+static int	calculate_side(t_philosopher *philosopher)
+{
+	int	side;
+	int	nbr_philos;
+
+	nbr_philos = philosopher->simulation->table->num_philosophers;
+	nbr_philos += 1;
+	side = 1;
+	// if (nbr_philos % 2 == 0)
+	// 	side = philosopher->id % 2;
+	// else if (philosopher->id != 0)
+	// 	side = (philosopher->id + 1) % 2;
+	// else
+	// 	side = philosopher->times_eaten % 2;
+	// if (philosopher->id == (philosopher->times_eaten % philosopher->simulation->table->num_philosophers))
+	// 	side = 0;
+	// else
+	// 	side = 1;
+	// return (side);
+	if (philosopher->id == 0)
+		side = 0;
+	return (side);
+}
+
 void	report_death(t_philosopher *philosopher)
 {
 	t_simulation	*simulation;
 
 	simulation = philosopher->simulation;
-	log_action(simulation, philosopher->id, "died");
+	log_action(simulation, philosopher->id, "HAS DIED");
 	// pthread_mutex_lock(&simulation->death_mutex);
 	// simulation->someone_died = philosopher->id + 1;
 	// pthread_mutex_unlock(&simulation->death_mutex);
@@ -75,16 +99,19 @@ void	*philosopher_routine(t_philosopher *philosopher)
 		table->num_philosophers);
 	// sleep_till(philosopher->simulation->start_simulation);
 	if (philosopher->id % 2 == 0)
-		usleep(DELAY_AFTER_CREATION);
+		sleep_ms(table->time_to_eat / 4);
 	while (!is_simulation_over(philosopher->simulation))
 	{
-
-		if (philosopher->id == 0)
-			side = (philosopher->id + philosopher->simulation->table->num_philosophers) % 2;
-		else
-			side = (philosopher->id) % 2;
-		// if (table->num_philosophers >= 1)
-		// {
+		side = calculate_side(philosopher);
+		// side = 0;
+		// side = philosopher->id % 2;
+		// if (philosopher->id == (philosopher->times_eaten % philosopher->simulation->table->num_philosophers))
+		// 	side = 0;
+		// else
+		// 	side = 1;
+		// 	side = (philosopher->id + philosopher->simulation->table->num_philosophers) % 2;
+		// else
+		// 	side = (philosopher->id) % 2;
 		think(philosopher);
 		// handle_greediness(*philosopher);
 		take_forks(philosopher, side);

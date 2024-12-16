@@ -176,6 +176,7 @@ int						ft_atoi(const char *str);
 char					*ft_strdup(const char *s);
 size_t					ft_strlen(const char *s);
 void					ft_putstr(char *str);
+void					ft_putnbr(long long n);
 void					ft_strcpy(char *dst, const char *src);
 
 // Logs

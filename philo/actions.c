@@ -30,15 +30,15 @@ void	take_forks(t_philosopher *philosopher, int side)
 		&forks_data.right_fork, simulation->table->num_philosophers);
 	left_fork = forks_data.left_fork;
 	right_fork = forks_data.right_fork;
-	sprintf(forks_data.message_left, "has taken the left fork %d", left_fork);
-	sprintf(forks_data.message_right, "has taken the right fork %d", right_fork);
+	// sprintf(forks_data.message_left, "has taken the left fork %d", left_fork);
+	// sprintf(forks_data.message_right, "has taken the right fork %d", right_fork);
 	if (im_alive(philosopher))
 	{
 		if (side == 0)
 		{
 			lock_safely(&table->forks[left_fork].fork_mutex);
 			set_fork_owner(&philosopher->left_fork, left_fork, TAKE);
-			log_action(simulation, philosopher->id, forks_data.message_left);
+			log_action(simulation, philosopher->id, "has taken a fork");
 			// pthread_mutex_lock(&table->nbr_forks_mutex);
 			// table->nbr_forks--;
 			// pthread_mutex_unlock(&table->nbr_forks_mutex);
@@ -51,7 +51,7 @@ void	take_forks(t_philosopher *philosopher, int side)
 				if (lock_safely(&table->forks[right_fork].fork_mutex) == 0)
 				{
 					set_fork_owner(&philosopher->right_fork, right_fork, TAKE);
-					log_action(simulation, philosopher->id, forks_data.message_right);
+					log_action(simulation, philosopher->id, "has taken a fork");
 					// pthread_mutex_lock(&table->nbr_forks_mutex);
 					// table->nbr_forks--;
 					// pthread_mutex_unlock(&table->nbr_forks_mutex);
@@ -61,7 +61,7 @@ void	take_forks(t_philosopher *philosopher, int side)
 				{
 					unlock_safely(&table->forks[left_fork].fork_mutex);
 					set_fork_owner(&philosopher->left_fork, left_fork, RELEASE);
-					log_action(simulation, philosopher->id, "has released the left fork"); // to remove
+					// log_action(simulation, philosopher->id, "has released the left fork"); // to remove
 					// pthread_mutex_lock(&table->nbr_forks_mutex);
 					// table->nbr_forks++;
 					// pthread_mutex_unlock(&table->nbr_forks_mutex);
@@ -76,7 +76,7 @@ void	take_forks(t_philosopher *philosopher, int side)
 				// pthread_mutex_lock(&table->nbr_forks_mutex);
 				// table->nbr_forks--;
 				// pthread_mutex_unlock(&table->nbr_forks_mutex);
-				log_action(simulation, philosopher->id, forks_data.message_right);
+				log_action(simulation, philosopher->id, "has taken a fork");
 				philosopher->is_eating = 1;
 			}
 		}
@@ -87,13 +87,13 @@ void	take_forks(t_philosopher *philosopher, int side)
 			// pthread_mutex_lock(&table->nbr_forks_mutex);
 			// table->nbr_forks--;
 			// pthread_mutex_unlock(&table->nbr_forks_mutex);
-			log_action(simulation, philosopher->id, forks_data.message_right);
+			log_action(simulation, philosopher->id, "has taken a fork");
 			lock_safely(&table->forks[left_fork].fork_mutex);
 			set_fork_owner(&philosopher->left_fork, left_fork, TAKE);
 			// pthread_mutex_lock(&table->nbr_forks_mutex);
 			// table->nbr_forks--;
 			// pthread_mutex_unlock(&table->nbr_forks_mutex);
-			log_action(simulation, philosopher->id, forks_data.message_left);
+			log_action(simulation, philosopher->id, "has taken a fork");
 			philosopher->is_eating = 1;
 		}
 	}
@@ -107,15 +107,15 @@ void	eat(t_philosopher *philosopher)
 	t_table			*table;
 	int				left_fork;
 	int				right_fork;
-	t_forks_data	forks_data;
+	// t_forks_data	forks_data;
 
 	table = philosopher->simulation->table;
 	get_forks_ids(philosopher->id, &left_fork, &right_fork,
 		table->num_philosophers);
-	sprintf(forks_data.message_left, "has released the left fork %d",
-		left_fork);
-	sprintf(forks_data.message_right, "has released the right fork %d",
-		right_fork);
+	// sprintf(forks_data.message_left, "has released the left fork %d",
+	// 	left_fork);
+	// sprintf(forks_data.message_right, "has released the right fork %d",
+	// 	right_fork);
 	if (im_alive(philosopher))
 	{
 		// philosopher->last_meal_time = current_time();

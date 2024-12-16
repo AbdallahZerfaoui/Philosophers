@@ -83,6 +83,21 @@ void	ft_putstr(char *str)
 	write(1, str, ft_strlen(str));
 }
 
+void	ft_putnbr(long long n)
+{
+	char c;
+
+	if (n < 0)
+	{
+		write(1, "-", 1);
+		n = -n;
+	}
+	if (n > 9)
+		ft_putnbr(n / 10);
+	c = n % 10 + '0';
+	write(1, &c, 1);
+}
+
 void	ft_strcpy(char *dst, const char *src)
 {
 	while (*src)

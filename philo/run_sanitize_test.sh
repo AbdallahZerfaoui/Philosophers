@@ -11,7 +11,7 @@ make re
 clear
 
 # Loop through a range of tests
-for i in $(seq 150 156); do
+for i in $(seq 2 10); do
     echo "Running ThreadSanitizer for test: ./philo $i 800 200 200 3"
 
     # Run the program and capture the output
