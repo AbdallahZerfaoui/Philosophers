@@ -78,9 +78,11 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-void	ft_putstr(char *str)
+ssize_t	ft_putstr(char *str)
 {
-	write(1, str, ft_strlen(str));
+	ssize_t	len;
+	len = write(1, str, ft_strlen(str));
+	return(len);
 }
 
 void	ft_putnbr(long long n)
