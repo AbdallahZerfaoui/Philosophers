@@ -29,7 +29,7 @@ int	unlock_safely(pthread_mutex_t *mutex)
 		// exit (UNLOCK_ERROR);
 		return (UNLOCK_ERROR);
 	}
-	return (0);
+	return (-1);
 }
 
 // int	custom_mutex_trylock(pthread_mutex_t *mutex)

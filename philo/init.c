@@ -2,19 +2,15 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+
-	+:+     */
-/*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+
-	+#+        */
-/*                                                +#+#+#+#+#+
-	+#+           */
-/*   Created: 2024/11/28 15:45:59 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/05 20:56:32 by azerfaou         ###   ########.fr       */
+/*                                                    +:+ +:+         +:+     */
+/*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 13:30:26 by azerfaou          #+#    #+#             */
+/*   Updated: 2024/12/17 13:30:26 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
 
 t_simulation	*allocate_simulation(void)
 {
@@ -26,8 +22,32 @@ t_simulation	*allocate_simulation(void)
 	return (simulation);
 }
 
+int	check_limits(char **argv)
+{
+	int	i;
+	int	len;
+	int	val;
+
+	i = 1;
+	while (i < 5)
+	{
+		val = ft_atoi(argv[i]);
+		len = ft_strlen(argv[i]);
+		if (len > 10 || val <= 0)
+			return (0);
+		if (i == 1 && val > 200)
+			return (0);
+		if (i > 1 && val > INT_MAX)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 int	parse_arguments(t_table *table, char **argv)
 {
+	if (check_limits(argv) == 0)
+		handle_invalid_args();
 	table->num_philosophers = ft_atoi(argv[1]);
 	table->time_to_die = ft_atoi(argv[2]);
 	table->time_to_eat = ft_atoi(argv[3]);
@@ -110,26 +130,6 @@ int	allocate_philosophers(t_simulation *simulation, int mini_nbr_meals)
 }
 
 /***
- * @brief Handle allocation failure
- * levels depends on how deep in the code the allocation failed
- * the earlier the failure, the lower the level
- */
-void	*handle_allocation_failure(t_simulation *simulation, int level)
-{
-	if (level >= 4)
-	{
-		destroy_mutexes(simulation);
-		free(simulation->table->forks);
-	}
-	if (level >= 3)
-		free(simulation->table);
-	if (level >= 2)
-		free(simulation);
-	return (NULL);
-}
-
-
-/***
  * @brief Parse the inputs and initialize the simulation structure
  * 1. We allocate memory for the simulation structure and the table structure.
  * 2. We fill the table struct
@@ -149,7 +149,7 @@ t_simulation	*parse_inputs(char **argv)
 	if (simulation->table == NULL)
 		return(handle_allocation_failure(simulation, 2));
 	mini_nbr_meals = parse_arguments(simulation->table, argv);
-	if (allocate_forks(simulation) == -1)
+	if (allocate_forks(simulation) == -1 || mini_nbr_meals == -1)
 		return(handle_allocation_failure(simulation, 3));
 	pthread_mutex_init(&simulation->log_mutex, NULL);
 	pthread_mutex_init(&simulation->death_mutex, NULL);

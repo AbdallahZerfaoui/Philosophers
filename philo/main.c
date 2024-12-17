@@ -64,7 +64,10 @@ int	main(int argc, char **argv)
 	// 	print_logs(simulation);
 	// }
 	// print_simu_status(simulation);
-	destroy_mutexes(simulation);
-	free_simulation(simulation);
+	if (simulation != NULL)
+	{
+		destroy_mutexes(simulation);
+		free_simulation(simulation);
+	}
 	return (0);
 }

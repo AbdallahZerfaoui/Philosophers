@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 14:54:02 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/14 17:04:35 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/17 21:48:11 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,31 +22,31 @@ long long	get_last_time_meal(t_philosopher *philosopher)
 	return (last_time_meal);
 }
 
-long long	get_meal_end_time(const t_philosopher *philosopher)
-{
-	long long	meal_end_time;
+// long long	get_meal_end_time(const t_philosopher *philosopher)
+// {
+// 	long long	meal_end_time;
 
-	meal_end_time = philosopher->meal_end_time;
-	return (meal_end_time);
-}
+// 	meal_end_time = philosopher->meal_end_time;
+// 	return (meal_end_time);
+// }
 
-long long	get_wake_up_time(const t_philosopher *philosopher)
-{
-	long long	wake_up_time;
+// long long	get_wake_up_time(const t_philosopher *philosopher)
+// {
+// 	long long	wake_up_time;
 
-	wake_up_time = philosopher->wake_up_time;
-	return (wake_up_time);
-}
+// 	wake_up_time = philosopher->wake_up_time;
+// 	return (wake_up_time);
+// }
 
-t_log	*get_log_lst(t_simulation *simulation)
-{
-	t_log	*log_lst;
+// t_log	*get_log_lst(t_simulation *simulation)
+// {
+// 	t_log	*log_lst;
 
-	lock_safely(&simulation->log_mutex);
-	log_lst = simulation->log_lst;
-	unlock_safely(&simulation->log_mutex);
-	return (log_lst);
-}
+// 	lock_safely(&simulation->log_mutex);
+// 	log_lst = simulation->log_lst;
+// 	unlock_safely(&simulation->log_mutex);
+// 	return (log_lst);
+// }
 
 int	get_times_eaten(t_philosopher *philosopher)
 {
@@ -68,9 +68,9 @@ long long 		get_start_time(t_simulation *simulation)
 	return (start_time);
 }
 
-int get_someone_died(t_simulation *simulation)
+int	get_someone_died(t_simulation *simulation)
 {
-	int someone_died;
+	int	someone_died;
 
 	lock_safely(&simulation->death_mutex);
 	someone_died = simulation->someone_died;
@@ -78,7 +78,7 @@ int get_someone_died(t_simulation *simulation)
 	return (someone_died);
 }
 
-t_philo_shared_data *get_philo_data(t_philosopher *philosopher)
+t_philo_shared_data	*get_philo_data(t_philosopher *philosopher)
 {
 	t_philo_shared_data	*data;
 

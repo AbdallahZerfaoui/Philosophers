@@ -47,13 +47,13 @@ typedef struct s_log
 	struct s_log		*next;
 }						t_log;
 
-typedef struct s_forks_data
-{
-	int					left_fork;
-	char				message_left[256];
-	int					right_fork;
-	char				message_right[256];
-}						t_forks_data;
+// typedef struct s_forks_data
+// {
+// 	int					left_fork;
+// 	char				message_left[256];
+// 	int					right_fork;
+// 	char				message_right[256];
+// }						t_forks_data;
 
 typedef struct s_fork
 {
@@ -117,7 +117,9 @@ void					monitoring_routine(t_simulation *simulation);
 
 // Errors
 void					handle_missing_values(void);
-
+void					handle_invalid_args(void);
+void					*handle_allocation_failure(t_simulation *simulation,
+							int level);
 // Memory management
 void					free_simulation(t_simulation *simulation);
 
@@ -175,7 +177,7 @@ void					*ft_calloc(size_t nitems, size_t size);
 int						ft_atoi(const char *str);
 char					*ft_strdup(const char *s);
 size_t					ft_strlen(const char *s);
-void					ft_putstr(char *str);
+ssize_t					ft_putstr(char *str);
 void					ft_putnbr(long long n);
 void					ft_strcpy(char *dst, const char *src);
 

@@ -1,8 +1,8 @@
 EXE = philo
-NBR_PHILO = 6
+NBR_PHILO = 9
 NBR_MEALS = 3
 
-CC = cc
+CC = gcc
 RM = rm -f
 CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize=thread -Ofast
 
@@ -74,5 +74,6 @@ art2:
 	@echo "▐▛▀▘ ▐▛▀▜▌  █  ▐▌   ▐▌ ▐▌ ▝▀▚▖▐▌ ▐▌▐▛▀▘ ▐▛▀▜▌▐▛▀▀▘▐▛▀▚▖ ▝▀▚▖";
 	@echo "▐▌   ▐▌ ▐▌▗▄█▄▖▐▙▄▄▖▝▚▄▞▘▗▄▄▞▘▝▚▄▞▘▐▌   ▐▌ ▐▌▐▙▄▄▖▐▌ ▐▌▗▄▄▞▘";
 	@echo "                                             by The Greatest";
+
 
 .PHONY: all clean fclean re art art2 valgrind helgrind drd help run_test cppcheck

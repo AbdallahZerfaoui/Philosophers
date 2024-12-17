@@ -15,22 +15,8 @@
 static int	calculate_side(t_philosopher *philosopher)
 {
 	int	side;
-	int	nbr_philos;
 
-	nbr_philos = philosopher->simulation->table->num_philosophers;
-	nbr_philos += 1;
 	side = 1;
-	// if (nbr_philos % 2 == 0)
-	// 	side = philosopher->id % 2;
-	// else if (philosopher->id != 0)
-	// 	side = (philosopher->id + 1) % 2;
-	// else
-	// 	side = philosopher->times_eaten % 2;
-	// if (philosopher->id == (philosopher->times_eaten % philosopher->simulation->table->num_philosophers))
-	// 	side = 0;
-	// else
-	// 	side = 1;
-	// return (side);
 	if (philosopher->id == 0)
 		side = 0;
 	return (side);
@@ -42,9 +28,6 @@ void	report_death(t_philosopher *philosopher)
 
 	simulation = philosopher->simulation;
 	log_action(simulation, philosopher->id, "HAS DIED");
-	// pthread_mutex_lock(&simulation->death_mutex);
-	// simulation->someone_died = philosopher->id + 1;
-	// pthread_mutex_unlock(&simulation->death_mutex);
 	set_someone_died(philosopher);
 }
 /***
@@ -99,7 +82,7 @@ void	*philosopher_routine(t_philosopher *philosopher)
 		table->num_philosophers);
 	// sleep_till(philosopher->simulation->start_simulation);
 	if (philosopher->id % 2 == 0)
-		sleep_ms(table->time_to_eat / 4);
+		sleep_ms(1);
 	while (!is_simulation_over(philosopher->simulation))
 	{
 		side = calculate_side(philosopher);

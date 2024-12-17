@@ -19,3 +19,30 @@ void	handle_missing_values(void)
 	ft_putstr("[time_to_eat] [time_to_sleep] [minimum_nbr_meals]\n");
 	exit(1);
 }
+
+void	handle_invalid_args(void)
+{
+	ft_putstr("Invalid arguments\n");
+	exit(1);
+}
+
+/***
+ * @brief Handle allocation failure
+ * levels depends on how deep in the code the allocation failed
+ * the earlier the failure, the lower the level
+ */
+void	*handle_allocation_failure(t_simulation *simulation, int level)
+{
+	if (!simulation)
+		return (NULL);
+	if (level >= 4)
+	{
+		destroy_mutexes(simulation);
+		free(simulation->table->forks);
+	}
+	if (level >= 3)
+		free(simulation->table);
+	if (level >= 2)
+		free(simulation);
+	return (NULL);
+}

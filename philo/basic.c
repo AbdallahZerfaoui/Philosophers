@@ -81,13 +81,14 @@ size_t	ft_strlen(const char *s)
 ssize_t	ft_putstr(char *str)
 {
 	ssize_t	len;
+
 	len = write(1, str, ft_strlen(str));
 	return(len);
 }
 
 void	ft_putnbr(long long n)
 {
-	char c;
+	char	c;
 
 	if (n < 0)
 	{
