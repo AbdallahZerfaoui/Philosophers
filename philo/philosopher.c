@@ -12,6 +12,34 @@
 
 #include "philo.h"
 
+// void	push_local_log(t_philosopher *philosopher)
+// {
+// 	int	i;
+// 	t_simulation	*simulation;
+// 	int	id;
+// 	t_log	*log;
+
+// 	i = 0;
+// 	id = philosopher->id;
+// 	simulation = philosopher->simulation;
+// 	lock_safely(&simulation->log_mutex);
+// 	while (philosopher->log_buffer[i] != 0)
+// 	{
+// 		if (i == 1 || i == 2)
+// 			log = create_log(philosopher->log_buffer[i], id, "has taken a fork", YELLOW);
+// 		else if (i == 3)
+// 			log = create_log(philosopher->log_buffer[i], id, "is eating", GREEN);
+// 		else if (i == 4)
+// 			log = create_log(philosopher->log_buffer[i], id, "is sleeping", BLUE);
+// 		else if (i == 0)
+// 			log = create_log(philosopher->log_buffer[i], id, "is thinking", CYAN);
+// 		simulation->log_lst = add_log(simulation->log_lst, log);
+// 		i++;
+// 	}
+// 	unlock_safely(&simulation->log_mutex);
+// 	memset(philosopher->log_buffer, 0, sizeof(philosopher->log_buffer));
+// }
+
 static int	calculate_side(t_philosopher *philosopher)
 {
 	int	side;
@@ -27,8 +55,8 @@ void	report_death(t_philosopher *philosopher)
 	t_simulation	*simulation;
 
 	simulation = philosopher->simulation;
-	log_action(simulation, philosopher->id, "HAS DIED");
 	set_someone_died(philosopher);
+	log_action(simulation, philosopher->id, "has died", RED);
 }
 /***
  *@note the difference between im alive and is alive is that im alive takes 
@@ -83,24 +111,15 @@ void	*philosopher_routine(t_philosopher *philosopher)
 	// sleep_till(philosopher->simulation->start_simulation);
 	if (philosopher->id % 2 == 0)
 		sleep_ms(1);
+	side = calculate_side(philosopher);
 	while (!is_simulation_over(philosopher->simulation))
 	{
-		side = calculate_side(philosopher);
-		// side = 0;
-		// side = philosopher->id % 2;
-		// if (philosopher->id == (philosopher->times_eaten % philosopher->simulation->table->num_philosophers))
-		// 	side = 0;
-		// else
-		// 	side = 1;
-		// 	side = (philosopher->id + philosopher->simulation->table->num_philosophers) % 2;
-		// else
-		// 	side = (philosopher->id) % 2;
 		think(philosopher);
 		// handle_greediness(*philosopher);
 		take_forks(philosopher, side);
 		eat(philosopher);
 		get_a_nap(philosopher);
-		// }
+		// push_local_log(philosopher);
 	}
 	// ft_putstr("im out\n");
 	unlock_my_forks(philosopher);

@@ -32,6 +32,15 @@ int	unlock_safely(pthread_mutex_t *mutex)
 	return (-1);
 }
 
+int	get_nbr_chuncks(int num_philosophers)
+{
+	int	chunks;
+
+	chunks = num_philosophers / CHUNK_SIZE;
+	if (num_philosophers % CHUNK_SIZE != 0)
+		chunks++;
+	return (chunks);
+}
 // int	custom_mutex_trylock(pthread_mutex_t *mutex)
 // {
 // 	// struct timeval start, now;

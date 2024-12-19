@@ -35,6 +35,8 @@ void	*handle_allocation_failure(t_simulation *simulation, int level)
 {
 	if (!simulation)
 		return (NULL);
+	if (level >= 5)
+		free(simulation->monitors);
 	if (level >= 4)
 	{
 		destroy_mutexes(simulation);

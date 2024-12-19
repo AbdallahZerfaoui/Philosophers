@@ -17,8 +17,8 @@ t_simulation	*allocate_simulation(void)
 	t_simulation	*simulation;
 
 	simulation = ft_calloc(1, sizeof(t_simulation));
-	if (simulation == NULL)
-		return (NULL);
+	// if (simulation == NULL)
+	// 	return (NULL);
 	return (simulation);
 }
 
@@ -98,6 +98,7 @@ static void	init_philosophers(t_simulation *simulation, int mini_nbr_meals)
 		philosopher->left_fork = -1;
 		philosopher->right_fork = -1;
 		philosopher->simulation = simulation;
+		memset(philosopher->log_buffer, 0, sizeof(philosopher->log_buffer));
 		i++;
 	}
 }
@@ -115,7 +116,7 @@ void	destroy_mutexes(t_simulation *simulation)
 	}
 	pthread_mutex_destroy(&simulation->log_mutex);
 	pthread_mutex_destroy(&simulation->death_mutex);
-	pthread_mutex_destroy(&simulation->table->start_time_mutex);
+	// pthread_mutex_destroy(&simulation->table->start_time_mutex);
 }
 
 int	allocate_philosophers(t_simulation *simulation, int mini_nbr_meals)
@@ -139,8 +140,9 @@ int	allocate_philosophers(t_simulation *simulation, int mini_nbr_meals)
  */
 t_simulation	*parse_inputs(char **argv)
 {
-	t_simulation *simulation;
-	int mini_nbr_meals;
+	t_simulation	*simulation;
+	int				mini_nbr_meals;
+	int				nbr_monitors;
 
 	simulation = allocate_simulation();
 	if (simulation == NULL)
@@ -153,9 +155,13 @@ t_simulation	*parse_inputs(char **argv)
 		return(handle_allocation_failure(simulation, 3));
 	pthread_mutex_init(&simulation->log_mutex, NULL);
 	pthread_mutex_init(&simulation->death_mutex, NULL);
-	pthread_mutex_init(&simulation->table->start_time_mutex, NULL);
+	// pthread_mutex_init(&simulation->table->start_time_mutex, NULL);
 	if (allocate_philosophers(simulation, mini_nbr_meals) == -1)
 		return(handle_allocation_failure(simulation, 4));
+	nbr_monitors = get_nbr_chuncks(simulation->table->num_philosophers);
+	simulation->monitors = ft_calloc(nbr_monitors, sizeof(pthread_t));
+	if (simulation->monitors == NULL)
+		return(handle_allocation_failure(simulation, 5));
 	simulation->table->philosophers = simulation->philosophers;
 	// init_philosophers(simulation, mini_nbr_meals);
 	simulation->table->start_time = current_time();

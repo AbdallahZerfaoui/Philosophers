@@ -12,7 +12,8 @@
 
 #include "philo.h"
 
-t_log	*create_log(long long timestamp, int philo_id, const char *action)
+t_log	*create_log(long long timestamp, int philo_id,
+	const char *action, char *color)
 {
 	t_log	*log;
 
@@ -21,13 +22,8 @@ t_log	*create_log(long long timestamp, int philo_id, const char *action)
 		return (NULL);
 	log->timestamp = timestamp;
 	log->philo_id = philo_id;
-	// log->action = ft_strdup(action);
 	ft_strcpy(log->action, action);
-	// if (log->action == NULL)
-	// {
-	// 	free(log);
-	// 	return (NULL);
-	// }
+	ft_strcpy(log->color, color);
 	log->next = NULL;
 	return (log);
 }
@@ -115,8 +111,10 @@ t_log	*add_log(t_log *log_lst, t_log *log)
 // 	}
 // }
 
-void	display_log(t_log *log)
+static void	display_log(t_log *log, char *color)
 {
+	// ft_putstr(RESET);
+	ft_putstr(color);
 	ft_putnbr(log->timestamp);
 	ft_putstr(" ");
 	ft_putnbr(log->philo_id);
@@ -148,7 +146,7 @@ void	print_logs(t_simulation *simulation)
 		// printf("%lld %d %s\n",
 		// 	current->timestamp, current->philo_id, current->action);
 		// ft_putstr(message);
-		display_log(current);
+		display_log(current, current->color);
 		prev = current;
 		current = current->next;
 		free(prev);

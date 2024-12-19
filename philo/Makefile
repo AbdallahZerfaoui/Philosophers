@@ -15,6 +15,7 @@ SRC = main.c init.c philosopher.c \
 OBJ = $(SRC:.c=.o)
 
 all: art $(EXE)
+	@echo "\033[31m	------------------***༺ (\033[31m\033[32mPhilosophers Compiled!\033[31m)༻***------------------\n\033[0m"
 
 $(EXE): $(OBJ)
 	$(CC) $(CFLAGS) -I. -o $(EXE) $(OBJ)

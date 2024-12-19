@@ -12,6 +12,24 @@
 
 #include "philo.h"
 
+// void	append_local_log(t_philosopher *philosopher)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (i < LOCAL_LOG_SIZE)
+// 	{
+// 		if (philosopher->log_buffer[i] == 0)
+// 		{
+// 			philosopher->log_buffer[i] = current_time()
+// 				- philosopher->simulation->table->start_time;
+// 			break ;
+// 		}
+// 		i++;
+// 	}
+// }
+
+
 void	try_take_fork(t_philosopher *philosopher,
 	int fork_id, int *fork)
 {
@@ -20,7 +38,9 @@ void	try_take_fork(t_philosopher *philosopher,
 	table = philosopher->simulation->table;
 	lock_safely(&table->forks[fork_id].fork_mutex);
 	set_fork_owner(fork, fork_id, TAKE);
-	log_action(philosopher->simulation, philosopher->id, "has taken a fork");
+	// append_local_log(philosopher);
+	log_action(philosopher->simulation, philosopher->id,
+		"has taken a fork", YELLOW);
 }
 
 void	release_fork(t_philosopher *philosopher, int fork_id, int *fork)
@@ -100,7 +120,8 @@ void	eat(t_philosopher *philosopher)
 	if (im_alive(philosopher))
 	{
 		set_philo_times(philosopher);
-		log_action(philosopher->simulation, philosopher->id, "is eating");
+		log_action(philosopher->simulation, philosopher->id, "is eating", GREEN);
+		// append_local_log(philosopher);
 		sleep_till(philosopher->meal_end_time);
 		release_fork(philosopher, left_fork, &philosopher->left_fork);
 		release_fork(philosopher, right_fork, &philosopher->right_fork);
@@ -115,7 +136,8 @@ void	get_a_nap(t_philosopher *philosopher)
 {
 	if (im_alive(philosopher))
 	{
-		log_action(philosopher->simulation, philosopher->id, "is sleeping");
+		log_action(philosopher->simulation, philosopher->id, "is sleeping", BLUE);
+		// append_local_log(philosopher);
 		sleep_till(philosopher->wake_up_time);
 	}
 }
@@ -123,7 +145,10 @@ void	get_a_nap(t_philosopher *philosopher)
 void	think(t_philosopher *philosopher)
 {
 	if (im_alive(philosopher))
-		log_action(philosopher->simulation, philosopher->id, "is thinking");
+	{
+		log_action(philosopher->simulation, philosopher->id, "is thinking", CYAN);
+		// append_local_log(philosopher);
+	}
 }
 
 void	unlock_my_forks(t_philosopher *philosopher)

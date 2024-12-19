@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 14:54:02 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/17 21:48:11 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/19 15:47:57 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ long long 		get_start_time(t_simulation *simulation)
 {
 	long long	start_time;
 
-	lock_safely(&simulation->table->start_time_mutex);
+	// lock_safely(&simulation->table->start_time_mutex);
 	start_time = simulation->table->start_time;
-	unlock_safely(&simulation->table->start_time_mutex);
+	// unlock_safely(&simulation->table->start_time_mutex);
 	return (start_time);
 }
 
@@ -78,16 +78,22 @@ int	get_someone_died(t_simulation *simulation)
 	return (someone_died);
 }
 
-t_philo_shared_data	*get_philo_data(t_philosopher *philosopher)
+/***
+ * @brief Get the philosopher data
+ * @note when the philo read a data he is the only one who can change it
+ * we dont need to lock the mutex
+ */
+void	get_philo_data(t_philosopher *philosopher,
+		t_philo_shared_data	*data)
 {
-	t_philo_shared_data	*data;
+	// t_philo_shared_data	*data;
 
-	data = (t_philo_shared_data *)malloc(sizeof(t_philo_shared_data));
-	if (data == NULL)
-		return (NULL);
+	// data = (t_philo_shared_data *)malloc(sizeof(t_philo_shared_data));
+	// if (data == NULL)
+	// 	return (NULL);
 	lock_safely(&philosopher->philo_mutex);
 	data->times_eaten = philosopher->times_eaten;
 	data->last_meal_time = philosopher->last_meal_time;
 	unlock_safely(&philosopher->philo_mutex);
-	return (data);
+	// return (data);
 }

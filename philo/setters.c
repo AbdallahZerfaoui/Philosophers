@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 14:10:30 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/14 17:05:13 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:21:27 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ void	set_fork_owner(int *fork, int fork_id, int action)
 
 void	set_start_time(t_simulation *simulation)
 {
-	lock_safely(&simulation->table->start_time_mutex);
+	// lock_safely(&simulation->table->start_time_mutex);
 	simulation->table->start_time = current_time();
-	unlock_safely(&simulation->table->start_time_mutex);
+	// unlock_safely(&simulation->table->start_time_mutex);
 }
 
 void	set_last_time_meal(t_philosopher *philosopher)
