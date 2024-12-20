@@ -13,7 +13,7 @@
 #include "philo.h"
 
 t_log	*create_log(long long timestamp, int philo_id,
-	const char *action, char *color)
+	const char *action, const char *color)
 {
 	t_log	*log;
 

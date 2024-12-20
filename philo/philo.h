@@ -34,8 +34,7 @@
 # define MAXIMUM_PHILOS 200
 # define ACTION_STR_LEN 50
 # define CHUNK_SIZE 20
-# define MINI_TIME 10
-# define DELAY_AFTER_CREATION 500 //in us
+# define DELAY_AFTER_CREATION 1000 //in us
 # define SCRIBE_TIME 7
 # define INT_MAX_DIGITS 10
 # define TAKE 1
@@ -129,34 +128,27 @@ void					log_action(t_simulation *simulation, int philo_id,
 							const char *action, char *color);
 void					get_forks_ids(int philo_id, int *left_fork,
 							int *right_fork, int num_philosophers);
-void					sleep_ms(int ms);
-void					sleep_till(long long target_time);
-long long				current_time(void);
-long long				current_time_us(void);
 // Utils - Simulation
 int						dinner_is_over(t_simulation *simulation);
 int						is_simulation_over(t_simulation *simulation);
-void					scribe_routine(t_simulation *simulation);
-// Utils - Starvation
-void					report_starvation(t_philosopher *philosopher);
-int						check_starvation(t_philosopher *philosopher);
-int						is_neighbor_starving(t_philosopher *philosopher);
-void					wait_neighbor_to_eat(t_philosopher *philosopher);
 // Utils - Philosophers
 void					report_death(t_philosopher *philosopher);
 int						is_alive(const t_simulation *simulation, \
 							const t_philo_shared_data *data);
 int						im_alive(const t_philosopher *philosopher);
-void					handle_greediness(t_philosopher philosopher);
 
 // Utils - mutex
 int						lock_safely(pthread_mutex_t *mutex);
 int						unlock_safely(pthread_mutex_t *mutex);
 
+// Utils - time
+long long				current_time(void);
+void					sleep_ms(int ms);
+void					sleep_till(long long target_time);
+
 // Actions
 void					think(t_philosopher *philosopher);
 void					take_forks(t_philosopher *philosopher, int side);
-int						take_fork_time_out(t_fork *fork, int philo_id);
 void					eat(t_philosopher *philosopher);
 void					get_a_nap(t_philosopher *philosopher);
 void					unlock_my_forks(t_philosopher *philosopher);
@@ -180,35 +172,33 @@ int						allocate_philosophers(t_simulation *simulation,
 // Philosophers
 void					philosopher_routine(t_philosopher *philosopher);
 
+// Scribe
+void					scribe_routine(t_simulation *simulation);
+
 // Basic
 int						ft_atoi(const char *str);
-char					*ft_strdup(const char *s);
 size_t					ft_strlen(const char *s);
 ssize_t					ft_putstr(char *str);
-void					ft_putnbr(long long n);
 void					ft_strcpy(char *dst, const char *src);
 void					swap(int *a, int *b);
 
 // Logs
 t_log					*create_log(long long timestamp, int philo_id,
-							const char *action, char *color);
+							const char *action, const char *color);
 t_log					*insert_after(t_log *lst, t_log *target, t_log *log);
 t_log					*add_log(t_log *log_lst, t_log *log);
 void					print_logs(t_simulation *simulation);
-int						log_size(t_log *lst);
 void					free_log_lst(t_log *log_lst);
 
 // Setters
 void					set_last_time_meal(t_philosopher *philosopher);
 void					set_fork_owner(int *fork, int fork_id, int action);
-void					set_start_time(t_simulation *simulation);
 void					set_eaten_meals(t_philosopher *philosopher,
 							int increment);
 void					set_someone_died(t_philosopher *philosopher);
 void					set_philo_times(t_philosopher *philosopher);
 
 // Getters
-long long				get_last_time_meal(t_philosopher *philosopher);
 long long				get_start_time(t_simulation *simulation);
 int						get_times_eaten(t_philosopher *philosopher);
 int						get_someone_died(t_simulation *simulation);

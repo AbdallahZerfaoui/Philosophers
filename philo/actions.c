@@ -18,10 +18,10 @@
  */
 void	take_forks(t_philosopher *philosopher, int side)
 {
-	t_simulation	*simulation;
-	t_table			*table;
-	int				left_fork;
-	int				right_fork;
+	const t_simulation	*simulation;
+	const t_table		*table;
+	int					left_fork;
+	int					right_fork;
 
 	simulation = philosopher->simulation;
 	table = simulation->table;
