@@ -32,16 +32,17 @@
 # define RESET		"\x1b[0m"
 
 # define MINIMUM_INPUTS 5
+# define MAXIMUM_PHILOS 200
 # define ALL_INPUTS 6
 // # define SIMU_DURATION 5000
 # define ACTION_STR_LEN 50
-# define CHUNK_SIZE 200
+# define CHUNK_SIZE 10
 # define MINI_TIME 10
 # define FORK_TIME_OUT 1
 # define DELAY_AFTER_CREATION 500 //in us
-# define SCRIBE_TIME 59
+# define SCRIBE_TIME 7
 # define LOCAL_LOG_SIZE 10
-// # define GREEDINESS 30
+# define INT_MAX_DIGITS 10
 # define TAKE 1
 # define RELEASE -1
 # define LOCK_ERROR 1
@@ -211,6 +212,7 @@ void					print_logs(t_simulation *simulation);
 void					print_logs_before(t_simulation *simulation, long long limit);
 int						log_size(t_log *lst);
 void					free_log(t_log *log);
+void					free_log_lst(t_log *log_lst);
 
 // Setters
 void					set_last_time_meal(t_philosopher *philosopher);

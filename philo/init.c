@@ -33,9 +33,9 @@ int	check_limits(char **argv)
 	{
 		val = ft_atoi(argv[i]);
 		len = ft_strlen(argv[i]);
-		if (len > 10 || val <= 0)
+		if (len > INT_MAX_DIGITS || val <= 0)
 			return (0);
-		if (i == 1 && val > 200)
+		if (i == 1 && val > MAXIMUM_PHILOS)
 			return (0);
 		if (i > 1 && val > INT_MAX)
 			return (0);

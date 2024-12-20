@@ -84,6 +84,7 @@ static void	run_simulation(t_simulation *simulation)
 		// printf("joining monitor\n");
 		i++;
 	}
+	free(m_data);
 	// pthread_join(simulation->monitor_bonn, NULL);
 	// pthread_join(simulation->monitor_berlin, NULL);
 	pthread_join(simulation->scribe, NULL);
