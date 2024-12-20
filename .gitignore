@@ -11,5 +11,6 @@ test*
 // Specific for the project
 
 backup/
+backup_final/
 philo_ohne_log/
 philo

@@ -5,12 +5,28 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/14 16:39:30 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/14 16:39:30 by azerfaou         ###   ########.fr       */
+/*   Created: 2024/12/20 16:46:29 by azerfaou          #+#    #+#             */
+/*   Updated: 2024/12/20 16:46:29 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static int	check_philosopher_status(t_simulation *simulation,
+		t_philo_shared_data *data, int philosopher_id, int *death_detected)
+{
+	int		status;
+
+	status = 1;
+	get_philo_data(&simulation->philosophers[philosopher_id], data);
+	if (!is_alive(simulation, data) && !(*death_detected))
+	{
+		report_death(&simulation->philosophers[philosopher_id]);
+		*death_detected = 1;
+		status = 0;
+	}
+	return (status);
+}
 
 /**
  * @note
@@ -36,28 +52,13 @@ void	monitoring_routine(t_monitoring_data *monitor_data)
 		i = monitor_data->id;
 		while (i < simulation->table->num_philosophers)
 		{
-			get_philo_data(&simulation->philosophers[i], data);
-			if (!is_alive(simulation, data) && !death_detected)
-			{
-				report_death(&simulation->philosophers[i]);
-				death_detected = 1;
+			if (check_philosopher_status
+				(simulation, data, i, &death_detected) == 0)
 				break ;
-			}
-			// free(data);
-			// data = NULL;
 			i += monitor_data->nbr_monitors;
 		}
-		if (simulation->philosophers[0].mini_nbr_meals != INT_MAX)
-		{	
-			// printf("dinner is over : %d\n", dinner_is_over(simulation));
-			if (dinner_is_over(simulation))
-			{
-				break ;
-			}
-		}
-		// print_logs_before(simulation, current_time()
-		// 	- get_start_time(simulation));
+		if (dinner_is_over(simulation))
+			break ;
 	}
-	// print_simu_status(simulation);
-	free(data); // think about removing this allocation
+	free(data);
 }

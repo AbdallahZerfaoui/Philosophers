@@ -6,11 +6,12 @@ CC = gcc
 RM = rm -f
 CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize=thread -Ofast
 
-SRC = main.c init.c philosopher.c \
+SRC = main.c parse.c philosopher.c \
 	utils.c utils2.c errors.c \
-	memory_management.c basic.c \
+	memory_management.c allocate.c basic.c \
 	monitor.c logs.c scribe.c \
-	actions.c setters.c getters.c \
+	actions.c action_utils.c setters.c getters.c \
+	simulation.c time.c death.c
 	
 OBJ = $(SRC:.c=.o)
 

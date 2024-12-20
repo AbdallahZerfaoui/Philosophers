@@ -5,99 +5,18 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/14 16:57:54 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/14 16:57:54 by azerfaou         ###   ########.fr       */
+/*   Created: 2024/12/20 16:01:16 by azerfaou          #+#    #+#             */
+/*   Updated: 2024/12/20 16:01:16 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long long	current_time(void)
-{
-	struct timeval	tv;
-	long long		time;
-
-	gettimeofday(&tv, NULL);
-	time = (tv.tv_sec * 1000LL + (tv.tv_usec / 1000LL));
-	return (time);
-}
-/***
- * @brief Get the current time in milliseconds
- */
-// long long	current_time(void)
-// {
-// 	struct timespec ts;
-// 	long long time;
-
-// 	clock_gettime(CLOCK_MONOTONIC, &ts);
-// 		// clock_gettime is more precise than gettimeofday but forbiden in the subject
-// 	time = (ts.tv_sec * 1000000000LL + ts.tv_nsec) / 1000000LL;
-// 	return (time);
-// }
-
-long long	current_time_us(void)
-{
-	struct timespec ts;
-	long long time;
-
-	clock_gettime(CLOCK_MONOTONIC, &ts);
-		// clock_gettime is more precise than gettimeofday but forbiden in the subject
-	time = ts.tv_sec * 1000000LL + ts.tv_nsec/1000LL;
-	return (time);
-}
-
-void	sleep_ms(int ms)
-{
-	long long	start;
-
-	start = current_time();
-	if (current_time() - start < ms)
-		usleep(1000LL * (ms - (current_time() - start)));
-}
-
-void	sleep_till(long long target_time)
-{
-	long long	diff;
-
-	// diff = 1000LL * target_time - current_time_us();
-	diff = target_time - current_time();
-	while (diff > 0)
-	{
-		usleep(1000LL * (diff / 2));
-		// usleep((diff / 2));
-		diff = target_time - current_time();
-		// diff = 1000LL * target_time - current_time_us();
-	}
-	// while(current_time() < target_time)
-	// 	;
-}
-
-/**
-
-	* @note i don't know why im checking if someone died in the print_action function
- */
-// void	print_action(t_simulation *simulation, int philo_id,
-//		const char *action)
-// {
-// 	long long	timestamp;
-
-// 	timestamp = current_time() - simulation->table->start_time;
-// 	pthread_mutex_lock(&simulation->print_mutex);
-// 	if (simulation->someone_died)
-// 	{
-// 		pthread_mutex_unlock(&simulation->print_mutex);
-// 		return ;
-// 	}
-// 	// printf("%lld - philo : %d - %s - Nforks : %d\n", timestamp, philo_id,
-// 	// 	action, simulation->table->nbr_forks);
-// 	printf("%lld %d %s\n", timestamp, philo_id, action);
-// 	pthread_mutex_unlock(&simulation->print_mutex);
-// }
 /***
  * @note should i create the log before or after locking the mutex???
  */
-void	log_action(t_simulation *simulation, int philo_id,
-	const char *action, char *color)
+void	log_action(t_simulation *simulation, int philo_id, const char *action,
+		char *color)
 {
 	t_log		*log;
 	long long	timestamp;
@@ -133,11 +52,9 @@ int	dinner_is_over(t_simulation *simulation)
 {
 	int	i;
 	int	mini_nbr_meals;
-	// int	result;
 	int	nbr_meals_eaten;
 
 	i = 0;
-	// result = 1;
 	mini_nbr_meals = simulation->philosophers[0].mini_nbr_meals;
 	if (mini_nbr_meals == INT_MAX)
 		return (0);
@@ -160,44 +77,12 @@ int	dinner_is_over(t_simulation *simulation)
  */
 int	is_simulation_over(t_simulation *simulation)
 {
-	int result;
-	int dinner_over;
-	int someone_died;
+	int	dinner_over;
+	int	someone_died;
 
 	someone_died = get_someone_died(simulation);
-	// if (!someone_died)
-	// 	return (0);
+	if (someone_died)
+		return (1);
 	dinner_over = dinner_is_over(simulation);
-	// pthread_mutex_lock(&simulation->death_mutex);
-	result = (someone_died || dinner_over);
-	// pthread_mutex_unlock(&simulation->death_mutex);
-	return (result);
+	return (dinner_over);
 }
-
-void	print_simu_status(t_simulation *simulation)
-{
-	int	i;
-	int	dead_id;
-
-	dead_id = get_someone_died(simulation) - 1;
-	printf("someone died : %d\n", dead_id);
-	// printf("someone is starving : %d\n", simulation->someone_starving - 1);
-	if (get_someone_died(simulation))
-	{
-		i = simulation->someone_died - 1;
-		printf("last meal of %d at %lld\n", i,
-			get_last_time_meal(&simulation->philosophers[i]) - get_start_time(simulation));
-	}
-	printf("dinner is over : %d\n", dinner_is_over(simulation));
-	// printf("nbr of meals eaten by 0: %d\n",
-	// 	simulation->philosophers[0].times_eaten);
-	printf("nbr of meals eaten by each philosopher : ");
-	for (int i = 0; i < simulation->table->num_philosophers; i++)
-	{
-		printf("%d ", simulation->philosophers[i].times_eaten);
-		if (i == simulation->table->num_philosophers - 1)
-			printf("\n");
-	}
-}
-
-

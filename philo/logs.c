@@ -74,65 +74,17 @@ t_log	*add_log(t_log *log_lst, t_log *log)
 	return (head);
 }
 
-// int	log_size(t_log *lst)
-// {
-// 	int		len;
-// 	t_log	*current;
-
-// 	len = 0;
-// 	current = lst;
-// 	while (current != NULL)
-// 	{
-// 		len++;
-// 		current = current->next;
-// 	}
-// 	return (len);
-// }
-
-// void	print_logs(t_log *log_lst)
-// {
-// 	t_log	*current;
-// 	t_log	*prev;
-// 	char	message[256];
-
-// 	if (log_lst == NULL)
-// 		return ;
-// 	current = log_lst;
-// 	while (current != NULL)
-// 	{
-// 		sprintf(message, "%lld %d %s\n",
-// 			current->timestamp, current->philo_id, current->action);
-// 		// printf("%lld %d %s\n",
-// 		// 	current->timestamp, current->philo_id, current->action);
-// 		ft_putstr(message);
-// 		prev = current;
-// 		current = current->next;
-// 		free_log(prev);
-// 	}
-// }
-
-static void	display_log(t_log *log, char *color)
+static void	display_log(const t_log *log, char *color)
 {
-	// ft_putstr(RESET);
-	// ft_putstr(color);
 	printf("%s%lld %d %s\n",
 		color, log->timestamp, log->philo_id, log->action);
-	// ft_putnbr(log->timestamp);
-	// ft_putstr(" ");
-	// ft_putnbr(log->philo_id);
-	// ft_putstr(" ");
-	// ft_putstr(log->action);
-	// ft_putstr("\n");
-
 }
-
 
 void	print_logs(t_simulation *simulation)
 {
 	t_log	*current;
 	t_log	*prev;
 	t_log	*log_lst;
-	// char	message[256];
 
 	lock_safely(&simulation->log_mutex);
 	log_lst = simulation->log_lst;
@@ -144,11 +96,6 @@ void	print_logs(t_simulation *simulation)
 	current = log_lst;
 	while (current != NULL)
 	{
-		// sprintf(message, "%lld %d %s\n",
-		// 	current->timestamp, current->philo_id, current->action);
-		// printf("%lld %d %s\n",
-		// 	current->timestamp, current->philo_id, current->action);
-		// ft_putstr(message);
 		display_log(current, current->color);
 		prev = current;
 		current = current->next;
@@ -157,46 +104,3 @@ void	print_logs(t_simulation *simulation)
 	simulation->log_lst = current;
 	unlock_safely(&simulation->log_mutex);
 }
-
-// void	print_logs_before(t_simulation *simulation, long long limit)
-// {
-// 	t_log	*current;
-// 	t_log	*tmp;
-// 	t_log	*log_lst;
-// 	char	message[256];
-
-// 	log_lst = get_log_lst(simulation);
-// 	if (log_lst == NULL)
-// 		return ;
-// 	// if (log_lst == NULL)
-// 	// {
-// 	// 	pthread_mutex_unlock(&simulation->log_mutex);
-// 	// 	return ;
-// 	// }
-// 	lock_safely(&simulation->log_mutex);
-// 	current = log_lst;
-// 	// printf("Size of the log: %d\n", log_size(log_lst));
-// 	while (current != NULL && current->timestamp < limit)
-// 	{
-// 		// printf("%lld - philo : %d - %s\n",
-// 		// 	current->timestamp, current->philo_id, current->action);
-// 		sprintf(message, "%lld %d %s\n",
-// 			current->timestamp, current->philo_id, current->action);
-// 		ft_putstr(message);
-// 		// printf("%lld %d %s\n",
-// 		// 	current->timestamp, current->philo_id, current->action);
-// 		tmp = current;
-// 		current = current->next;
-// 		free(tmp);
-// 	}
-// 	simulation->log_lst = current;
-// 	unlock_safely(&simulation->log_mutex);
-// }
-
-/***
- * @brief Free the log properly
- */
-// void free_log(t_log *log)
-// {
-// 	free(log);
-// }
