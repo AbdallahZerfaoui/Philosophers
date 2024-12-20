@@ -17,23 +17,29 @@
 // 	int	i;
 // 	t_simulation	*simulation;
 // 	int	id;
-// 	t_log	*log;
+// 	t_log	*log[LOCAL_LOG_SIZE];
 
 // 	i = 0;
 // 	id = philosopher->id;
 // 	simulation = philosopher->simulation;
+
+// 	while (philosopher->log_buffer[i] != 0)
+// 	{
+// 		if (i == 0)
+// 			log[i] = create_log(philosopher->log_buffer[i], id, "is thinking", CYAN);
+// 		else if (i == 1 || i == 2)
+// 			log[i] = create_log(philosopher->log_buffer[i], id, "has taken a fork", YELLOW);
+// 		else if (i == 3)
+// 			log[i] = create_log(philosopher->log_buffer[i], id, "is eating", GREEN);
+// 		else if (i == 4)
+// 			log[i] = create_log(philosopher->log_buffer[i], id, "is sleeping", BLUE);
+// 		i++;
+// 	}
+// 	i = 0;
 // 	lock_safely(&simulation->log_mutex);
 // 	while (philosopher->log_buffer[i] != 0)
 // 	{
-// 		if (i == 1 || i == 2)
-// 			log = create_log(philosopher->log_buffer[i], id, "has taken a fork", YELLOW);
-// 		else if (i == 3)
-// 			log = create_log(philosopher->log_buffer[i], id, "is eating", GREEN);
-// 		else if (i == 4)
-// 			log = create_log(philosopher->log_buffer[i], id, "is sleeping", BLUE);
-// 		else if (i == 0)
-// 			log = create_log(philosopher->log_buffer[i], id, "is thinking", CYAN);
-// 		simulation->log_lst = add_log(simulation->log_lst, log);
+// 		simulation->log_lst = add_log(simulation->log_lst, log[i]);
 // 		i++;
 // 	}
 // 	unlock_safely(&simulation->log_mutex);

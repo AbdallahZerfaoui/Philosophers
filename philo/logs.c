@@ -114,13 +114,16 @@ t_log	*add_log(t_log *log_lst, t_log *log)
 static void	display_log(t_log *log, char *color)
 {
 	// ft_putstr(RESET);
-	ft_putstr(color);
-	ft_putnbr(log->timestamp);
-	ft_putstr(" ");
-	ft_putnbr(log->philo_id);
-	ft_putstr(" ");
-	ft_putstr(log->action);
-	ft_putstr("\n");
+	// ft_putstr(color);
+	printf("%s%lld %d %s\n",
+		color, log->timestamp, log->philo_id, log->action);
+	// ft_putnbr(log->timestamp);
+	// ft_putstr(" ");
+	// ft_putnbr(log->philo_id);
+	// ft_putstr(" ");
+	// ft_putstr(log->action);
+	// ft_putstr("\n");
+
 }
 
 

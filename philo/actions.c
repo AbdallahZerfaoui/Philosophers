@@ -120,8 +120,8 @@ void	eat(t_philosopher *philosopher)
 	if (im_alive(philosopher))
 	{
 		set_philo_times(philosopher);
-		log_action(philosopher->simulation, philosopher->id, "is eating", GREEN);
 		// append_local_log(philosopher);
+		log_action(philosopher->simulation, philosopher->id, "is eating", GREEN);
 		sleep_till(philosopher->meal_end_time);
 		release_fork(philosopher, left_fork, &philosopher->left_fork);
 		release_fork(philosopher, right_fork, &philosopher->right_fork);
@@ -136,8 +136,8 @@ void	get_a_nap(t_philosopher *philosopher)
 {
 	if (im_alive(philosopher))
 	{
-		log_action(philosopher->simulation, philosopher->id, "is sleeping", BLUE);
 		// append_local_log(philosopher);
+		log_action(philosopher->simulation, philosopher->id, "is sleeping", BLUE);
 		sleep_till(philosopher->wake_up_time);
 	}
 }
@@ -146,8 +146,8 @@ void	think(t_philosopher *philosopher)
 {
 	if (im_alive(philosopher))
 	{
-		log_action(philosopher->simulation, philosopher->id, "is thinking", CYAN);
 		// append_local_log(philosopher);
+		log_action(philosopher->simulation, philosopher->id, "is thinking", CYAN);
 	}
 }
 

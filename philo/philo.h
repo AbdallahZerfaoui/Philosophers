@@ -39,7 +39,7 @@
 # define MINI_TIME 10
 # define FORK_TIME_OUT 1
 # define DELAY_AFTER_CREATION 500 //in us
-# define SCRIBE_TIME 50
+# define SCRIBE_TIME 59
 # define LOCAL_LOG_SIZE 10
 // # define GREEDINESS 30
 # define TAKE 1
