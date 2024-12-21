@@ -74,10 +74,13 @@ t_log	*add_log(t_log *log_lst, t_log *log)
 	return (head);
 }
 
+/***
+ * @note philos are indexed from 1 to num_philos for the display
+ */
 static void	display_log(const t_log *log, char *color)
 {
 	printf("%s%lld %d %s\n",
-		color, log->timestamp, log->philo_id, log->action);
+		color, log->timestamp, log->philo_id + 1, log->action);
 }
 
 void	print_logs(t_simulation *simulation)
@@ -96,7 +99,7 @@ void	print_logs(t_simulation *simulation)
 	}
 	current = log_lst;
 	died = 0;
-	while (current != NULL && !died) //remove the forbidden function
+	while (current != NULL && !died)
 	{
 		display_log(current, current->color);
 		prev = current;

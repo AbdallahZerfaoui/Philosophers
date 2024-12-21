@@ -59,6 +59,7 @@ void	monitoring_routine(t_monitoring_data *monitor_data)
 		}
 		if (dinner_is_over(simulation))
 			break ;
+		usleep(MONITOR_SLEEP);
 	}
 	free(data);
 }

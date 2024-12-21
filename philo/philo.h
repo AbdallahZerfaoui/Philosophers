@@ -37,6 +37,7 @@
 # define DELAY_AFTER_CREATION 1000 //in us
 # define SCRIBE_TIME 7
 # define INT_MAX_DIGITS 10
+# define MONITOR_SLEEP 100 // in us
 # define TAKE 1
 # define RELEASE -1
 # define LOCK_ERROR 1
