@@ -19,7 +19,7 @@ int	check_limits(char **argv)
 	int	val;
 
 	i = 1;
-	while (i < 5)
+	while (i <= 5 && argv[i])
 	{
 		val = ft_atoi(argv[i]);
 		len = ft_strlen(argv[i]);

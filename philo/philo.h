@@ -116,7 +116,7 @@ void					monitoring_routine(t_monitoring_data *monitor_data);
 int						get_nbr_chuncks(int num_philosophers);
 
 // Errors
-void					handle_missing_values(void);
+void					handle_inadequate_args(void);
 void					handle_invalid_args(void);
 void					*handle_allocation_failure(t_simulation *simulation,
 							int level);

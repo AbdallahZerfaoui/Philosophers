@@ -21,10 +21,10 @@ int	main(int argc, char **argv)
 {
 	t_simulation	*simulation;
 
-	if (argc < MINIMUM_INPUTS)
+	if (argc < MINIMUM_INPUTS || argc > MINIMUM_INPUTS + 1)
 	{
 		simulation = NULL;
-		handle_missing_values();
+		handle_inadequate_args();
 	}
 	else
 	{

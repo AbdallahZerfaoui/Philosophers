@@ -12,9 +12,9 @@
 
 #include "philo.h"
 
-void	handle_missing_values(void)
+void	handle_inadequate_args(void)
 {
-	ft_putstr(RED"Missing values\n"RESET);
+	ft_putstr(RED"Invalid values\n"RESET);
 	ft_putstr(GREEN"Usage: ./philo [nbr_of_philosophers] [time_to_die] ");
 	ft_putstr(GREEN"[time_to_eat] [time_to_sleep] [minimum_nbr_meals]\n");
 	exit(1);
