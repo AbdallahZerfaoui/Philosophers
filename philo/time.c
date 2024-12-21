@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 14:50:49 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/20 14:52:46 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/20 20:29:34 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,6 @@ long long	current_time(void)
 	return (time);
 }
 
-void	sleep_ms(int ms)
-{
-	long long	start;
-
-	start = current_time();
-	if (current_time() - start < ms)
-		usleep(1000LL * (ms - (current_time() - start)));
-}
-
 void	sleep_till(long long target_time)
 {
 	long long	diff;
@@ -41,4 +32,14 @@ void	sleep_till(long long target_time)
 		usleep(1000LL * (diff / 2));
 		diff = target_time - current_time();
 	}
+}
+
+void	sleep_ms(int ms)
+{
+	long long	target_time;
+
+	target_time = current_time() + ms;
+	usleep(1000LL * ms - 100);
+	while (current_time() < target_time)
+		;
 }

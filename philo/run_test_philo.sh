@@ -8,13 +8,13 @@ MINIMUM_TIMESTAMP=2700
 
 rm -f output_*.txt
 make re; clear
-for i in $(seq 2 10); do
+for i in $(seq 150 160); do
 	echo "Testing with $i philosophers..."
 
 	touch output_"$i".txt
 
 	# Run philo in the background, output goes to output.txt
-	./philo $i 800 200 200 > output_"$i".txt 2>&1 &
+	./philo $i 400 100 100 > output_"$i".txt 2>&1 &
 	pid=$!
 
 	# Wait for 5 seconds

@@ -181,6 +181,7 @@ size_t					ft_strlen(const char *s);
 ssize_t					ft_putstr(char *str);
 void					ft_strcpy(char *dst, const char *src);
 void					swap(int *a, int *b);
+int						ft_strncmp(const char *s1, const char *s2, size_t n);
 
 // Logs
 t_log					*create_log(long long timestamp, int philo_id,

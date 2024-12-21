@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 15:32:29 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/20 15:33:28 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/21 19:16:22 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	report_death(t_philosopher *philosopher)
 
 	simulation = philosopher->simulation;
 	set_someone_died(philosopher);
-	log_action(simulation, philosopher->id, "has died", RED);
+	log_action(simulation, philosopher->id, "died", RED);
 }
 
 /***

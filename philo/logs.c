@@ -85,6 +85,7 @@ void	print_logs(t_simulation *simulation)
 	t_log	*current;
 	t_log	*prev;
 	t_log	*log_lst;
+	int		died;
 
 	lock_safely(&simulation->log_mutex);
 	log_lst = simulation->log_lst;
@@ -94,10 +95,12 @@ void	print_logs(t_simulation *simulation)
 		return ;
 	}
 	current = log_lst;
-	while (current != NULL)
+	died = 0;
+	while (current != NULL && !died) //remove the forbidden function
 	{
 		display_log(current, current->color);
 		prev = current;
+		died = (ft_strncmp(current->action, "died", 5) == 0);
 		current = current->next;
 		free(prev);
 	}
