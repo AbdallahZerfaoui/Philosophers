@@ -102,7 +102,6 @@ typedef struct s_simulation
 	int					someone_died;
 	pthread_mutex_t		death_mutex;
 	pthread_mutex_t		log_mutex;
-	pthread_mutex_t		time_mutex;
 }						t_simulation;
 
 typedef struct s_monitoring_data

@@ -109,8 +109,8 @@ void	sort_logs(t_log *log_lst)
 	t_log	*next;
 
 	current = log_lst;
-	next = NULL;
-	while (current->next != NULL)
+	next = log_lst->next;
+	while (current->next != NULL && next != NULL)
 	{
 		next = current->next;
 		if (current->timestamp > next->timestamp)
@@ -180,6 +180,7 @@ void	handle_end_of_simulation_log(t_simulation *simulation)
 
 	died = 0;
 	lock_safely(&simulation->log_mutex);
+	sort_logs(simulation->log_lst);
 	current = simulation->log_lst;
 	while (current != NULL && !died)
 	{

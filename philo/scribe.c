@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 19:26:32 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/24 15:58:42 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/24 16:51:50 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	scribe_routine(t_simulation *simulation)
 	// long long	wait_time;
 
 	// wait_time = simulation->table->time_to_eat + simulation->table->time_to_sleep;
-	sleep_ms(100);
+	// sleep_ms(100);
 	while (!get_someone_died(simulation) && !dinner_is_over(simulation))
 	{
 		if (simulation)
