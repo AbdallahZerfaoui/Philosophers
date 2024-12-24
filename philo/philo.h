@@ -35,7 +35,7 @@
 # define ACTION_STR_LEN 50
 # define CHUNK_SIZE 20
 # define DELAY_AFTER_CREATION 1000 //in us
-# define SCRIBE_TIME 7
+# define SCRIBE_TIME 59
 # define INT_MAX_DIGITS 10
 # define MONITOR_SLEEP 100 // in us
 # define TAKE 1
@@ -102,6 +102,7 @@ typedef struct s_simulation
 	int					someone_died;
 	pthread_mutex_t		death_mutex;
 	pthread_mutex_t		log_mutex;
+	pthread_mutex_t		time_mutex;
 }						t_simulation;
 
 typedef struct s_monitoring_data
@@ -190,6 +191,7 @@ t_log					*create_log(long long timestamp, int philo_id,
 t_log					*insert_after(t_log *lst, t_log *target, t_log *log);
 t_log					*add_log(t_log *log_lst, t_log *log);
 void					print_logs(t_simulation *simulation);
+void					handle_end_of_simulation_log(t_simulation *simulation);
 void					free_log_lst(t_log *log_lst);
 
 // Setters

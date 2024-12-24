@@ -60,6 +60,7 @@ void	destroy_mutexes(t_simulation *simulation)
 	}
 	pthread_mutex_destroy(&simulation->log_mutex);
 	pthread_mutex_destroy(&simulation->death_mutex);
+	pthread_mutex_destroy(&simulation->time_mutex);
 }
 
 /***
@@ -87,6 +88,7 @@ t_simulation	*parse_inputs(char **argv)
 		return (handle_allocation_failure(simulation, 3));
 	pthread_mutex_init(&simulation->log_mutex, NULL);
 	pthread_mutex_init(&simulation->death_mutex, NULL);
+	pthread_mutex_lock(&simulation->time_mutex);
 	if (allocate_philosophers(simulation, mini_nbr_meals) == -1)
 		return (handle_allocation_failure(simulation, 4));
 	nbr_monitors = get_nbr_chuncks(simulation->table->num_philosophers);

@@ -33,7 +33,6 @@ int	main(int argc, char **argv)
 			return (1);
 		run_simulation(simulation);
 	}
-	ft_putstr(RESET);
 	if (simulation != NULL)
 	{
 		destroy_mutexes(simulation);

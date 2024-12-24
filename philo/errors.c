@@ -14,15 +14,15 @@
 
 void	handle_inadequate_args(void)
 {
-	ft_putstr(RED"Invalid values\n"RESET);
-	ft_putstr(GREEN"Usage: ./philo [nbr_of_philosophers] [time_to_die] ");
-	ft_putstr(GREEN"[time_to_eat] [time_to_sleep] [minimum_nbr_meals]\n");
+	printf(RED"Invalid args\n"RESET);
+	printf(GREEN"Usage: ./philo [nbr_of_philosophers] [time_to_die] ");
+	printf(GREEN"[time_to_eat] [time_to_sleep] [minimum_nbr_meals]\n");
 	exit(1);
 }
 
 void	handle_invalid_args(void)
 {
-	ft_putstr(RED"Invalid arguments\n");
+	printf(RED"Invalid args\n");
 	exit(1);
 }
 
