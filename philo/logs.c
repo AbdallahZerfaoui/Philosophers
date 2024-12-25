@@ -12,25 +12,6 @@
 
 #include "philo.h"
 
-/***
- * @note this function must always be called after locking the right mutex
- */
-long long	get_highest_timestamp(t_simulation *simulation)
-{
-	t_log		*current;
-	long long	highest;
-
-	highest = 0;
-	current = simulation->log_lst;
-	while (current != NULL)
-	{
-		if (current->timestamp > highest)
-			highest = current->timestamp;
-		current = current->next;
-	}
-	return (highest);
-}
-
 t_log	*create_log(long long timestamp, int philo_id,
 	const char *action, const char *color)
 {
@@ -70,27 +51,6 @@ t_log	*insert_after(t_log *lst, t_log *target, t_log *log)
 	return (head);
 }
 
-t_log	*is_sorted(t_log *log_lst)
-{
-	t_log	*current;
-	t_log	*next;
-
-	if (log_lst == NULL)
-		return (NULL);
-	if (log_lst->next == NULL)
-		return (NULL);
-	current = log_lst;
-	next = log_lst->next;
-	while (current->next != NULL && next != NULL)
-	{
-		next = current->next;
-		if (current->timestamp > next->timestamp)
-			return (next);
-		current = current->next;
-	}
-	return (NULL);
-}
-
 t_log	*add_log(t_log *log_lst, t_log *log)
 {
 	t_log	*head;
@@ -99,19 +59,11 @@ t_log	*add_log(t_log *log_lst, t_log *log)
 	if (log_lst == NULL)
 		return (log);
 	head = log_lst;
-	prev = NULL;
 	while (log_lst != NULL)
 	{
 		if (log->timestamp < log_lst->timestamp)
 		{
 			head = insert_after(head, prev, log);
-			// t_log	*last_sorted = is_sorted(head);
-			// if (last_sorted != NULL)
-			// {
-			// 	printf("Logs are not sorted : %lld\n", last_sorted->timestamp);
-			// 	printf("log i want to insert: %lld\n", log->timestamp);
-			// 	exit(1);
-			// }
 			return (head);
 		}
 		prev = log_lst;
@@ -122,102 +74,11 @@ t_log	*add_log(t_log *log_lst, t_log *log)
 	return (head);
 }
 
-
-void	swap_logs(t_log *a, t_log *b)
-{
-	t_log	tmp;
-
-	tmp = *a;
-	*a = *b;
-	*b = tmp;
-}
-
-void	sort_logs(t_log *log_lst)
-{
-	t_log	*current;
-	t_log	*next;
-
-	if (!log_lst || !log_lst->next)
-		return ;
-	current = log_lst;
-	next = log_lst->next;
-	while (current->next != NULL && next != NULL)
-	{
-		next = current->next;
-		if (current->timestamp > next->timestamp)
-		{
-			swap_logs(current, next);
-			current = log_lst;
-		}
-		else
-			current = current->next;
-	}
-}
-
 /***
  * @note philos are indexed from 1 to num_philos for the display
  */
-static void	display_log(const t_log *log, char *color)
+void	display_log(const t_log *log, const char *color)
 {
 	printf("%s%lld [%d] %s%s\n",
 		color, log->timestamp, log->philo_id + 1, log->action, RESET);
-}
-
-void	print_logs(t_simulation *simulation)
-{
-	t_log	*current;
-	t_log	*prev;
-	t_log	*log_lst;
-	int		died;
-	long long	last_timestamp;
-
-	lock_safely(&simulation->log_mutex);
-	log_lst = simulation->log_lst;
-	if (log_lst == NULL)
-	{
-		unlock_safely(&simulation->log_mutex);
-		return ;
-	}
-	// t_log	*last_sorted = is_sorted(log_lst);
-	// if (last_sorted != NULL)
-	// {
-	// 	printf("Logs are not sorted\n");
-	// 	printf("last timestamp: %lld\n", last_sorted->timestamp);
-	// 	unlock_safely(&simulation->log_mutex);
-	// 	exit(1);
-	// }
-	// sort_logs(log_lst);
-	current = log_lst;
-	last_timestamp = get_highest_timestamp(simulation);
-	died = 0;
-	while (current != NULL && !died)
-	{
-		if (current->timestamp > last_timestamp - 100)
-			break ;
-		display_log(current, current->color);
-		prev = current;
-		died = (ft_strncmp(current->action, "died", 5) == 0);
-		current = current->next;
-		free(prev);
-	}
-	simulation->log_lst = current;
-	unlock_safely(&simulation->log_mutex);
-}
-
-void	handle_end_of_simulation_log(t_simulation *simulation)
-{
-	t_log	*current;
-	int		died;
-
-	died = 0;
-	lock_safely(&simulation->log_mutex);
-	// sort_logs(simulation->log_lst);
-	current = simulation->log_lst;
-	while (current != NULL && !died)
-	{
-		display_log(current, current->color);
-		died = (ft_strncmp(current->action, "died", 5) == 0);
-		current = current->next;
-	}
-	unlock_safely(&simulation->log_mutex);
 }

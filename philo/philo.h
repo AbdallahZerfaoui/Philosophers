@@ -194,6 +194,7 @@ void					handle_end_of_simulation_log(t_simulation *simulation);
 void					free_log_lst(t_log *log_lst);
 void					sort_logs(t_log *log_lst);
 t_log					*is_sorted(t_log *log_lst);
+void					display_log(const t_log *log, const char *color);
 
 // Setters
 void					set_last_time_meal(t_philosopher *philosopher);
