@@ -24,7 +24,6 @@ t_log	*create_log(long long timestamp, int philo_id,
 	log->philo_id = philo_id;
 	ft_strcpy(log->action, action);
 	ft_strcpy(log->color, color);
-	log->next = NULL;
 	return (log);
 }
 

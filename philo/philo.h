@@ -33,9 +33,10 @@
 # define MINIMUM_INPUTS 5
 # define MAXIMUM_PHILOS 200
 # define ACTION_STR_LEN 50
-# define CHUNK_SIZE 20
-# define DELAY_AFTER_CREATION 3000 //in us
-# define SCRIBE_TIME 59
+# define CHUNK_SIZE 20 //DONT CHANGE
+# define DELAY_AFTER_CREATION 1000 //in us
+# define SCRIBE_SLEEP_TIME 59
+# define SCRIBE_TIME_GAP 67 // gap between log and now - youssef constant
 # define INT_MAX_DIGITS 10
 # define MONITOR_SLEEP 100 // in us
 # define TAKE 1
@@ -49,6 +50,7 @@ typedef struct s_log
 	int					philo_id;
 	char				action[50];
 	char				color[16];
+	int					status;
 	struct s_log		*next;
 }						t_log;
 
