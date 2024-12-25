@@ -30,6 +30,12 @@ void	log_action(t_simulation *simulation, int philo_id, const char *action,
 		return ;
 	}
 	lock_safely(&simulation->log_mutex);
+	// sort_logs(simulation->log_lst);
+	// if (is_sorted(simulation->log_lst) != NULL)
+	// {
+	// 	printf("Logs are not sorted\n");
+	// 	exit(1);
+	// }
 	simulation->log_lst = add_log(simulation->log_lst, log);
 	unlock_safely(&simulation->log_mutex);
 }
