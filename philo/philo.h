@@ -34,7 +34,7 @@
 # define MAXIMUM_PHILOS 200
 # define ACTION_STR_LEN 50
 # define CHUNK_SIZE 20
-# define DELAY_AFTER_CREATION 1000 //in us
+# define DELAY_AFTER_CREATION 3000 //in us
 # define SCRIBE_TIME 59
 # define INT_MAX_DIGITS 10
 # define MONITOR_SLEEP 100 // in us
@@ -189,12 +189,12 @@ t_log					*create_log(long long timestamp, int philo_id,
 							const char *action, const char *color);
 t_log					*insert_after(t_log *lst, t_log *target, t_log *log);
 t_log					*add_log(t_log *log_lst, t_log *log);
-void					print_logs(t_simulation *simulation);
+int						print_logs(t_simulation *simulation);
 void					handle_end_of_simulation_log(t_simulation *simulation);
 void					free_log_lst(t_log *log_lst);
 void					sort_logs(t_log *log_lst);
 t_log					*is_sorted(t_log *log_lst);
-void					display_log(const t_log *log, const char *color);
+int						display_log(const t_log *log, const char *color);
 
 // Setters
 void					set_last_time_meal(t_philosopher *philosopher);

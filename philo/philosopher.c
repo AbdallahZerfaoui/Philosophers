@@ -36,7 +36,7 @@ void	philosopher_routine(t_philosopher *philosopher)
 	table = philosopher->simulation->table;
 	get_forks_ids(philosopher->id, &left_fork, &right_fork,
 		table->num_philosophers);
-	if (philosopher->id % 2 == 0)
+	if (philosopher->id % 2 == 1)
 		usleep(DELAY_AFTER_CREATION);
 	side = calculate_side(philosopher);
 	while (!is_simulation_over(philosopher->simulation))

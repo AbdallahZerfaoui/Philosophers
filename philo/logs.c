@@ -77,8 +77,11 @@ t_log	*add_log(t_log *log_lst, t_log *log)
 /***
  * @note philos are indexed from 1 to num_philos for the display
  */
-void	display_log(const t_log *log, const char *color)
+int	display_log(const t_log *log, const char *color)
 {
-	printf("%s%lld [%d] %s%s\n",
-		color, log->timestamp, log->philo_id + 1, log->action, RESET);
+	int	nbr_chars_printed;
+
+	nbr_chars_printed = printf("%s%lld [%d] %s%s\n",
+			color, log->timestamp, log->philo_id + 1, log->action, RESET);
+	return (nbr_chars_printed);
 }
