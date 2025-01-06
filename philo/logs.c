@@ -58,6 +58,7 @@ t_log	*add_log(t_log *log_lst, t_log *log)
 	if (log_lst == NULL)
 		return (log);
 	head = log_lst;
+	prev = NULL;
 	while (log_lst != NULL)
 	{
 		if (log->timestamp < log_lst->timestamp)

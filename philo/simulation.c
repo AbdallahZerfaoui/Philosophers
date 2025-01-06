@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 14:46:39 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/20 16:45:34 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/26 14:41:45 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,23 @@ void	wait_for_threads(pthread_t *threads, int count)
 	}
 }
 
+/**
+ * @brief Executes the main simulation flow for
+ * the philosopher problem.
+ * 1. Calculates the number of monitoring threads needed based
+ * on the number of philosophers.
+ * 2. Initializes monitoring data structures.
+ * 3. Records the start time of the simulation.
+ * 4. Creates philosopher threads to simulate their behavior.
+ * 5. Creates monitoring threads to supervise philosophers' states.
+ * 6. Starts a scribe thread to log simulation events.
+ * 7. Waits for all philosopher threads to finish execution.
+ * 8. Joins monitoring threads and cleans up monitoring resources.
+ * 9. Waits for the scribe thread to finish logging before concluding.
+ * @param simulation A pointer to the simulation structure
+ * containing all necessary data.
+ * @return void
+ **/
 void	run_simulation(t_simulation *simulation)
 {
 	int					i;

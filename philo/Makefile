@@ -1,3 +1,28 @@
+# define standard colors
+ifneq (,$(findstring xterm,${TERM}))
+	BLACK        := $(shell tput -Txterm setaf 0)
+	RED          := $(shell tput -Txterm setaf 1)
+	GREEN        := $(shell tput -Txterm setaf 2)
+	YELLOW       := $(shell tput -Txterm setaf 3)
+	LIGHTPURPLE  := $(shell tput -Txterm setaf 4)
+	PURPLE       := $(shell tput -Txterm setaf 5)
+	BLUE         := $(shell tput -Txterm setaf 6)
+	WHITE        := $(shell tput -Txterm setaf 7)
+	RESET := $(shell tput -Txterm sgr0)
+else
+	BLACK        := ""
+	RED          := ""
+	GREEN        := ""
+	YELLOW       := ""
+	LIGHTPURPLE  := ""
+	PURPLE       := ""
+	BLUE         := ""
+	WHITE        := ""
+	RESET        := ""
+endif
+
+### ================================================================================ ###
+
 EXE = philo
 NBR_PHILO = 9
 NBR_MEALS = 3
@@ -15,18 +40,18 @@ SRC = main.c parse.c philosopher.c \
 	
 OBJ = $(SRC:.c=.o)
 
-all: art $(EXE)
+all: art3 $(EXE)
 	@echo "\033[31m	------------------***༺ (\033[31m\033[32mPhilosophers Compiled!\033[31m)༻***------------------\n\033[0m"
 
 $(EXE): $(OBJ)
 	$(CC) $(CFLAGS) -I. -o $(EXE) $(OBJ)
 
 clean:
-	$(RM) $(OBJ)
+	@$(RM) $(OBJ)
 
 fclean: clean
-	$(RM) $(EXE) *.out
-	$(RM) -r *.dSYM
+	@$(RM) $(EXE) *.out
+	@$(RM) -r *.dSYM
 
 re: fclean all
 
@@ -77,5 +102,29 @@ art2:
 	@echo "▐▌   ▐▌ ▐▌▗▄█▄▖▐▙▄▄▖▝▚▄▞▘▗▄▄▞▘▝▚▄▞▘▐▌   ▐▌ ▐▌▐▙▄▄▖▐▌ ▐▌▗▄▄▞▘";
 	@echo "                                             by The Greatest";
 
+art3:
+	@echo "${GREEN}                                                                                               #                           ";
+	@echo "   ## #        #                  ##  ##       #       ##  ##             ## ##       ##       #                    #  #   ";
+	@echo "        #                         #   ##               ##  #                            ####   #         ###               ";
+	@echo "       ##    #####             #  #   ##     #####     ##  #                          ### ##   #        ######         #   ${RESET}";
+	@echo "    #####   ##   ##     #  ## ##  #   ##     #   ##    ##  #                    ##    ######   #      ##  #   ##       #   ";
+	@echo "   #   ##    #  ##      #  ##  #  ##  ##     #  ##     ##  #          .#         #        ##   #      #   #    #       #   ";
+	@echo "${RED}   #############################   ######################  #        ########################   #########################   ";
+	@echo "                                   ####                                                               ##  #                ";
+	@echo "                                   #. ##                              by The Greatest                   +##                ";
+	@echo "                                     #                                                                                     ${RESET}";
+	@echo "                                                                                                            ";
 
-.PHONY: all clean fclean re art art2 valgrind helgrind drd help run_test cppcheck
+
+   ## #        #                  ##  ##       #       ##  ##   
+        #                         #   ##               ##  #    
+       ##    #####             #  #   ##     #####     ##  #    
+    #####   ##   ##     #  ## ##  #   ##     #   ##    ##  #    
+   #   ##    #  ##      #  ##  #  ##  ##     #  ##     ##  #    
+   #############################   ######################  #    
+                                   ####                         
+                                   #. ##                        
+                                     #                          
+
+
+.PHONY: all clean fclean re art art2 art3 valgrind helgrind drd help run_test cppcheck

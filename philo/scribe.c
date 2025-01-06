@@ -6,13 +6,13 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 19:26:32 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/25 23:21:13 by azerfaou         ###   ########.fr       */
+/*   Updated: 2024/12/26 00:33:54 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	print_logs(t_simulation *simulation)
+int	print_logs(t_simulation *simulation, long long delay)
 {
 	t_log		*current;
 	t_log		*prev;
@@ -27,7 +27,7 @@ int	print_logs(t_simulation *simulation)
 	died = 0;
 	while (current != NULL && !died)
 	{
-		if (current->timestamp > now - SCRIBE_TIME_GAP)
+		if (current->timestamp > now - delay)
 			break ;
 		display_log(current, current->color);
 		prev = current;
@@ -42,7 +42,7 @@ int	print_logs(t_simulation *simulation)
 
 void	scribe_routine(t_simulation *simulation)
 {
-	static int	died;
+	int	died;
 
 	if (!simulation)
 		return ;
@@ -50,7 +50,9 @@ void	scribe_routine(t_simulation *simulation)
 	sleep_ms(SCRIBE_TIME_GAP);
 	while (!died && !dinner_is_over(simulation))
 	{
-		died = print_logs(simulation);
+		died = print_logs(simulation, SCRIBE_TIME_GAP);
 		sleep_ms(SCRIBE_SLEEP_TIME);
 	}
+	if (!died)
+		print_logs(simulation, 0);
 }

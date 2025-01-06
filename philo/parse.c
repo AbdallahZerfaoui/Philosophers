@@ -70,7 +70,7 @@ void	destroy_mutexes(t_simulation *simulation)
  * 4. We allocate memory for the forks and the philosophers
  * @return t_simulation*
  */
-t_simulation	*parse_inputs(char **argv)
+t_simulation	*setup_simulation(char **argv)
 {
 	t_simulation	*simulation;
 	int				mini_nbr_meals;

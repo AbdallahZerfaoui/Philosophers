@@ -28,7 +28,7 @@ int	main(int argc, char **argv)
 	}
 	else
 	{
-		simulation = parse_inputs(argv);
+		simulation = setup_simulation(argv);
 		if (simulation == NULL)
 			return (1);
 		run_simulation(simulation);
