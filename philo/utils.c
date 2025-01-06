@@ -16,7 +16,7 @@
  * @note should i create the log before or after locking the mutex???
  */
 void	log_action(t_simulation *simulation, int philo_id, const char *action,
-		char *color)
+		const char *color)
 {
 	t_log		*log;
 	long long	timestamp;

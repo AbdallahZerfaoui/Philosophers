@@ -5,15 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/30 15:18:01 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/05 20:57:21 by azerfaou         ###   ########.fr       */
+/*   Created: 2025/01/06 13:36:07 by azerfaou          #+#    #+#             */
+/*   Updated: 2025/01/06 13:36:07 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_log	*create_log(long long timestamp, int philo_id,
-	const char *action, const char *color)
+t_log	*create_log(long long timestamp, int philo_id, const char *action,
+		const char *color)
 {
 	t_log	*log;
 
@@ -27,51 +27,31 @@ t_log	*create_log(long long timestamp, int philo_id,
 	return (log);
 }
 
-t_log	*insert_after(t_log *lst, t_log *target, t_log *log)
-{
-	t_log	*head;
-
-	if (target == NULL)
-	{
-		log->next = lst;
-		return (log);
-	}
-	head = lst;
-	while (lst != NULL)
-	{
-		if (lst == target)
-		{
-			log->next = lst->next;
-			lst->next = log;
-			break ;
-		}
-		lst = lst->next;
-	}
-	return (head);
-}
-
 t_log	*add_log(t_log *log_lst, t_log *log)
 {
-	t_log	*head;
+	t_log	*current;
 	t_log	*prev;
 
 	if (log_lst == NULL)
 		return (log);
-	head = log_lst;
+	current = log_lst;
 	prev = NULL;
-	while (log_lst != NULL)
+	while (current != NULL && log->timestamp >= current->timestamp)
 	{
-		if (log->timestamp < log_lst->timestamp)
-		{
-			head = insert_after(head, prev, log);
-			return (head);
-		}
-		prev = log_lst;
-		log_lst = log_lst->next;
+		prev = current;
+		current = current->next;
 	}
-	prev->next = log;
-	log->next = NULL;
-	return (head);
+	if (prev == NULL)
+	{
+		log->next = log_lst;
+		return (log);
+	}
+	else
+	{
+		prev->next = log;
+		log->next = current;
+		return (log_lst);
+	}
 }
 
 /***
@@ -81,7 +61,7 @@ int	display_log(const t_log *log, const char *color)
 {
 	int	nbr_chars_printed;
 
-	nbr_chars_printed = printf("%s%lld [%d] %s%s\n",
-			color, log->timestamp, log->philo_id + 1, log->action, RESET);
+	nbr_chars_printed = printf("%s%lld [%d] %s%s\n", color, log->timestamp,
+			log->philo_id + 1, log->action, RESET);
 	return (nbr_chars_printed);
 }

@@ -48,7 +48,7 @@ void	take_forks(t_philosopher *philosopher, int side)
  */
 void	eat(t_philosopher *philosopher)
 {
-	t_table			*table;
+	const t_table	*table;
 	int				left_fork;
 	int				right_fork;
 

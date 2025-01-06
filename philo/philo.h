@@ -128,7 +128,7 @@ void					*ft_calloc(size_t nitems, size_t size);
 
 // Utils
 void					log_action(t_simulation *simulation, int philo_id,
-							const char *action, char *color);
+							const char *action, const char *color);
 void					get_forks_ids(int philo_id, int *left_fork,
 							int *right_fork, int num_philosophers);
 // Utils - Simulation
@@ -181,7 +181,6 @@ void					scribe_routine(t_simulation *simulation);
 // Basic
 int						ft_atoi(const char *str);
 size_t					ft_strlen(const char *s);
-ssize_t					ft_putstr(char *str);
 void					ft_strcpy(char *dst, const char *src);
 void					swap(int *a, int *b);
 int						ft_strncmp(const char *s1, const char *s2, size_t n);
@@ -192,10 +191,7 @@ t_log					*create_log(long long timestamp, int philo_id,
 t_log					*insert_after(t_log *lst, t_log *target, t_log *log);
 t_log					*add_log(t_log *log_lst, t_log *log);
 int						print_logs(t_simulation *simulation, long long delay);
-void					handle_end_of_simulation_log(t_simulation *simulation);
 void					free_log_lst(t_log *log_lst);
-void					sort_logs(t_log *log_lst);
-t_log					*is_sorted(t_log *log_lst);
 int						display_log(const t_log *log, const char *color);
 
 // Setters

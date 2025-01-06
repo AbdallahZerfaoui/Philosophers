@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-static int	calculate_side(t_philosopher *philosopher)
+static int	calculate_side(const t_philosopher *philosopher)
 {
 	int	side;
 
