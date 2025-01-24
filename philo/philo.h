@@ -34,7 +34,7 @@
 # define MAXIMUM_PHILOS 200
 # define ACTION_STR_LEN 50
 # define CHUNK_SIZE 20 //DONT CHANGE
-# define DELAY_AFTER_CREATION 1000 //in us
+# define DELAY_AFTER_CREATION 300 //in us
 # define SCRIBE_SLEEP_TIME 59
 # define SCRIBE_TIME_GAP 67 // gap between log and now - youssef constant
 # define INT_MAX_DIGITS 10
