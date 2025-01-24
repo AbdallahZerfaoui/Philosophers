@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 15:32:29 by azerfaou          #+#    #+#             */
-/*   Updated: 2025/01/20 19:36:14 by azerfaou         ###   ########.fr       */
+/*   Updated: 2025/01/24 17:21:10 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	im_alive(const t_philosopher *philosopher)
 {
 	long long	time_since_last_meal;
 
-	time_since_last_meal = current_time() - philosopher->last_meal_time;
+	time_since_last_meal = (current_time_us() - philosopher->last_meal_time) / 1000LL;
 	if (time_since_last_meal > philosopher->simulation->table->time_to_die
 		|| (time_since_last_meal == philosopher->simulation->table->time_to_die && !philosopher->is_eating))
 	{
@@ -44,7 +44,7 @@ int	is_alive(const t_simulation *simulation, const t_philo_shared_data *data)
 {
 	long long	time_since_last_meal;
 
-	time_since_last_meal = current_time() - data->last_meal_time;
+	time_since_last_meal = (current_time_us() - data->last_meal_time) / 1000LL;
 	if (time_since_last_meal > simulation->table->time_to_die)
 	{
 		return (0);

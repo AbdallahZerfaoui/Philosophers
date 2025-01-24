@@ -23,7 +23,7 @@ void	log_action(t_simulation *simulation, int philo_id, const char *action,
 	long long	start_time;
 
 	start_time = get_start_time(simulation);
-	timestamp = current_time() - start_time;
+	timestamp = (current_time_us() - start_time) / 1000LL;
 	log = create_log(timestamp, philo_id, action, color);
 	if (!log)
 	{

@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 19:26:32 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/26 00:33:54 by azerfaou         ###   ########.fr       */
+/*   Updated: 2025/01/24 17:10:14 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	print_logs(t_simulation *simulation, long long delay)
 	long long	now;
 
 	lock_safely(&simulation->log_mutex);
-	now = current_time() - simulation->table->start_time;
+	now = (current_time_us() - simulation->table->start_time) / 1000LL;
 	current = simulation->log_lst;
 	if (current == NULL)
 		return (unlock_safely(&simulation->log_mutex), 0);

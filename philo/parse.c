@@ -94,6 +94,6 @@ t_simulation	*setup_simulation(char **argv)
 	if (simulation->monitors == NULL)
 		return (handle_allocation_failure(simulation, 5));
 	simulation->table->philosophers = simulation->philosophers;
-	simulation->table->start_time = current_time();
+	simulation->table->start_time = current_time_us();
 	return (simulation);
 }

@@ -145,6 +145,7 @@ int						lock_safely(pthread_mutex_t *mutex);
 int						unlock_safely(pthread_mutex_t *mutex);
 
 // Utils - time
+long long				current_time_us(void);
 long long				current_time(void);
 void					sleep_ms(int ms);
 void					sleep_till(long long target_time);

@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 14:46:39 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/26 14:41:45 by azerfaou         ###   ########.fr       */
+/*   Updated: 2025/01/24 17:12:05 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void	run_simulation(t_simulation *simulation)
 	nbr_philosophers = simulation->table->num_philosophers;
 	nbr_monitors = get_nbr_chuncks(nbr_philosophers);
 	m_data = init_monitoring_data(simulation, nbr_monitors);
-	simulation->table->start_time = current_time();
+	simulation->table->start_time = current_time_us();
 	create_philosophers(simulation);
 	create_monitors(simulation, m_data, nbr_monitors);
 	pthread_create(&simulation->scribe, NULL, (void *)scribe_routine,

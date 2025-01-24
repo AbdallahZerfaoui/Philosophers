@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 14:10:30 by azerfaou          #+#    #+#             */
-/*   Updated: 2024/12/20 15:39:26 by azerfaou         ###   ########.fr       */
+/*   Updated: 2025/01/24 17:22:46 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	set_fork_owner(int *fork, int fork_id, int action)
 void	set_last_time_meal(t_philosopher *philosopher)
 {
 	lock_safely(&philosopher->philo_mutex);
-	philosopher->last_meal_time = current_time();
+	philosopher->last_meal_time = current_time_us();
 	unlock_safely(&philosopher->philo_mutex);
 }
 
@@ -51,8 +51,8 @@ void	set_philo_times(t_philosopher *philosopher)
 
 	table = philosopher->simulation->table;
 	lock_safely(&philosopher->philo_mutex);
-	philosopher->last_meal_time = current_time();
-	philosopher->meal_end_time = philosopher->last_meal_time
+	philosopher->last_meal_time = current_time_us();
+	philosopher->meal_end_time = philosopher->last_meal_time / 1000LL
 		+ table->time_to_eat;
 	philosopher->wake_up_time = philosopher->meal_end_time
 		+ table->time_to_sleep;
