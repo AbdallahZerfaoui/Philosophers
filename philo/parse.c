@@ -41,7 +41,11 @@ int	parse_arguments(t_table *table, char **argv)
 	table->num_philosophers = ft_atoi(argv[1]);
 	table->time_to_die = ft_atoi(argv[2]);
 	table->time_to_eat = ft_atoi(argv[3]);
+	if (table->time_to_eat > table->time_to_die)
+		table->time_to_eat = table->time_to_die + 1;
 	table->time_to_sleep = ft_atoi(argv[4]);
+	if (table->time_to_sleep > table->time_to_die)
+		table->time_to_sleep = table->time_to_die + 1;
 	if (argv[5])
 		return (ft_atoi(argv[5]));
 	return (INT_MAX);
