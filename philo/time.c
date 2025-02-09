@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 14:50:49 by azerfaou          #+#    #+#             */
-/*   Updated: 2025/01/24 17:16:57 by azerfaou         ###   ########.fr       */
+/*   Updated: 2025/02/09 14:23:42 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ long long	current_time(void)
 {
 	return (current_time_us() / 1000LL);
 }
-
 
 void	sleep_till(long long target_time)
 {

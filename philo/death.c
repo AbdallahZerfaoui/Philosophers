@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 15:32:29 by azerfaou          #+#    #+#             */
-/*   Updated: 2025/01/24 17:21:10 by azerfaou         ###   ########.fr       */
+/*   Updated: 2025/02/09 14:21:07 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,13 @@ void	report_death(t_philosopher *philosopher)
 int	im_alive(const t_philosopher *philosopher)
 {
 	long long	time_since_last_meal;
+	long long	time_to_die;
 
-	time_since_last_meal = (current_time_us() - philosopher->last_meal_time) / 1000LL;
+	time_since_last_meal
+		= (current_time_us() - philosopher->last_meal_time) / 1000LL;
+	time_to_die = philosopher->simulation->table->time_to_die;
 	if (time_since_last_meal > philosopher->simulation->table->time_to_die
-		|| (time_since_last_meal == philosopher->simulation->table->time_to_die && !philosopher->is_eating))
+		|| (time_since_last_meal == time_to_die && !philosopher->is_eating))
 	{
 		return (0);
 	}
