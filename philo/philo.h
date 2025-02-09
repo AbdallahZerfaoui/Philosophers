@@ -185,6 +185,8 @@ size_t					ft_strlen(const char *s);
 void					ft_strcpy(char *dst, const char *src);
 void					swap(int *a, int *b);
 int						ft_strncmp(const char *s1, const char *s2, size_t n);
+int						ft_isnumber(const char *str);
+int						ft_are_all_numbers(char **argv);
 
 // Logs
 t_log					*create_log(long long timestamp, int philo_id,

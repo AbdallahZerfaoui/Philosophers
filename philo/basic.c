@@ -44,14 +44,6 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-// ssize_t	ft_putstr(char *str)
-// {
-// 	ssize_t	len;
-
-// 	len = write(1, str, ft_strlen(str));
-// 	return (len);
-// }
-
 void	ft_strcpy(char *dst, const char *src)
 {
 	while (*src)

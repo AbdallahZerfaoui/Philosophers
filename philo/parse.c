@@ -36,7 +36,7 @@ int	check_limits(char **argv)
 
 int	parse_arguments(t_table *table, char **argv)
 {
-	if (check_limits(argv) == 0)
+	if (check_limits(argv) == 0 || !ft_are_all_numbers(argv))
 		handle_invalid_args();
 	table->num_philosophers = ft_atoi(argv[1]);
 	table->time_to_die = ft_atoi(argv[2]);

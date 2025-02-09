@@ -6,7 +6,7 @@
 /*   By: azerfaou <azerfaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 15:32:29 by azerfaou          #+#    #+#             */
-/*   Updated: 2025/02/09 14:21:07 by azerfaou         ###   ########.fr       */
+/*   Updated: 2025/02/09 18:59:37 by azerfaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	im_alive(const t_philosopher *philosopher)
 	return (1);
 }
 
+// TODO improve this condition
 int	is_alive(const t_simulation *simulation, const t_philo_shared_data *data)
 {
 	long long	time_since_last_meal;
