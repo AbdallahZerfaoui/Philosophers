@@ -24,10 +24,10 @@ endif
 ### ================================================================================ ###
 
 EXE = philo
-NBR_PHILO = 200
+NBR_PHILO = 20
 NBR_MEALS = 3
 
-CC = gcc
+CC = cc
 RM = rm -f
 CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize=thread -Ofast
 
