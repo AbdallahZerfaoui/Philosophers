@@ -1,243 +1,95 @@
-# Philosophers
+# Philosophers Project: A Beginner's Guide
 
-### **Step-by-Step Guide for the Dining Philosophers Project**
+This guide breaks down the key steps involved in the Philosophers project. The goal is to simulate the classic "Dining Philosophers" computer science problem, focusing on concurrency, resource sharing, and avoiding issues like deadlock and starvation.
 
-This tutorial will guide you through both the **mandatory** and **bonus** parts of the Dining Philosophers project in a structured way, ensuring the mandatory implementation is designed to easily extend into the bonus part.
+## 1. Understanding the Problem
 
----
+*   **Scenario:** Imagine several philosophers sitting around a circular table. Between each pair of adjacent philosophers lies a single fork.
+*   **Goal:** Philosophers alternate between thinking, getting hungry, eating, and sleeping.
+*   **Challenge:** To eat, a philosopher needs *two* forks – the one on their left and the one on their right. They must pick up both forks without causing a situation where no one can eat (deadlock) or where a specific philosopher never gets a chance to eat (starvation).
 
-## **1. Understand the Project Requirements**
+## 2. Setting Up the Simulation
 
-### **Mandatory Part:**
-- Use **threads** for philosophers.
-- Use **mutexes** to protect shared resources (forks).
-- Each philosopher must:
-  1. Take forks (both left and right).
-  2. Eat.
-  3. Release forks.
-  4. Sleep.
-  5. Think.
-- Simulation ends when:
-  - A philosopher dies (fails to eat within `time_to_die` milliseconds).
-  - Optional: All philosophers eat at least `number_of_times_each_philosopher_must_eat`.
+*   **Parsing Input (`philo/parse.c`, `main.c`):**
+    *   The program starts by reading command-line arguments:
+        *   Number of philosophers
+        *   Time to die (ms): Max time a philosopher can go without eating.
+        *   Time to eat (ms): Duration of eating.
+        *   Time to sleep (ms): Duration of sleeping.
+        *   (Optional) Number of times each philosopher must eat.
+    *   Functions like `parse_arguments`, `check_limits`, `ft_atoi`, and `ft_isnumber` handle reading and validating this input. Invalid input leads to errors handled in `philo/errors.c`.
+*   **Allocating Memory (`philo/allocate.c`, `philo/memory_management.c`):**
+    *   Memory is needed to store information about the simulation (`t_simulation`), the table (`t_table`), each philosopher (`t_philosopher`), and each fork (`t_fork`). These structures are defined in `philo/philo.h`.
+    *   Functions like `allocate_simulation`, `allocate_forks`, `allocate_philosophers`, and `ft_calloc` reserve the necessary memory.
+*   **Initialization (`philo/allocate.c`, `philo/parse.c`):**
+    *   Each philosopher and fork is initialized with its ID and default state.
+    *   **Crucially:** A **mutex** (`pthread_mutex_t`) is created for each fork (`init_forks`) and each philosopher (`init_philosophers`). Mutexes act like locks to protect shared resources (like forks or philosopher data) from being accessed by multiple threads simultaneously.
+    *   Global mutexes (e.g., for logging `log_mutex`, checking death `death_mutex`) are also initialized in `setup_simulation`.
 
-### **Bonus Part:**
-- Use **processes** for philosophers.
-- Use **semaphores** for fork availability instead of mutexes.
-- Forks are represented as a shared count tracked by a semaphore.
+## 3. The Philosopher's Life (`philo/philosopher.c`, `philo/actions.c`)
 
----
+*   **Threads:** Each philosopher runs concurrently in its own thread, executing the `philosopher_routine` function.
+*   **The Cycle:** Inside the loop (`while (!is_simulation_over(...))`), a philosopher performs actions:
+    *   **Think (`think`):** Logs the thinking status.
+    *   **Take Forks (`take_forks`, `philo/action_utils.c`):**
+        *   Attempts to acquire the mutexes for both the left and right forks using `try_take_fork` which calls `lock_safely` (`philo/utils2.c`).
+        *   To prevent **deadlock**, philosophers might pick up forks in a specific order (e.g., even/odd IDs pick up left/right first, or lower ID fork first). The `side` variable and potential `usleep(DELAY_AFTER_CREATION)` help stagger attempts.
+        *   The philosopher's `left_fork` and `right_fork` variables track which forks they hold.
+    *   **Eat (`eat`):**
+        *   If successful in getting both forks:
+            *   Logs "is eating".
+            *   Updates their `last_meal_time` and calculates `meal_end_time` and `wake_up_time` (`set_philo_times` in `philo/setters.c`).
+            *   Simulates eating using `sleep_till` (`philo/time.c`).
+            *   Releases the forks using `release_fork` (which calls `unlock_safely`).
+            *   Increments their meal count (`set_eaten_meals`).
+    *   **Sleep (`get_a_nap`):**
+        *   Logs "is sleeping".
+        *   Simulates sleeping using `sleep_till`.
+*   **Checking Status:** Philosophers constantly check if the simulation has ended (`is_simulation_over` in `philo/utils.c`) or if they are still alive (`im_alive` in `philo/death.c`).
 
-## **2. Design the Program**
-Structure your code to accommodate both the mandatory and bonus requirements:
-- Separate **logic** (philosopher actions) from **implementation** (threads vs. processes).
-- Use abstraction for shared resources (forks).
-- Centralize simulation control for easy debugging and extensions.
+## 4. Monitoring for Problems (`philo/monitor.c`, `philo/death.c`)
 
----
+*   **Monitor Thread(s):** One or more separate threads run the `monitoring_routine`. Using multiple monitors (`get_nbr_chuncks` in `philo/utils2.c`) can improve efficiency for large numbers of philosophers.
+*   **Health Checks:**
+    *   The monitor periodically checks each philosopher it's responsible for.
+    *   It safely reads the philosopher's `last_meal_time` and `times_eaten` using `get_philo_data` (`philo/getters.c`), which locks the philosopher's specific mutex.
+*   **Detecting Death:**
+    *   Calculates time since the last meal (`current_time_us` in `philo/time.c`).
+    *   If this exceeds `time_to_die` (`is_alive` in `philo/death.c`), it calls `report_death`, which sets a global `someone_died` flag (protected by `death_mutex` via `set_someone_died`) and logs the death.
+*   **Checking Meal Count:** The monitor also checks if all philosophers have completed their required meals using `dinner_is_over` (`philo/utils.c`).
 
-### **3. Step-by-Step Implementation**
+## 5. Logging Actions (`philo/scribe.c`, `philo/logs.c`)
 
-### **Step 3.1: Setup the Project Directory**
-1. Create the project directories:
-   ```bash
-   mkdir philo philo_bonus
-   cd philo
-   touch Makefile *.c *.h
-   ```
+*   **The Scribe Thread:** A dedicated thread runs `scribe_routine`. Its purpose is to print status messages from all philosophers in the correct chronological order.
+*   **Recording:** When a philosopher acts, `log_action` (`philo/utils.c`) creates a log entry (`t_log`) with the timestamp, philosopher ID, and message.
+*   **Storing:** These logs are added to a shared linked list (`log_lst` in `t_simulation`), sorted by timestamp. Access is protected by `log_mutex` (`add_log`).
+*   **Printing:** The scribe periodically wakes up (`sleep_ms`), locks the `log_mutex`, prints logs that occurred sufficiently in the past (`print_logs`, `display_log`), removes them from the list, and unlocks the mutex. This ensures output isn't jumbled due to thread concurrency.
 
-2. Write your **Makefile**:
-   ```Makefile
-   NAME = philo
+## 6. Running and Ending the Simulation (`philo/simulation.c`)
 
-   CC = cc
-   CFLAGS = -Wall -Wextra -Werror
+*   **Orchestration:** The `run_simulation` function manages the overall process.
+*   **Thread Creation:** It uses `pthread_create` to start all philosopher threads, monitor thread(s), and the scribe thread.
+*   **Waiting:** It uses `pthread_join` to wait for all threads to complete. Philosophers finish when the simulation ends (death or meals completed). Monitors and the scribe finish when they detect the simulation end condition.
 
-   SRC = main.c init.c philosopher.c utils.c
-   OBJ = $(SRC:.c=.o)
+## 7. Cleaning Up (`philo/memory_management.c`, `philo/parse.c`)
 
-   all: $(NAME)
+*   **Resource Release:** After the simulation ends (`main.c`), it's crucial to clean up:
+    *   `destroy_mutexes`: Destroys all initialized mutexes.
+    *   `free_simulation`: Frees all dynamically allocated memory (for philosophers, forks, table, logs, etc.) to prevent memory leaks.
 
-   $(NAME): $(OBJ)
-       $(CC) $(CFLAGS) -o $(NAME) $(OBJ)
+## 8. Building the Project (`philo/Makefile`)
 
-   clean:
-       rm -f $(OBJ)
+*   The `Makefile` provides commands to compile the source code (`.c` files) into an executable program (`philo`).
+*   Common commands:
+    *   `make`: Compiles the project.
+    *   `make clean`: Removes intermediate object files (`.o`).
+    *   `make fclean`: Removes object files and the executable.
+    *   `make re`: Recompiles everything cleanly.
+    *   `make run_test`, `make valgrind`, `make helgrind`: Useful targets for running tests and checking for memory or threading errors.
 
-   fclean: clean
-       rm -f $(NAME)
+## Key Concepts Recap
 
-   re: fclean all
-   ```
-
----
-
-### **Step 3.2: Global Header File**
-Create `philo.h` to store shared structures, constants, and function prototypes:
-```c
-#ifndef PHILO_H
-# define PHILO_H
-
-# include <pthread.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <sys/time.h>
-
-typedef struct s_fork {
-    pthread_mutex_t mutex;
-}               t_fork;
-
-typedef struct s_philosopher {
-    int             id;
-    int             times_eaten;
-    long long       last_meal_time;
-    struct s_table  *table;
-}               t_philosopher;
-
-typedef struct s_table {
-    int             num_philosophers;
-    int             time_to_die;
-    int             time_to_eat;
-    int             time_to_sleep;
-    int             must_eat_count;
-    t_fork          *forks;
-    t_philosopher   *philosophers;
-    pthread_t       *threads;
-    long long       start_time;
-}               t_table;
-
-// Utils
-long long   current_time(void);
-void        sleep_ms(int ms);
-void        print_action(t_table *table, int id, const char *action);
-
-#endif
-```
-
----
-
-### **Step 3.3: Implement Utility Functions**
-Add utilities for time management, printing, and sleeping:
-```c
-#include "philo.h"
-
-long long current_time(void) {
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    return (tv.tv_sec * 1000LL + tv.tv_usec / 1000LL);
-}
-
-void sleep_ms(int ms) {
-    long long start = current_time();
-    while (current_time() - start < ms)
-        usleep(100);
-}
-
-void print_action(t_table *table, int id, const char *action) {
-    printf("%lld %d %s\n", current_time() - table->start_time, id, action);
-}
-```
-
----
-
-### **Step 3.4: Initialize Data**
-Set up the table, forks, and philosophers:
-```c
-#include "philo.h"
-
-int init_table(t_table *table, int argc, char **argv) {
-    table->num_philosophers = atoi(argv[1]);
-    table->time_to_die = atoi(argv[2]);
-    table->time_to_eat = atoi(argv[3]);
-    table->time_to_sleep = atoi(argv[4]);
-    table->must_eat_count = (argc == 6) ? atoi(argv[5]) : -1;
-    table->forks = malloc(sizeof(t_fork) * table->num_philosophers);
-    table->philosophers = malloc(sizeof(t_philosopher) * table->num_philosophers);
-    table->threads = malloc(sizeof(pthread_t) * table->num_philosophers);
-    if (!table->forks || !table->philosophers || !table->threads)
-        return (1);
-    for (int i = 0; i < table->num_philosophers; i++)
-        pthread_mutex_init(&table->forks[i].mutex, NULL);
-    table->start_time = current_time();
-    return (0);
-}
-```
-
----
-
-### **Step 3.5: Philosopher Actions**
-Write the main loop for each philosopher:
-```c
-#include "philo.h"
-
-void *philosopher_routine(void *arg) {
-    t_philosopher *philo = (t_philosopher *)arg;
-    t_table *table = philo->table;
-
-    while (1) {
-        // Take forks
-        pthread_mutex_lock(&table->forks[philo->id].mutex);
-        print_action(table, philo->id, "has taken a fork");
-        pthread_mutex_lock(&table->forks[(philo->id + 1) % table->num_philosophers].mutex);
-        print_action(table, philo->id, "has taken a fork");
-        
-        // Eat
-        print_action(table, philo->id, "is eating");
-        philo->last_meal_time = current_time();
-        sleep_ms(table->time_to_eat);
-        pthread_mutex_unlock(&table->forks[philo->id].mutex);
-        pthread_mutex_unlock(&table->forks[(philo->id + 1) % table->num_philosophers].mutex);
-
-        // Sleep
-        print_action(table, philo->id, "is sleeping");
-        sleep_ms(table->time_to_sleep);
-
-        // Think
-        print_action(table, philo->id, "is thinking");
-    }
-    return (NULL);
-}
-```
-
----
-
-### **Step 3.6: Launch Threads**
-Write the main simulation:
-```c
-#include "philo.h"
-
-int main(int argc, char **argv) {
-    t_table table;
-
-    if (argc < 5 || argc > 6) {
-        printf("Usage: ./philo num_philosophers time_to_die time_to_eat time_to_sleep [must_eat_count]\n");
-        return (1);
-    }
-    if (init_table(&table, argc, argv))
-        return (1);
-
-    for (int i = 0; i < table.num_philosophers; i++) {
-        table.philosophers[i].id = i;
-        table.philosophers[i].last_meal_time = table.start_time;
-        table.philosophers[i].table = &table;
-        pthread_create(&table.threads[i], NULL, philosopher_routine, &table.philosophers[i]);
-    }
-    for (int i = 0; i < table.num_philosophers; i++)
-        pthread_join(table.threads[i], NULL);
-
-    return (0);
-}
-```
-
----
-
-### **Step 3.7: Extend for Bonus**
-In the bonus version:
-- Replace threads with **processes** (`fork()`).
-- Replace mutexes with **semaphores** (`sem_open`, `sem_wait`, `sem_post`).
-- Add process synchronization using a shared semaphore for forks.
-
----
-
-This design ensures the mandatory part is robust and easily extensible to the bonus part. Let me know if you'd like the detailed bonus implementation or need help debugging!
+*   **Threads:** Allow philosophers (and monitors/scribe) to run concurrently.
+*   **Mutexes:** Essential locks to protect shared data (forks, philosopher state, logs) from race conditions, ensuring data integrity.
+*   **Deadlock:** A state where threads are blocked forever, waiting for resources held by each other. Prevented by careful resource acquisition strategies (e.g., fork ordering).
+*   **Starvation:** A state where a thread is perpetually denied access to necessary resources and cannot make progress. Monitored by checking `time_to_die`.
